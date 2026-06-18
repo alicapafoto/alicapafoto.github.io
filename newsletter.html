@@ -307,7 +307,7 @@
   <a class="page-footer" href="index.html" style="pointer-events:all; text-decoration:none;">NiNE</a>
 
   <script>
-    const FORM_URL = 'https://docs.google.com/forms/d/e/1FAIpQLScIrTaVfJtk_ofIS91LuY_k_K1ZRbGdZoJ1cBKVVbPRUf_SCg/formResponse';
+    const SCRIPT_URL = 'https://script.google.com/macros/s/AKfycbxpuGsOxITd3u4mINe98A-w30NJTx-52g0RWe9mAiVEYwGU6bpHb4KZRNgn7VuvQ_9xVw/exec';
     const form = document.getElementById('signupForm');
     const success = document.getElementById('successMsg');
 
@@ -322,23 +322,20 @@
       emailInput.value = emailInput.value.toLowerCase().trim();
 
       const data = new FormData();
-      data.append('entry.2145452041', document.getElementById('name').value.trim());
-      data.append('entry.864389969', emailInput.value);
-      data.append('entry.1371677305', document.getElementById('country').value);
+      data.append('name', document.getElementById('name').value.trim());
+      data.append('email', emailInput.value);
+      data.append('country', document.getElementById('country').value);
 
       try {
-        // Use no-cors mode — Google Forms doesn't allow CORS but the data still goes through
-        await fetch(FORM_URL, {
+        await fetch(SCRIPT_URL, {
           method: 'POST',
           mode: 'no-cors',
           body: data
         });
-      } catch(e) {
-        // no-cors always throws on response read — that's expected, ignore it
+      } catch(err) {
+        // no-cors expected, data still goes through
       }
 
-      // Show success regardless — no-cors means we can't read the response
-      // but if the entry IDs are correct the data lands in the sheet
       form.style.display = 'none';
       success.style.display = 'flex';
     });

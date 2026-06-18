@@ -60,6 +60,16 @@
       transition: color 0.2s;
     }
     .nav-links a:hover, .nav-links a.active { color: var(--ink); }
+    .nav-links a.nav-cta {
+      color: var(--ink);
+      border: 1px solid rgba(26,26,26,0.4);
+      padding: 0.4rem 1rem;
+      transition: background .2s, border-color .2s;
+    }
+    .nav-links a.nav-cta:hover {
+      background: rgba(26,26,26,0.06);
+      border-color: var(--ink);
+    }
 
     /* MAIN */
     main { padding-top: 7rem; min-height: 100vh; }
@@ -245,6 +255,7 @@
       <li><a href="index.html">Book</a></li>
       <li><a href="about.html" class="active">About</a></li>
       <li><a href="mailto:alicapafoto@gmail.com">Contact</a></li>
+      <li><a href="newsletter.html" class="nav-cta">Join the List</a></li>
     </ul>
   </nav>
 
