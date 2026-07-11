@@ -51,7 +51,7 @@
     {
       "@type": "EducationalOccupationalCredential",
       "credentialCategory": "Bachelor's degree",
-      "name": "Bachelor of Social Communications, Social Development",
+      "name": "Bachelor of Social Communications, Social Development & Journalism",
       "dateCreated": "2020"
     },
     {
@@ -248,17 +248,27 @@
       gap: 1.2rem;
     }
     .award-item {
+      display: flex;
+      justify-content: space-between;
+      align-items: baseline;
+      gap: 2rem;
       font-size: 0.8rem;
-      font-weight: 400;
       color: var(--ink);
       line-height: 1.5;
     }
-    .award-item span {
-      display: block;
+    .award-title { font-weight: 400; color: var(--ink); }
+    .award-sub {
       font-size: 0.68rem;
       color: var(--mid);
       margin-top: 0.15rem;
       font-weight: 300;
+    }
+    .award-year {
+      font-size: 0.7rem;
+      color: var(--mid);
+      letter-spacing: 0.05em;
+      white-space: nowrap;
+      margin-left: 2rem;
     }
 
     /* FOOTER */
@@ -390,16 +400,16 @@
             <div class="cred-item">
               <div>
                 <div class="cred-title">Bachelor of Social Communications</div>
-                <div class="cred-sub">Social Development</div>
+                <div class="cred-sub">Social Development &amp; Journalism</div>
               </div>
-              <div class="cred-year">Graduated 2020</div>
+              <div class="cred-year">2020</div>
             </div>
             <div class="cred-item">
               <div>
                 <div class="cred-title">Associate of Arts</div>
                 <div class="cred-sub">Audiovisual Arts</div>
               </div>
-              <div class="cred-year">Graduated 2019</div>
+              <div class="cred-year">2019</div>
             </div>
           </div>
         </div>
@@ -480,16 +490,25 @@
           <div class="awards-list">
 
             <div class="award-item">
-              Foto Maracaibo &mdash; Regional Contest, L'Alliance Française
-              <span>2nd Place &mdash; 2018</span>
+              <div>
+                <div class="award-title">Foto Maracaibo</div>
+                <div class="award-sub">Regional Contest, L'Alliance Française &middot; 2nd Place</div>
+              </div>
+              <div class="award-year">2018</div>
             </div>
             <div class="award-item">
-              Focus On The City Cabimas &mdash; Collective Exhibition
-              <span>Participant &mdash; 2018</span>
+              <div>
+                <div class="award-title">Focus On The City Cabimas</div>
+                <div class="award-sub">Collective Exhibition</div>
+              </div>
+              <div class="award-year">2018</div>
             </div>
             <div class="award-item">
-              Venezuela como Destino &mdash; National Photography Contest
-              <span>Participant &mdash; 2017</span>
+              <div>
+                <div class="award-title">Venezuela como Destino</div>
+                <div class="award-sub">European Union - CENAF</div>
+              </div>
+              <div class="award-year">2017</div>
             </div>
 
             </div>
