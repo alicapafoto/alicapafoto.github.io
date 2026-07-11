@@ -149,7 +149,7 @@
       display: flex;
       justify-content: space-between;
       align-items: center;
-      padding: 1.45rem 3.5rem;
+      padding: 1.8rem 3.5rem;
       background: rgba(250,250,247,0.96);
       backdrop-filter: blur(14px);
       border-bottom: 1px solid rgba(221,218,210,0.75);
@@ -162,14 +162,15 @@
       text-transform: uppercase;
       color: var(--ink);
       text-decoration: none;
-      line-height: 1;
+      line-height: 1.2;
       opacity: 0.85;
     }
-    .nav-links { display: flex; gap: 2.3rem; list-style: none; align-items: center; }
+    .nav-links { display: flex; gap: 2.5rem; list-style: none; align-items: center; }
     .nav-links a {
-      font-size: 0.68rem;
-      font-weight: 400;
-      letter-spacing: 0.17em;
+      font-size: 0.75rem;
+      font-weight: 300;
+      letter-spacing: 0.18em;
+      line-height: 1.2;
       text-transform: uppercase;
       color: var(--mid);
       text-decoration: none;
@@ -179,11 +180,11 @@
     .nav-links a.nav-cta {
       color: var(--ink);
       border: 1px solid var(--ink);
-      padding: .52rem 1rem;
+      padding: .4rem 1rem;
     }
     .nav-links a.nav-cta:hover { background: var(--ink); color: var(--white); }
 
-    main { padding-top: 5.7rem; }
+    main { padding-top: 7rem; }
 
     .works-hero {
       max-width: 880px;
@@ -453,9 +454,6 @@
     .mobile-nav a.active-mobile { color: var(--ink); border-color: var(--ink); }
 
     @media(max-width: 900px) {
-      nav.site-nav { padding: 1.3rem 2rem; }
-      .nav-links { display: none; }
-      .mobile-nav { display: flex; }
       .works-hero { padding: 6rem 2rem 4.5rem; }
       .collection { padding: 0 2rem 6rem; }
       .collection-grid { grid-template-columns: 1fr; gap: 4.5rem; }
@@ -465,6 +463,13 @@
       footer { padding: 2rem 2rem 6rem; flex-direction: column; text-align: center; }
       .footer-links { justify-content: center; flex-wrap: wrap; }
     }
+
+    @media(max-width: 860px) {
+      nav.site-nav { padding: 1.2rem 2rem; }
+      .nav-links { display: none; }
+      .mobile-nav { display: flex; }
+    }
+
     @media(max-width: 560px) {
       .art-stage { min-height: 410px; padding: 2rem; }
       .art-stage img { max-height: 350px; }
