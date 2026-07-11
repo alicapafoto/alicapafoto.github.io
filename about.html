@@ -75,6 +75,11 @@
       --ink: #1A1A1A;
       --mid: #8C8C8A;
       --rule: #DDDDD8;
+      --mobile-nav-bg: rgba(250,250,248,0.98);
+      --mobile-nav-text: #8C8C8A;
+      --mobile-nav-active: #1A1A1A;
+      --mobile-nav-rule: #DDDDD8;
+      --mobile-nav-active-rule: #DDDDD8;
     }
     html, body {
       background: var(--bg);
@@ -83,10 +88,11 @@
       font-weight: 300;
       line-height: 1.6;
       min-height: 100vh;
+      overflow-x: hidden;
     }
 
     /* NAV */
-    nav {
+    nav.site-nav {
       position: fixed;
       top: 0; left: 0; right: 0;
       z-index: 100;
@@ -314,34 +320,59 @@
       color: rgba(255,255,255,.22);
     }
 
-    /* Mobile nav bottom bar */
+    /* UNIFIED MOBILE HEADER — identical geometry on every page */
     .mobile-nav {
       display: none;
-      width: 100%;
-      background: rgba(250,250,248,0.97);
-      border-top: 1px solid var(--rule);
-      padding: 0.8rem 1.5rem;
-      justify-content: space-around;
+      position: fixed;
+      top: 0;
+      left: 0;
+      right: 0;
+      z-index: 101;
+      width: auto;
+      max-width: 100vw;
+      height: 3.6rem;
+      padding: 0 0.5rem;
+      grid-template-columns: repeat(4, minmax(0, 1fr));
       align-items: center;
+      background: var(--mobile-nav-bg);
+      border-top: 0;
+      border-bottom: 1px solid var(--mobile-nav-rule);
+      backdrop-filter: blur(12px);
+      -webkit-backdrop-filter: blur(12px);
     }
     .mobile-nav a {
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      justify-self: center;
+      width: calc(100% - 0.5rem);
+      height: 2.45rem;
+      min-width: 0;
+      padding: 0 0.2rem;
+      font-family: 'Inter', sans-serif;
       font-size: 0.6rem;
       font-weight: 500;
       letter-spacing: 0.15em;
+      line-height: 1;
+      text-align: center;
       text-transform: uppercase;
-      color: var(--mid);
+      white-space: nowrap;
+      color: var(--mobile-nav-text);
       text-decoration: none;
-      padding: 0.4rem 0.8rem;
       border: 1px solid transparent;
-      transition: all 0.2s;
+      transition: color 0.2s, border-color 0.2s, background 0.2s;
     }
-    .mobile-nav a.active-mobile { color: var(--ink); border-color: var(--rule); }
-    .mobile-nav a:hover { color: var(--ink); }
+    .mobile-nav a.active-mobile {
+      color: var(--mobile-nav-active);
+      border-color: var(--mobile-nav-active-rule);
+    }
+    .mobile-nav a:hover { color: var(--mobile-nav-active); }
+
+
 
     @media(max-width:860px) {
-      nav { padding: 1.2rem 2rem; }
-      .nav-links { display: none; }
-      .mobile-nav { display: flex; }
+      nav.site-nav { display: none; }
+      .mobile-nav { display: grid; }
       .about-hero { padding: 4rem 2rem 3rem; flex-direction: column; gap: 1rem; align-items: flex-start; }
       .about-hero-right { text-align: left; }
       .bio-section { grid-template-columns: 1fr; }
@@ -354,7 +385,7 @@
 </head>
 <body>
 
-  <nav>
+  <nav class="site-nav">
     <a class="nav-brand" href="index.html">Ali Capa Foto</a>
     <ul class="nav-links">
       <li><a href="index.html">Book</a></li>

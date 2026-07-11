@@ -63,19 +63,24 @@
       --white: #FAFAF8;
       --ink: #1A1A1A;
       --rule: #E0E0DE;
+      --mobile-nav-bg: rgba(10,10,10,0.97);
+      --mobile-nav-text: rgba(255,255,255,0.64);
+      --mobile-nav-active: #FAFAF8;
+      --mobile-nav-rule: rgba(255,255,255,0.10);
+      --mobile-nav-active-rule: rgba(255,255,255,0.34);
     }
     html, body { width:100%; font-family:'Inter',sans-serif; font-weight:300; background:#0a0a0a; color:var(--white); overflow-x:hidden; }
 
     /* NAV */
-    nav { position:fixed; top:0; left:0; right:0; z-index:100; display:flex; justify-content:space-between; align-items:center; padding:1.8rem 3.5rem; }
+    nav.site-nav { position:fixed; top:0; left:0; right:0; z-index:100; display:flex; justify-content:space-between; align-items:center; padding:1.8rem 3.5rem; }
     .nav-brand { font-size:0.75rem; font-weight:500; letter-spacing:0.22em; line-height:1.2; text-transform:uppercase; color:var(--white); text-decoration:none; opacity:0.85; }
     .nav-links { display:flex; gap:2.5rem; list-style:none; align-items:center; }
     .nav-links a { font-size:0.75rem; font-weight:300; letter-spacing:0.18em; line-height:1.2; text-transform:uppercase; color:var(--white); text-decoration:none; opacity:0.65; transition:opacity .2s; }
     .nav-links a:hover { opacity:1; }
     .nav-links a.nav-cta { opacity:1; border:1px solid rgba(255,255,255,0.5); padding:0.4rem 1rem; transition:background .2s, border-color .2s; }
     .nav-links a.nav-cta:hover { background:rgba(255,255,255,0.1); border-color:rgba(255,255,255,0.9); opacity:1; }
-    nav.on-light .nav-links a.nav-cta { border-color:rgba(26,26,26,0.4); }
-    nav.on-light .nav-links a.nav-cta:hover { background:rgba(26,26,26,0.06); border-color:var(--ink); }
+    nav.site-nav.on-light .nav-links a.nav-cta { border-color:rgba(26,26,26,0.4); }
+    nav.site-nav.on-light .nav-links a.nav-cta:hover { background:rgba(26,26,26,0.06); border-color:var(--ink); }
 
     /* HERO */
     .hero { position:relative; width:100vw; height:100vh; height:100dvh; overflow:hidden; }
@@ -241,43 +246,67 @@
 
 
     /* Smart nav color switching */
-    nav { transition: background 0.3s; }
-    nav.on-light { background:rgba(250,250,248,.96); backdrop-filter:blur(12px); border-bottom:1px solid rgba(26,26,26,.08); }
-    nav.on-light .nav-brand { color: var(--ink) !important; }
-    nav.on-light .nav-links a { color: var(--ink) !important; opacity: 0.65; }
-    nav.on-light .nav-links a:hover { opacity: 1; }
-    nav.on-dark .nav-brand { color: var(--white); }
-    nav.on-dark .nav-links a { color: var(--white); }
-    /* Mobile bottom nav bar */
+    nav.site-nav { transition: background 0.3s; }
+    nav.site-nav.on-light { background:rgba(250,250,248,.96); backdrop-filter:blur(12px); border-bottom:1px solid rgba(26,26,26,.08); }
+    nav.site-nav.on-light .nav-brand { color: var(--ink) !important; }
+    nav.site-nav.on-light .nav-links a { color: var(--ink) !important; opacity: 0.65; }
+    nav.site-nav.on-light .nav-links a:hover { opacity: 1; }
+    nav.site-nav.on-dark .nav-brand { color: var(--white); }
+    nav.site-nav.on-dark .nav-links a { color: var(--white); }
+
+    /* UNIFIED MOBILE HEADER — identical geometry on every page */
     .mobile-nav {
       display: none;
-      width: 100%;
-      background: rgba(10,10,10,0.97);
-      border-top: 1px solid rgba(255,255,255,0.1);
-      padding: 0.9rem 1rem;
-      justify-content: space-around;
+      position: fixed;
+      top: 0;
+      left: 0;
+      right: 0;
+      z-index: 101;
+      width: auto;
+      max-width: 100vw;
+      height: 3.6rem;
+      padding: 0 0.5rem;
+      grid-template-columns: repeat(4, minmax(0, 1fr));
       align-items: center;
+      background: var(--mobile-nav-bg);
+      border-top: 0;
+      border-bottom: 1px solid var(--mobile-nav-rule);
+      backdrop-filter: blur(12px);
+      -webkit-backdrop-filter: blur(12px);
     }
     .mobile-nav a {
-      font-size: 0.62rem;
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      justify-self: center;
+      width: calc(100% - 0.5rem);
+      height: 2.45rem;
+      min-width: 0;
+      padding: 0 0.2rem;
+      font-family: 'Inter', sans-serif;
+      font-size: 0.6rem;
       font-weight: 500;
-      letter-spacing: 0.14em;
+      letter-spacing: 0.15em;
+      line-height: 1;
+      text-align: center;
       text-transform: uppercase;
-      color: rgba(255,255,255,0.6);
+      white-space: nowrap;
+      color: var(--mobile-nav-text);
       text-decoration: none;
-      padding: 0.5rem 0.9rem;
       border: 1px solid transparent;
-      transition: all 0.2s;
+      transition: color 0.2s, border-color 0.2s, background 0.2s;
     }
-    .mobile-nav a:hover, .mobile-nav a.active-mobile {
-      color: var(--white);
-      border-color: rgba(255,255,255,0.3);
+    .mobile-nav a.active-mobile {
+      color: var(--mobile-nav-active);
+      border-color: var(--mobile-nav-active-rule);
     }
+    .mobile-nav a:hover { color: var(--mobile-nav-active); }
+
+
 
     @media(max-width:860px) {
-      nav { padding:1.2rem 2rem; }
-      .nav-links { display:none; }
-      .mobile-nav { display:flex; }
+      nav.site-nav { display:none; }
+      .mobile-nav { display:grid; }
       .hero-title { font-size:6rem; }
       .hero-content { padding-bottom: 6.5rem; }
       .editions { padding:5rem 2rem 7rem; }
@@ -298,7 +327,7 @@
 </head>
 <body>
 
-  <nav>
+  <nav class="site-nav">
     <a class="nav-brand" href="#">Ali Capa Foto</a>
     <ul class="nav-links">
       <li><a href="#editions">Editions</a></li>
@@ -503,7 +532,7 @@
     const collectorSection = document.getElementById('collector');
     const worksSection = document.getElementById('original-works-preview');
     const aboutSection = document.getElementById('about');
-    const navEl = document.querySelector('nav');
+    const navEl = document.querySelector('nav.site-nav');
 
     function updateNav() {
       const scrollY = window.scrollY;

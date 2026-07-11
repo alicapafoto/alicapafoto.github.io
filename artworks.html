@@ -126,6 +126,11 @@
       --soft: #F1F0EB;
       --rule: #DDDAD2;
       --gold: #8A7145;
+      --mobile-nav-bg: rgba(250,250,247,0.98);
+      --mobile-nav-text: #8C8A84;
+      --mobile-nav-active: #1A1813;
+      --mobile-nav-rule: var(--rule);
+      --mobile-nav-active-rule: var(--rule);
     }
     html { scroll-behavior: smooth; }
     body {
@@ -432,6 +437,7 @@
       cursor: pointer;
     }
 
+    /* UNIFIED MOBILE HEADER — identical geometry on every page */
     .mobile-nav {
       display: none;
       position: fixed;
@@ -439,26 +445,47 @@
       left: 0;
       right: 0;
       z-index: 101;
-      width: 100%;
-      background: rgba(250,250,247,.98);
-      border-bottom: 1px solid var(--rule);
-      padding: .8rem 1.5rem;
-      justify-content: space-around;
+      width: auto;
+      max-width: 100vw;
+      height: 3.6rem;
+      padding: 0 0.5rem;
+      grid-template-columns: repeat(4, minmax(0, 1fr));
       align-items: center;
+      background: var(--mobile-nav-bg);
+      border-top: 0;
+      border-bottom: 1px solid var(--mobile-nav-rule);
+      backdrop-filter: blur(12px);
+      -webkit-backdrop-filter: blur(12px);
     }
     .mobile-nav a {
-      font-size: .6rem;
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      justify-self: center;
+      width: calc(100% - 0.5rem);
+      height: 2.45rem;
+      min-width: 0;
+      padding: 0 0.2rem;
+      font-family: 'Inter', sans-serif;
+      font-size: 0.6rem;
       font-weight: 500;
-      letter-spacing: .15em;
+      letter-spacing: 0.15em;
+      line-height: 1;
+      text-align: center;
       text-transform: uppercase;
-      color: var(--mid);
+      white-space: nowrap;
+      color: var(--mobile-nav-text);
       text-decoration: none;
-      padding: .4rem .8rem;
       border: 1px solid transparent;
-      transition: all .2s;
+      transition: color 0.2s, border-color 0.2s, background 0.2s;
     }
-    .mobile-nav a.active-mobile { color: var(--ink); border-color: var(--rule); }
-    .mobile-nav a:hover { color: var(--ink); }
+    .mobile-nav a.active-mobile {
+      color: var(--mobile-nav-active);
+      border-color: var(--mobile-nav-active-rule);
+    }
+    .mobile-nav a:hover { color: var(--mobile-nav-active); }
+
+
 
     @media(max-width: 900px) {
       .works-hero { padding: 6rem 2rem 4.5rem; }
@@ -473,7 +500,7 @@
 
     @media(max-width: 860px) {
       nav.site-nav { display: none; }
-      .mobile-nav { display: flex; }
+      .mobile-nav { display: grid; }
     }
 
     @media(max-width: 560px) {
