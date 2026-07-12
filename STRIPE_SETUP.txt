@@ -1,0 +1,30 @@
+ALI CAPA SUPPORT PAGE — FINAL DEPLOYMENT NOTES
+
+LIVE STRIPE PAYMENT LINK
+https://buy.stripe.com/7sY6oI4iWbND0OO759gIo00
+
+The link is already connected to the “Contribute securely” button in support.html.
+No Stripe API keys are used or required.
+
+UPLOAD
+Upload the contents of the alicapafoto.github.io-main folder to the root of the GitHub Pages repository, replacing the existing files while preserving the folder structure.
+
+AFTER THE SITE IS LIVE
+In Stripe customer support / public business settings, use:
+
+Customer support URL:
+https://alicapafoto.github.io/support.html
+
+Privacy policy URL:
+https://alicapafoto.github.io/privacy.html
+
+Terms of service URL:
+https://alicapafoto.github.io/terms.html
+
+FINAL CHECKS
+1. Open https://alicapafoto.github.io/support.html on desktop and mobile.
+2. Confirm “Join Living Archive” opens Patreon.
+3. Confirm “Contribute securely” opens the live Stripe checkout.
+4. Confirm the Stripe checkout displays Ali Capa Foto and the intended title, image, amount limits, and payment methods.
+5. Open privacy.html and terms.html and confirm both pages load.
+6. Send STRIPE_REVIEW_MESSAGE.txt to Stripe Support as a written-confirmation request.
