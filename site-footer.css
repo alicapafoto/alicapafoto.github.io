@@ -1,0 +1,143 @@
+/*
+  Shared footer geometry
+  Keeps every page aligned on desktop and mobile while allowing each page
+  to retain its light or dark visual theme.
+*/
+.site-footer {
+  width: 100%;
+  padding: 2.5rem 3.5rem;
+  display: grid;
+  grid-template-columns: minmax(11rem, 1fr) auto minmax(16rem, 1fr);
+  align-items: center;
+  column-gap: 2rem;
+  background: #0a0a0a;
+  border-top: 1px solid rgba(255,255,255,.08);
+}
+
+.site-footer .footer-brand {
+  justify-self: start;
+  font-family: 'Smooch', cursive;
+  font-size: 2.2rem;
+  font-weight: 400;
+  line-height: 1;
+  color: var(--red, #8B1A1A);
+  text-decoration: none;
+  white-space: nowrap;
+  transition: opacity .2s;
+}
+
+.site-footer .footer-brand:hover { opacity: .75; }
+
+.site-footer .footer-nav {
+  justify-self: center;
+  min-width: 0;
+}
+
+.site-footer .footer-links {
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  gap: 2rem;
+  margin: 0;
+  padding: 0;
+  list-style: none;
+}
+
+.site-footer .footer-links a {
+  display: block;
+  font-family: 'Inter', sans-serif;
+  font-size: .62rem;
+  font-weight: 300;
+  line-height: 1.4;
+  letter-spacing: .14em;
+  text-align: center;
+  text-transform: uppercase;
+  white-space: nowrap;
+  color: rgba(255,255,255,.4);
+  text-decoration: none;
+  transition: color .2s;
+}
+
+.site-footer .footer-links a:hover { color: rgba(255,255,255,.9); }
+
+.site-footer .footer-copy {
+  justify-self: end;
+  font-family: 'Inter', sans-serif;
+  font-size: .62rem;
+  font-weight: 300;
+  line-height: 1.4;
+  text-align: right;
+  white-space: nowrap;
+  color: rgba(255,255,255,.22);
+}
+
+/* The Original Works page keeps its light theme but uses identical geometry. */
+.site-footer.site-footer--light {
+  background: var(--bg, #FAFAF8);
+  border-top-color: var(--rule, #DDDDD8);
+}
+
+.site-footer.site-footer--light .footer-brand { color: var(--ink, #1A1A1A); }
+.site-footer.site-footer--light .footer-links a { color: var(--mid, #8C8C8A); }
+.site-footer.site-footer--light .footer-links a:hover { color: var(--ink, #1A1A1A); }
+.site-footer.site-footer--light .footer-copy { color: #AAA69D; }
+
+@media (max-width: 860px) {
+  .site-footer {
+    padding: 2rem 2rem 6rem;
+    grid-template-columns: minmax(0, 1fr);
+    grid-template-rows: auto auto auto;
+    justify-items: center;
+    row-gap: 1.5rem;
+    text-align: center;
+  }
+
+  .site-footer .footer-brand {
+    justify-self: center;
+    font-size: 2.2rem;
+  }
+
+  .site-footer .footer-nav {
+    width: 100%;
+    max-width: 42rem;
+  }
+
+  .site-footer .footer-links {
+    width: 100%;
+    display: grid;
+    grid-template-columns: repeat(4, minmax(0, 1fr));
+    gap: .75rem;
+    align-items: start;
+  }
+
+  .site-footer .footer-links a {
+    min-height: 2.6rem;
+    display: flex;
+    align-items: flex-start;
+    justify-content: center;
+    padding: 0 .1rem;
+    line-height: 1.65;
+    white-space: normal;
+    overflow-wrap: anywhere;
+  }
+
+  .site-footer .footer-copy {
+    justify-self: center;
+    max-width: 100%;
+    text-align: center;
+    white-space: normal;
+  }
+}
+
+@media (max-width: 420px) {
+  .site-footer {
+    padding-right: 1rem;
+    padding-left: 1rem;
+  }
+
+  .site-footer .footer-links { gap: .5rem; }
+  .site-footer .footer-links a {
+    font-size: .58rem;
+    letter-spacing: .12em;
+  }
+}
