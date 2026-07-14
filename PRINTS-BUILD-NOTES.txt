@@ -1,57 +1,16 @@
-ALI CAPA PRINTS PROTOTYPE 01
-Built 14 July 2026
+ALI CAPA PRINTS MASTER BUILD 05
 
-WHAT CHANGED
-- Added prints.html for the first limited-edition print release.
-- Added four optimized print image sets for AtaquaS, EclaircissE, K.AISA.R, and Ràábta.
-- Built a three-stage artwork experience:
-  1. Cropped, asymmetrically spaced preview.
-  2. Complete photograph presented deeper in the page.
-  3. Full-screen artwork viewer after a second click.
-- Kept acquisition separate from image enlargement so the visitor is never surprised by a purchase action.
-- Added the edition policy: ten prints per photograph shared across all offered sizes.
-- No size or price information is displayed until those details are finalized.
-- Added a quiet note reserving the fifth photograph for the recovered-archive selection.
-- Refreshed the homepage into a general Ali Capa entrance rather than a NiNE-only billboard.
-- Reduced and unified desktop navigation across the site: NiNE / Prints / Works / About / Support.
-- Expanded the unified mobile navigation to the same five destinations.
-- Unified footer destinations: Prints / Original Works / Instagram / LinkedIn / Contact.
-- Added prints.html to sitemap.xml.
+Seven works, in final order:
+1. AtaquaS
+2. K.aisa.R
+3. Mèranö
+4. EclaircissE
+5. Ràábta
+6. Öppiä
+7. IndepenDienta
 
-IMAGE PREPARATION
-The original 16-bit TIFF files were not changed and are not included in this website package.
-Web files were exported as optimized 8-bit sRGB progressive JPEGs:
-- Full-view versions: up to 3000 px on the long edge, quality 90.
-- Preview versions: up to 1600 px on the long edge, quality 86.
+Edition and sizes:
+- AtaquaS, K.aisa.R, Mèranö: 5 at 80 × 60 cm + 5 at 120 × 90 cm (10 total).
+- EclaircissE, Ràábta, Öppiä, IndepenDienta: 10 at 80 × 60 cm.
 
-NOT CONNECTED YET
-- Checkout or shop provider
-- Final paper and printing method
-- Final sizes for each artwork
-- Prices
-- Live inventory tracking
-- Edition-number allocation by order
-
-UPLOAD
-The folder is a complete GitHub Pages website build. Review it locally first, then replace the corresponding repository files when approved.
-
-PROTOTYPE 02 — HOMEPAGE NAVIGATION CORRECTION
-- Removed the redundant white “Ali Capa Foto” line above the red logo.
-- Removed the non-clickable “Photography · Books · Prints · Original Works” descriptor.
-- Homepage now presents one clear navigation row only:
-  NiNE · Prints · Original Works · About · Support.
-- Compact site navigation appears after the visitor scrolls beyond the opening hero.
-- The same reveal behavior now applies on desktop and mobile.
-- “Original Works” is written consistently across primary and mobile navigation.
-
-BUILD 03 — PRINT PAGE REFINEMENT
-- Shortened the intro edition copy.
-- Replaced technical edition language with: Only ten prints. Forever.
-- Removed shared-size wording from the visible print details.
-- Desktop selection images now reveal more vertical length and sit closer together.
-- Mobile selection spacing and 4:5 presentation remain unchanged.
-
-BUILD 04 REFINEMENT
-- Removed all visible size and price placeholders from the Prints page.
-- Each artwork now carries only the exact edition line: Edition 10.
-- Full-screen viewer label also reads Edition 10.
+The white selection shows the artwork only. The black section contains a two-slide viewer: full artwork, then framed wall mockup. Prices and purchase buttons are intentionally omitted until The Print Space integration.

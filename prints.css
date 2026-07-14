@@ -413,3 +413,36 @@ main { padding-top: 4rem; }
   .fragment-frame figcaption,
   .artwork-expand img { transition: none; }
 }
+
+
+/* Build 05: seven-work catalogue and two-view carousel */
+.print-fragment + .print-fragment { margin-top: clamp(4rem, 6vw, 6.5rem); }
+.fragment-ataquas { width:min(44vw,650px);margin-left:3vw; }
+.fragment-kaisar { width:min(41vw,610px);margin-left:auto;margin-right:7vw; }
+.fragment-merano { width:min(55vw,820px);margin-left:8vw; }
+.fragment-eclaircisse { width:min(38vw,570px);margin-left:auto;margin-right:10vw; }
+.fragment-raabta { width:min(40vw,600px);margin-left:12vw; }
+.fragment-oppia { width:min(57vw,850px);margin-left:auto;margin-right:5vw; }
+.fragment-independienta { width:min(58vw,870px);margin-left:7vw; }
+.fragment-ataquas .fragment-frame,.fragment-kaisar .fragment-frame,.fragment-eclaircisse .fragment-frame,.fragment-raabta .fragment-frame { aspect-ratio:.78/1; }
+.fragment-merano .fragment-frame,.fragment-oppia .fragment-frame,.fragment-independienta .fragment-frame { aspect-ratio:1.48/1; }
+.fragment-merano .fragment-frame img,.fragment-oppia .fragment-frame img,.fragment-independienta .fragment-frame img { object-position:center; }
+.fragment-meta { grid-template-columns:2.4rem minmax(0,1fr) auto; }
+.fragment-meta > span:last-child { text-align:right; }
+.artwork-carousel { width:min(78vw,980px); margin:0 auto; overflow:hidden; }
+.carousel-track { display:flex; width:100%; transition:transform .65s cubic-bezier(.2,.7,.2,1); }
+.carousel-slide { flex:0 0 100%; width:100%; min-height:30rem; }
+.carousel-slide img { width:100%; height:72vh; object-fit:contain; }
+.carousel-slide:not(.is-active) { pointer-events:none; }
+.carousel-controls { margin-top:3.1rem; display:grid; grid-template-columns:auto 1fr auto; align-items:center; gap:1rem; }
+.carousel-controls > span { display:flex; justify-content:center; gap:1rem; }
+.carousel-controls button { border:0; background:transparent; color:rgba(255,255,255,.48); cursor:pointer; font:500 .58rem 'Inter',sans-serif; letter-spacing:.16em; transition:color .2s ease; }
+.carousel-controls button:hover,.carousel-controls button.is-active { color:#fff; }
+.print-details p em { color:rgba(255,255,255,.43); font:400 .58rem 'Inter',sans-serif; letter-spacing:.16em; text-transform:uppercase; }
+.lightbox-bar > span { color:rgba(255,255,255,.55); font-size:.58rem; letter-spacing:.16em; text-transform:uppercase; }
+@media(max-width:760px){
+ .print-fragment,.fragment-ataquas,.fragment-kaisar,.fragment-merano,.fragment-eclaircisse,.fragment-raabta,.fragment-oppia,.fragment-independienta{width:100%;margin-left:0;margin-right:0}
+ .print-fragment + .print-fragment{margin-top:4.5rem}
+ .fragment-meta{grid-template-columns:1.8rem 1fr;gap:.7rem}.fragment-meta>span:last-child{grid-column:2;text-align:left;margin-top:.2rem}
+ .artwork-carousel{width:100%}.carousel-slide{min-height:0}.carousel-slide img{height:auto;max-height:68vh}
+}
