@@ -1,0 +1,36 @@
+ALI CAPA PRINTS PROTOTYPE 01
+Built 14 July 2026
+
+WHAT CHANGED
+- Added prints.html for the first limited-edition print release.
+- Added four optimized print image sets for AtaquaS, EclaircissE, K.AISA.R, and Ràábta.
+- Built a three-stage artwork experience:
+  1. Cropped, asymmetrically spaced preview.
+  2. Complete photograph presented deeper in the page.
+  3. Full-screen artwork viewer after a second click.
+- Kept acquisition separate from image enlargement so the visitor is never surprised by a purchase action.
+- Added the edition policy: ten prints per photograph shared across all offered sizes.
+- Left sizes and prices visibly marked "To be announced."
+- Added a quiet note reserving the fifth photograph for the recovered-archive selection.
+- Refreshed the homepage into a general Ali Capa entrance rather than a NiNE-only billboard.
+- Reduced and unified desktop navigation across the site: NiNE / Prints / Works / About / Support.
+- Expanded the unified mobile navigation to the same five destinations.
+- Unified footer destinations: Prints / Original Works / Instagram / LinkedIn / Contact.
+- Added prints.html to sitemap.xml.
+
+IMAGE PREPARATION
+The original 16-bit TIFF files were not changed and are not included in this website package.
+Web files were exported as optimized 8-bit sRGB progressive JPEGs:
+- Full-view versions: up to 3000 px on the long edge, quality 90.
+- Preview versions: up to 1600 px on the long edge, quality 86.
+
+NOT CONNECTED YET
+- Checkout or shop provider
+- Final paper and printing method
+- Final sizes for each artwork
+- Prices
+- Live inventory tracking
+- Edition-number allocation by order
+
+UPLOAD
+The folder is a complete GitHub Pages website build. Review it locally first, then replace the corresponding repository files when approved.
