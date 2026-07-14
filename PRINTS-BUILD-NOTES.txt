@@ -10,7 +10,7 @@ WHAT CHANGED
   3. Full-screen artwork viewer after a second click.
 - Kept acquisition separate from image enlargement so the visitor is never surprised by a purchase action.
 - Added the edition policy: ten prints per photograph shared across all offered sizes.
-- Left sizes and prices visibly marked "To be announced."
+- No size or price information is displayed until those details are finalized.
 - Added a quiet note reserving the fifth photograph for the recovered-archive selection.
 - Refreshed the homepage into a general Ali Capa entrance rather than a NiNE-only billboard.
 - Reduced and unified desktop navigation across the site: NiNE / Prints / Works / About / Support.
@@ -43,3 +43,15 @@ PROTOTYPE 02 — HOMEPAGE NAVIGATION CORRECTION
 - Compact site navigation appears after the visitor scrolls beyond the opening hero.
 - The same reveal behavior now applies on desktop and mobile.
 - “Original Works” is written consistently across primary and mobile navigation.
+
+BUILD 03 — PRINT PAGE REFINEMENT
+- Shortened the intro edition copy.
+- Replaced technical edition language with: Only ten prints. Forever.
+- Removed shared-size wording from the visible print details.
+- Desktop selection images now reveal more vertical length and sit closer together.
+- Mobile selection spacing and 4:5 presentation remain unchanged.
+
+BUILD 04 REFINEMENT
+- Removed all visible size and price placeholders from the Prints page.
+- Each artwork now carries only the exact edition line: Edition 10.
+- Full-screen viewer label also reads Edition 10.
