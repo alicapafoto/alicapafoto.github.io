@@ -325,7 +325,7 @@
 <body>
 <nav aria-label="Primary navigation" class="site-nav site-nav--home">
 <a class="nav-brand" href="index.html">Ali Capa</a>
-<ul class="nav-links"><li><a href="index.html#editions">NiNE</a></li><li><a href="prints.html">Prints</a></li><li><a href="artworks.html">Works</a></li><li><a href="about.html">About</a></li><li><a href="support.html">Support</a></li></ul>
+<ul class="nav-links"><li><a href="index.html#editions">NiNE</a></li><li><a href="prints.html">Prints</a></li><li><a href="artworks.html">Original Works</a></li><li><a href="about.html">About</a></li><li><a href="support.html">Support</a></li></ul>
 </nav>
 <section class="hero">
 <div class="slide active"></div>
@@ -337,9 +337,7 @@
 <div class="slide"></div>
 <div class="hero-overlay"></div>
 <div class="hero-content">
-<p class="hero-kicker">Ali Capa Foto</p>
 <h1 class="hero-title">Ali Capa</h1>
-<p class="hero-sub">Photography · Books · Prints · Original Works</p>
 <nav aria-label="Explore Ali Capa" class="hero-index">
 <a href="#editions">NiNE</a>
 <a href="prints.html">Prints</a>
@@ -513,17 +511,19 @@
     });
   </script>
 
-<nav aria-label="Mobile navigation" class="mobile-nav"><a href="index.html">NiNE</a><a href="prints.html">Prints</a><a href="artworks.html">Works</a><a href="about.html">About</a><a href="support.html">Support</a></nav>
+<nav aria-label="Mobile navigation" class="mobile-nav mobile-nav--home"><a href="index.html#editions">NiNE</a><a href="prints.html">Prints</a><a href="artworks.html">Original Works</a><a href="about.html">About</a><a href="support.html">Support</a></nav>
 <script>
-    const homeNav = document.querySelector('.site-nav--home');
+    const homeNavs = document.querySelectorAll('.site-nav--home, .mobile-nav--home');
     const homeHero = document.querySelector('.hero');
     function updateHomeNav() {
-      if (!homeNav || !homeHero) return;
+      if (!homeHero || !homeNavs.length) return;
       const revealAt = Math.max(160, homeHero.offsetHeight - 120);
-      homeNav.classList.toggle('is-visible', window.scrollY >= revealAt);
+      const shouldShow = window.scrollY >= revealAt;
+      homeNavs.forEach(nav => nav.classList.toggle('is-visible', shouldShow));
     }
     window.addEventListener('scroll', updateHomeNav, { passive: true });
     window.addEventListener('resize', updateHomeNav);
+    window.addEventListener('load', updateHomeNav);
     updateHomeNav();
   </script></body>
 </html>

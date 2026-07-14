@@ -1,4 +1,8 @@
-/* Homepage as an entrance, not a sales header. */
+/*
+  Homepage entrance: art first, one clear set of destinations.
+  The compact site header stays out of the opening image and appears only
+  after the visitor moves into the deeper page.
+*/
 @media (min-width: 861px) {
   nav.site-nav.site-nav--home {
     opacity: 0;
@@ -29,30 +33,14 @@
   top: 50%;
   bottom: auto !important;
   padding: 0 clamp(1.5rem, 5vw, 5rem) !important;
-  transform: translateY(-38%);
-}
-
-.hero-kicker {
-  margin-bottom: .75rem;
-  font-size: .61rem;
-  font-weight: 500;
-  letter-spacing: .28em;
-  text-transform: uppercase;
-  color: rgba(255,255,255,.72);
+  transform: translateY(-35%);
 }
 
 .hero-title {
-  margin: 0 0 .9rem !important;
+  margin: 0 0 2.35rem !important;
   font-size: clamp(7.5rem, 15vw, 13.5rem) !important;
   line-height: .78 !important;
   text-shadow: 0 1rem 4rem rgba(0,0,0,.16);
-}
-
-.hero-sub {
-  margin-bottom: 2.2rem !important;
-  font-size: .62rem !important;
-  letter-spacing: .26em !important;
-  opacity: .78 !important;
 }
 
 .hero-index {
@@ -71,7 +59,7 @@
   font-weight: 400;
   letter-spacing: .18em;
   text-transform: uppercase;
-  color: rgba(255,255,255,.72);
+  color: rgba(255,255,255,.76);
   text-decoration: none;
   transition: color .2s ease;
 }
@@ -94,25 +82,50 @@
 .hero-index a:hover::after,
 .hero-index a:focus-visible::after { transform: scaleX(1); }
 
+@media (max-width: 1080px) and (min-width: 861px) {
+  nav.site-nav.site-nav--home {
+    gap: 1.2rem;
+  }
+
+  nav.site-nav.site-nav--home .nav-links {
+    gap: 1.05rem !important;
+  }
+
+  nav.site-nav.site-nav--home .nav-links a {
+    font-size: .58rem !important;
+    letter-spacing: .13em !important;
+  }
+}
+
 @media (max-width: 860px) {
+  .mobile-nav.mobile-nav--home {
+    opacity: 0;
+    transform: translateY(-105%);
+    pointer-events: none;
+    transition: opacity .3s ease, transform .35s ease !important;
+  }
+
+  .mobile-nav.mobile-nav--home.is-visible {
+    opacity: 1;
+    transform: translateY(0);
+    pointer-events: auto;
+  }
+
   .hero-content {
-    top: 48%;
-    transform: translateY(-34%);
+    top: 49%;
+    transform: translateY(-31%);
     padding-right: 1.25rem !important;
     padding-left: 1.25rem !important;
   }
 
   .hero-title {
+    margin-bottom: 1.9rem !important;
     font-size: clamp(5.7rem, 28vw, 8rem) !important;
-  }
-
-  .hero-sub {
-    max-width: 24rem;
-    line-height: 1.7;
   }
 
   .hero-index {
     gap: .5rem 1.15rem;
+    max-width: 24rem;
   }
 
   .hero-index a {
@@ -121,13 +134,13 @@
   }
 
   .dots {
-    bottom: 4.65rem !important;
+    bottom: 1.65rem !important;
     right: 1.25rem !important;
   }
 }
 
 @media (max-width: 480px) {
   .hero-index {
-    max-width: 20rem;
+    max-width: 21rem;
   }
 }

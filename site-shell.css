@@ -198,3 +198,28 @@ nav.site-nav.site-nav--dark .nav-links a {
     letter-spacing: .075em !important;
   }
 }
+
+/* Preserve the full destination name in the compact navigation. */
+.mobile-nav a {
+  white-space: normal !important;
+  line-height: 1.12 !important;
+}
+
+@media (max-width: 860px) {
+  .mobile-nav a[href="artworks.html"] {
+    font-size: .49rem !important;
+    letter-spacing: .075em !important;
+  }
+}
+
+@media (max-width: 1080px) and (min-width: 861px) {
+  nav.site-nav .nav-links {
+    gap: 1.05rem !important;
+  }
+
+  nav.site-nav .nav-links a,
+  nav.site-nav .nav-links a.nav-cta {
+    font-size: .58rem !important;
+    letter-spacing: .13em !important;
+  }
+}

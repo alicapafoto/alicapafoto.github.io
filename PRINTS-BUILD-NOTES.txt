@@ -34,3 +34,12 @@ NOT CONNECTED YET
 
 UPLOAD
 The folder is a complete GitHub Pages website build. Review it locally first, then replace the corresponding repository files when approved.
+
+PROTOTYPE 02 — HOMEPAGE NAVIGATION CORRECTION
+- Removed the redundant white “Ali Capa Foto” line above the red logo.
+- Removed the non-clickable “Photography · Books · Prints · Original Works” descriptor.
+- Homepage now presents one clear navigation row only:
+  NiNE · Prints · Original Works · About · Support.
+- Compact site navigation appears after the visitor scrolls beyond the opening hero.
+- The same reveal behavior now applies on desktop and mobile.
+- “Original Works” is written consistently across primary and mobile navigation.
