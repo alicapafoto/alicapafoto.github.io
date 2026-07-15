@@ -1,0 +1,14 @@
+{
+  "name": "ali-capa-foto-storefront",
+  "private": true,
+  "type": "module",
+  "scripts": {
+    "dev": "wrangler pages dev .",
+    "validate": "node scripts/validate-site.mjs",
+    "set-domain": "node scripts/set-domain.mjs",
+    "test": "node scripts/test-storefront.mjs"
+  },
+  "devDependencies": {
+    "wrangler": "^4.0.0"
+  }
+}

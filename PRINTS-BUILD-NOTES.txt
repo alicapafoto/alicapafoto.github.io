@@ -1,16 +1,29 @@
-ALI CAPA PRINTS MASTER BUILD 05
+ALI CAPA PRINTS — STOREFRONT STAGING BUILD 06
+15 July 2026
 
-Seven works, in final order:
-1. AtaquaS
-2. K.aisa.R
-3. Mèranö
-4. EclaircissE
-5. Ràábta
-6. Öppiä
-7. IndepenDienta
+CURRENT PRODUCT STRUCTURE
 
-Edition and sizes:
-- AtaquaS, K.aisa.R, Mèranö: 5 at 80 × 60 cm + 5 at 120 × 90 cm (10 total).
-- EclaircissE, Ràábta, Öppiä, IndepenDienta: 10 at 80 × 60 cm.
+Accessible open editions through Prodigi LPP 240 gsm:
+1. AtaquaS — available — GLOBAL-PAP-12X18 — 30 × 45 cm / 12 × 18 in.
+2. EclaircissE — available — GLOBAL-PAP-16X20 — 40 × 50 cm / 16 × 20 in.
+3. Öppiä — coming soon; final collage pending — planned GLOBAL-PAP-12X16.
+4. IndepenDienta — coming soon; final collage pending — planned GLOBAL-PAP-12X16.
 
-The white selection shows the artwork only. The black section contains a two-slide viewer: full artwork, then framed wall mockup. Prices and purchase buttons are intentionally omitted until The Print Space integration.
+Premium limited collector editions through Creativehub / theprintspace:
+- K.aisa.R — in preparation.
+- Mèranö — in preparation.
+- Ràábta — in preparation.
+
+PRICING
+- Introductory open-edition price: €30 for the first seven days after launch.
+- Regular open-edition price: €35.
+- Customer always pays shipping.
+
+ARCHITECTURE
+- GitHub remains the authoritative source repository and archive.
+- Cloudflare Pages/Functions is the target public storefront host.
+- Stripe-hosted Checkout processes payment and card data.
+- Prodigi Quote API calculates destination shipping.
+- Google Sheets receives paid-order records from a verified Stripe webhook.
+- Fulfilment remains manual after the Stripe payout is visibly available in Wise.
+- No secret credentials belong in GitHub or browser code.
