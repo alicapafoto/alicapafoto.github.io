@@ -1,3 +1,7 @@
-name = "ali-capa-foto"
+name = "ali-capa-storefront-staging"
 compatibility_date = "2026-07-15"
 pages_build_output_dir = "."
+
+[[kv_namespaces]]
+binding = "ORDER_EVENTS"
+id = "422b786723514dbe84c23779062f9892"
