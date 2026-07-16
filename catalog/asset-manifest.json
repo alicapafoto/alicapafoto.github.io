@@ -1,0 +1,254 @@
+[
+  {
+    "slug": "ataquas",
+    "kind": "artwork",
+    "source": "ataquas-artwork.jpg",
+    "output": "images/prints/ataquas.jpg",
+    "dimensions": [
+      1867,
+      2800
+    ],
+    "bytes": 1783075,
+    "sha256": "2af5d2e3f3d9ed7353a0e37112bb077321d524eeda792e3a42435e7e9356dc1c"
+  },
+  {
+    "slug": "ataquas",
+    "kind": "mockup",
+    "source": "ataquas-mockup.jpg",
+    "output": "images/prints/ataquas-mockup.jpg",
+    "dimensions": [
+      1122,
+      1402
+    ],
+    "bytes": 220429,
+    "sha256": "a5a509d413ec882a90b19dab619fa3daa39f23acc9d94e23763cf162ee1a15a2"
+  },
+  {
+    "slug": "ataquas",
+    "kind": "preview",
+    "source": "ataquas-artwork.jpg",
+    "output": "images/prints/ataquas-preview.jpg",
+    "dimensions": [
+      667,
+      1000
+    ],
+    "bytes": 125608,
+    "sha256": "41e552beb431dff713c42d2266649a4cec546c9bf4d53ea97e47c31e2ec493e9"
+  },
+  {
+    "slug": "eclaircisse",
+    "kind": "artwork",
+    "source": "eclaircisse-artwork.jpg",
+    "output": "images/prints/eclaircisse.jpg",
+    "dimensions": [
+      2240,
+      2800
+    ],
+    "bytes": 757095,
+    "sha256": "57416d27abe47d73b4db3ad9f9636e2b42353bfefd07074eaeb5cad41462f9fe"
+  },
+  {
+    "slug": "eclaircisse",
+    "kind": "mockup",
+    "source": "eclaircisse-mockup.jpg",
+    "output": "images/prints/eclaircisse-mockup.jpg",
+    "dimensions": [
+      1600,
+      2400
+    ],
+    "bytes": 497152,
+    "sha256": "f4624cd9eb1a12a3957b916c526a80f824f021d042f5a1f4640f836602d42523"
+  },
+  {
+    "slug": "eclaircisse",
+    "kind": "preview",
+    "source": "eclaircisse-artwork.jpg",
+    "output": "images/prints/eclaircisse-preview.jpg",
+    "dimensions": [
+      800,
+      1000
+    ],
+    "bytes": 69070,
+    "sha256": "ed323dcc3dc71a60fb14da9329a1de212d1f7a1dd1e0e249b39cfd1d1ba0f2e7"
+  },
+  {
+    "slug": "independienta",
+    "kind": "artwork",
+    "source": "independienta-artwork.png",
+    "output": "images/prints/independienta.jpg",
+    "dimensions": [
+      2308,
+      1570
+    ],
+    "bytes": 614170,
+    "sha256": "18f5d056c25c92ac8a34be84715ef72ead68fd4ebb037d5bbb1f6732d679a9ec"
+  },
+  {
+    "slug": "independienta",
+    "kind": "mockup",
+    "source": "independienta-mockup.jpg",
+    "output": "images/prints/independienta-mockup.jpg",
+    "dimensions": [
+      1921,
+      2400
+    ],
+    "bytes": 664585,
+    "sha256": "4c114625f867e7abdc6875130123863c836b11e9e4335e15b247bbc2529094f4"
+  },
+  {
+    "slug": "independienta",
+    "kind": "preview",
+    "source": "independienta-artwork.png",
+    "output": "images/prints/independienta-preview.jpg",
+    "dimensions": [
+      1000,
+      680
+    ],
+    "bytes": 135892,
+    "sha256": "2eb24d4bc61726694ca4d3d0125c7a5a9035a5c87663dbb045fa7e1720cc3bc5"
+  },
+  {
+    "slug": "kaisar",
+    "kind": "artwork",
+    "source": "kaisar-artwork.jpg",
+    "output": "images/prints/kaisar.jpg",
+    "dimensions": [
+      1867,
+      2800
+    ],
+    "bytes": 560060,
+    "sha256": "87804ac0b9c9ffbe2e36d01146123c5fcc3a16cec7743cb035adad94d6860648"
+  },
+  {
+    "slug": "kaisar",
+    "kind": "mockup",
+    "source": "kaisar-mockup.jpg",
+    "output": "images/prints/kaisar-mockup.jpg",
+    "dimensions": [
+      1921,
+      2400
+    ],
+    "bytes": 578146,
+    "sha256": "6677e3c93c994053fb6b2b86f196c4d2e3328fa543e50e5dc6da78bf60e3e842"
+  },
+  {
+    "slug": "kaisar",
+    "kind": "preview",
+    "source": "kaisar-artwork.jpg",
+    "output": "images/prints/kaisar-preview.jpg",
+    "dimensions": [
+      667,
+      1000
+    ],
+    "bytes": 76125,
+    "sha256": "75e5e3a86159ba01461dfbcc468dd64e9a44e42c78edcc19730aeff52ab97535"
+  },
+  {
+    "slug": "merano",
+    "kind": "artwork",
+    "source": "merano-artwork.jpg",
+    "output": "images/prints/merano.jpg",
+    "dimensions": [
+      2240,
+      2800
+    ],
+    "bytes": 1537932,
+    "sha256": "6202ec99ea3699bce8e235357a3c04ffeab224420921aa81de066fbef9df5d1b"
+  },
+  {
+    "slug": "merano",
+    "kind": "mockup",
+    "source": "merano-mockup.jpg",
+    "output": "images/prints/merano-mockup.jpg",
+    "dimensions": [
+      1122,
+      1402
+    ],
+    "bytes": 208992,
+    "sha256": "08a38bca217fe2c8cf6769e6e590986fd1260c1dc7ee34c4e692e71a94594ac5"
+  },
+  {
+    "slug": "merano",
+    "kind": "preview",
+    "source": "merano-artwork.jpg",
+    "output": "images/prints/merano-preview.jpg",
+    "dimensions": [
+      800,
+      1000
+    ],
+    "bytes": 74991,
+    "sha256": "aaa834c91f3e746f93b8471b3562dbdb7db53c677718092de0ff6376bcc012ea"
+  },
+  {
+    "slug": "oppia",
+    "kind": "artwork",
+    "source": "oppia-artwork.jpg",
+    "output": "images/prints/oppia.jpg",
+    "dimensions": [
+      2332,
+      1585
+    ],
+    "bytes": 1276641,
+    "sha256": "a58a063860cf244b093aae9d43ae07f1c933169d0e234f402358de7f836552a8"
+  },
+  {
+    "slug": "oppia",
+    "kind": "mockup",
+    "source": "oppia-mockup.png",
+    "output": "images/prints/oppia-mockup.jpg",
+    "dimensions": [
+      1448,
+      1086
+    ],
+    "bytes": 252194,
+    "sha256": "296e021a0aea253aa99ed697806a1bf96f59ea17487a144a444acf151e72ee63"
+  },
+  {
+    "slug": "oppia",
+    "kind": "preview",
+    "source": "oppia-artwork.jpg",
+    "output": "images/prints/oppia-preview.jpg",
+    "dimensions": [
+      1000,
+      680
+    ],
+    "bytes": 254208,
+    "sha256": "0814734b5dd1e1e25744c3520e574edd002807cbe9fa62e322e3dd169fe3b056"
+  },
+  {
+    "slug": "raabta",
+    "kind": "artwork",
+    "source": "raabta-artwork.jpg",
+    "output": "images/prints/raabta.jpg",
+    "dimensions": [
+      2241,
+      2800
+    ],
+    "bytes": 457853,
+    "sha256": "3b931529a641230a0b30b57ba80421111bbada45f084a46d9ef4728abec767da"
+  },
+  {
+    "slug": "raabta",
+    "kind": "mockup",
+    "source": "raabta-mockup.jpg",
+    "output": "images/prints/raabta-mockup.jpg",
+    "dimensions": [
+      1921,
+      2400
+    ],
+    "bytes": 543316,
+    "sha256": "4b101d6f1fb285ec8e42d560a78223d79fd20820c1164cca1a17de95cf1d1a7f"
+  },
+  {
+    "slug": "raabta",
+    "kind": "preview",
+    "source": "raabta-artwork.jpg",
+    "output": "images/prints/raabta-preview.jpg",
+    "dimensions": [
+      800,
+      1000
+    ],
+    "bytes": 66954,
+    "sha256": "37d1a1312d4948b38b098330ef997053032814739ac66d03badd592bda51f483"
+  }
+]

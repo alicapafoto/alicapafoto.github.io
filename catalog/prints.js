@@ -1,0 +1,252 @@
+/**
+ * Ali Capa print catalogue — single source of truth.
+ *
+ * To add a future print:
+ * 1. Add optimized files at /images/prints/<slug>.jpg and <slug>-mockup.jpg.
+ * 2. Copy one work object below and update its metadata and variants.
+ * 3. Run `npm test` and `npm run validate` before deployment.
+ *
+ * Product prices, identifiers, availability and presentation are read from this
+ * file by both the public Prints page and the private checkout functions.
+ */
+
+export const PRINT_CATEGORIES = Object.freeze({
+  open: Object.freeze({
+    id: "open",
+    eyebrow: "Accessible editions",
+    title: "Open editions",
+    description: "Made to order on lustre photographic paper: an accessible way to bring the archive into everyday spaces.",
+  }),
+  collector: Object.freeze({
+    id: "collector",
+    eyebrow: "Limited releases",
+    title: "Collector editions",
+    description: "Small editions on Hahnemühle Pearl, created for scale, scarcity and a more ceremonial relationship with the work.",
+  }),
+});
+
+export const PRINT_CATALOG = Object.freeze([
+  Object.freeze({
+    id: "ataquas",
+    title: "AtaquaS",
+    category: "open",
+    order: 1,
+    artworkPath: "/images/prints/ataquas.jpg",
+    previewPath: "/images/prints/ataquas-preview.jpg",
+    mockupPath: "/images/prints/ataquas-mockup.jpg",
+    aspectRatio: "2:3 portrait",
+    borderMm: 0,
+    cardSummary: "Open edition · €30",
+    description: "A vivid photographic print made to order on satin lustre paper. The artwork is supplied unframed.",
+    variants: Object.freeze([
+      Object.freeze({
+        id: "ataquas-open",
+        label: "Open edition",
+        storeSku: "ATQ-LPP-30X45",
+        provider: "Prodigi",
+        providerSku: "GLOBAL-PAP-12X18",
+        paper: "Lustre Photo Paper (LPP), 240 gsm",
+        size: "30 × 45 cm / 12 × 18 in",
+        priceCents: 3000,
+        availability: "available",
+        fulfillment: Object.freeze({ mode: "prodigi-live" }),
+      }),
+    ]),
+  }),
+  Object.freeze({
+    id: "eclaircisse",
+    title: "EclaircissE",
+    category: "open",
+    order: 2,
+    artworkPath: "/images/prints/eclaircisse.jpg",
+    previewPath: "/images/prints/eclaircisse-preview.jpg",
+    mockupPath: "/images/prints/eclaircisse-mockup.jpg",
+    aspectRatio: "4:5 portrait",
+    borderMm: 0,
+    cardSummary: "Open edition · €35",
+    description: "A luminous photographic print made to order on satin lustre paper. The artwork is supplied unframed.",
+    variants: Object.freeze([
+      Object.freeze({
+        id: "eclaircisse-open",
+        label: "Open edition",
+        storeSku: "ECL-LPP-40X50",
+        provider: "Prodigi",
+        providerSku: "GLOBAL-PAP-16X20",
+        paper: "Lustre Photo Paper (LPP), 240 gsm",
+        size: "40 × 50 cm / 16 × 20 in",
+        priceCents: 3500,
+        availability: "available",
+        fulfillment: Object.freeze({ mode: "prodigi-live" }),
+      }),
+    ]),
+  }),
+  Object.freeze({
+    id: "oppia",
+    title: "Öppiä",
+    category: "open",
+    order: 3,
+    artworkPath: "/images/prints/oppia.jpg",
+    previewPath: "/images/prints/oppia-preview.jpg",
+    mockupPath: "/images/prints/oppia-mockup.jpg",
+    aspectRatio: "4:3 landscape collage",
+    borderMm: 0,
+    cardSummary: "Open edition · Available soon",
+    description: "The final multi-image collage is still being rebuilt from the archive. The artwork and framed view are shown as a preview only.",
+    variants: Object.freeze([
+      Object.freeze({
+        id: "oppia-open",
+        label: "Open edition",
+        storeSku: "OPP-PENDING",
+        provider: "Prodigi",
+        providerSku: "",
+        paper: "Lustre Photo Paper (LPP), 240 gsm",
+        size: "Final landscape dimensions in development",
+        priceCents: null,
+        availability: "upcoming",
+        fulfillment: Object.freeze({ mode: "unavailable" }),
+      }),
+    ]),
+  }),
+  Object.freeze({
+    id: "independienta",
+    title: "IndepenDienta",
+    category: "open",
+    order: 4,
+    artworkPath: "/images/prints/independienta.jpg",
+    previewPath: "/images/prints/independienta-preview.jpg",
+    mockupPath: "/images/prints/independienta-mockup.jpg",
+    aspectRatio: "4:3 landscape collage",
+    borderMm: 0,
+    cardSummary: "Open edition · Available soon",
+    description: "The final multi-image collage is still being rebuilt from the archive. The artwork and framed view are shown as a preview only.",
+    variants: Object.freeze([
+      Object.freeze({
+        id: "independienta-open",
+        label: "Open edition",
+        storeSku: "IND-PENDING",
+        provider: "Prodigi",
+        providerSku: "",
+        paper: "Lustre Photo Paper (LPP), 240 gsm",
+        size: "Final landscape dimensions in development",
+        priceCents: null,
+        availability: "upcoming",
+        fulfillment: Object.freeze({ mode: "unavailable" }),
+      }),
+    ]),
+  }),
+  Object.freeze({
+    id: "kaisar",
+    title: "K.aisa.R",
+    category: "collector",
+    order: 1,
+    artworkPath: "/images/prints/kaisar.jpg",
+    previewPath: "/images/prints/kaisar-preview.jpg",
+    mockupPath: "/images/prints/kaisar-mockup.jpg",
+    aspectRatio: "2:3 portrait",
+    borderMm: 0,
+    cardSummary: "Edition of 10 · from €250",
+    description: "A full-bleed collector print on Hahnemühle Pearl. The total edition is ten prints, divided equally between two scales.",
+    certificate: "Clean",
+    letterIncluded: true,
+    variants: Object.freeze([
+      Object.freeze({
+        id: "kaisar-presence",
+        label: "Presence",
+        storeSku: "KSR-PRL-PRESENCE-60X90",
+        provider: "Creativehub / theprintspace",
+        providerSku: "V-XL076PZL",
+        paper: "Hahnemühle Pearl, 285 gsm Giclée",
+        size: "60 × 90 cm / 24 × 35 in",
+        priceCents: 25000,
+        availability: "available",
+        editionSize: 5,
+        soldCount: 0,
+        fulfillment: Object.freeze({ mode: "configured-fixed", envPrefix: "KAISAR_PRESENCE" }),
+      }),
+      Object.freeze({
+        id: "kaisar-immersion",
+        label: "Immersion",
+        storeSku: "KSR-PRL-IMMERSION-80X120",
+        provider: "Creativehub / theprintspace",
+        providerSku: "V-Y6L6H5YT",
+        paper: "Hahnemühle Pearl, 285 gsm Giclée",
+        size: "80 × 120 cm / 31 × 47 in",
+        priceCents: 45000,
+        availability: "available",
+        editionSize: 5,
+        soldCount: 0,
+        fulfillment: Object.freeze({ mode: "configured-fixed", envPrefix: "KAISAR_IMMERSION" }),
+      }),
+    ]),
+  }),
+  Object.freeze({
+    id: "merano",
+    title: "Mèranö",
+    category: "collector",
+    order: 2,
+    artworkPath: "/images/prints/merano.jpg",
+    previewPath: "/images/prints/merano-preview.jpg",
+    mockupPath: "/images/prints/merano-mockup.jpg",
+    aspectRatio: "4:5 portrait",
+    borderMm: 20,
+    cardSummary: "Edition of 10 · €225",
+    description: "A dreamlike collector print with a 20 mm even white border, produced on Hahnemühle Pearl and supplied unframed.",
+    certificate: "Typewriter",
+    letterIncluded: true,
+    variants: Object.freeze([
+      Object.freeze({
+        id: "merano-reverie",
+        label: "Reverie",
+        storeSku: "MER-PRL-REVERIE-60X75",
+        provider: "Creativehub / theprintspace",
+        providerSku: "V-GDH2VKCH",
+        paper: "Hahnemühle Pearl, 285 gsm Giclée",
+        size: "60 × 75 cm / 24 × 30 in",
+        priceCents: 22500,
+        availability: "available",
+        editionSize: 10,
+        soldCount: 0,
+        fulfillment: Object.freeze({ mode: "configured-fixed", envPrefix: "MERANO_REVERIE" }),
+      }),
+    ]),
+  }),
+  Object.freeze({
+    id: "raabta",
+    title: "Ràábta",
+    category: "collector",
+    order: 3,
+    artworkPath: "/images/prints/raabta.jpg",
+    previewPath: "/images/prints/raabta-preview.jpg",
+    mockupPath: "/images/prints/raabta-mockup.jpg",
+    aspectRatio: "4:5 portrait",
+    borderMm: 25,
+    cardSummary: "Edition of 10 · €175",
+    description: "A monochrome collector print with a 25 mm even white border, held from sale until its physical test print is approved.",
+    certificate: "Traditional",
+    letterIncluded: true,
+    variants: Object.freeze([
+      Object.freeze({
+        id: "raabta-veil",
+        label: "Veil",
+        storeSku: "RBT-PRL-VEIL-40X50",
+        provider: "Creativehub / theprintspace",
+        providerSku: "V-K5SCKYN3",
+        paper: "Hahnemühle Pearl, 285 gsm Giclée",
+        size: "40 × 50 cm / 16 × 20 in",
+        priceCents: 17500,
+        availability: "proof-hold",
+        editionSize: 10,
+        soldCount: 0,
+        fulfillment: Object.freeze({ mode: "configured-fixed", envPrefix: "RAABTA_VEIL" }),
+      }),
+    ]),
+  }),
+]);
+
+export function flattenVariants() {
+  return PRINT_CATALOG.flatMap((work) => work.variants.map((variant) => ({ ...variant, work })));
+}
+
+export function findVariant(productId) {
+  return flattenVariants().find((entry) => entry.id === productId) || null;
+}

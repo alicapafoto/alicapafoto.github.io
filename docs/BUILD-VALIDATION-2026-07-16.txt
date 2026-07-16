@@ -1,0 +1,30 @@
+ALI CAPA STOREFRONT BUILD VALIDATION
+16 July 2026
+
+AUTOMATED CHECKS
+- npm test: PASSED
+- npm run validate: PASSED
+- storefront.js syntax check: PASSED
+- all Cloudflare Functions JavaScript syntax checks: PASSED
+
+VISUAL STRUCTURE CHECK
+- Catalogue cards rendered: 7
+- Detailed print sections rendered: 7
+- Catalogue rendering errors: 0
+- Desktop catalogue: 4 open-edition cards + 3 collector-edition cards
+- Mobile catalogue: compact 2-column grid
+- Every work contains exactly 2 views: artwork + framed-room mockup
+
+SECURITY CHECK
+- No live Stripe keys, webhook secrets, Google private keys or customer records are included.
+- Example credentials appear only in automated test fixtures.
+
+SAFE LAUNCH LOCKS
+- Öppiä and IndepenDienta: Available soon; checkout disabled.
+- K.aisa.R and Mèranö: checkout disabled until verified collector shipping values are configured.
+- Ràábta: checkout disabled until physical print approval.
+
+FUTURE ADDITIONS
+- Public catalogue and checkout data are centralized in catalog/prints.js.
+- A copy-ready object is included at catalog/NEW-PRINT-TEMPLATE.js.txt.
+- This is intentionally not a public browser-based admin dashboard; keeping catalogue changes inside the private site code avoids exposing an upload/admin endpoint on the static storefront.

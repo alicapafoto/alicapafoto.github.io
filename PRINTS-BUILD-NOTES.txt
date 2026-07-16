@@ -1,16 +1,30 @@
-ALI CAPA PRINTS MASTER BUILD 05
+ALI CAPA PRINTS PAGE — FINAL BUILD NOTES
+16 July 2026
 
-Seven works, in final order:
-1. AtaquaS
-2. K.aisa.R
-3. Mèranö
-4. EclaircissE
-5. Ràábta
-6. Öppiä
-7. IndepenDienta
+LAYOUT
+- Open editions: 4 cards across on desktop, 2 across on mobile.
+- Collector editions: 3 cards across on desktop, 2 across on mobile.
+- The old staggered cascade has been removed.
+- Every work has exactly two views: artwork and framed-room mockup.
 
-Edition and sizes:
-- AtaquaS, K.aisa.R, Mèranö: 5 at 80 × 60 cm + 5 at 120 × 90 cm (10 total).
-- EclaircissE, Ràábta, Öppiä, IndepenDienta: 10 at 80 × 60 cm.
+OPEN EDITIONS
+- AtaquaS: 30 × 45 cm, €30, Prodigi GLOBAL-PAP-12X18.
+- EclaircissE: 40 × 50 cm, €35, Prodigi GLOBAL-PAP-16X20.
+- Öppiä: visual preview only; Available soon.
+- IndepenDienta: visual preview only; Available soon.
+- The printed A5 thank-you letter is a discretionary bonus where the fulfilment route supports it, not a promised feature.
 
-The white selection shows the artwork only. The black section contains a two-slide viewer: full artwork, then framed wall mockup. Prices and purchase buttons are intentionally omitted until The Print Space integration.
+COLLECTOR EDITIONS
+- K.aisa.R Presence: 60 × 90 cm, edition 5, €250, V-XL076PZL.
+- K.aisa.R Immersion: 80 × 120 cm, edition 5, €450, V-Y6L6H5YT.
+- Mèranö Reverie: 60 × 75 cm, 20 mm border, edition 10, €225, V-GDH2VKCH.
+- Ràábta Veil: 40 × 50 cm, 25 mm border, edition 10, €175, V-K5SCKYN3.
+- Collector paper: Hahnemühle Pearl 285 gsm Giclée.
+- All are unframed and include a COA and personal letter.
+- Ràábta remains disabled until a physical proof is approved.
+- K.aisa.R and Mèranö checkout remains disabled until verified shipping values are configured.
+
+FUTURE PRINTS
+- Add images and one catalogue entry in catalog/prints.js.
+- No repeated hand-built HTML sections are required.
+- See catalog/README.md.
