@@ -41,3 +41,4 @@
 - Added internal store SKU, variant and edition information to the order-ledger Notes field without changing the live sheet column structure.
 - Expanded automated tests to cover collector pricing and configured shipping.
 - 2026-07-17: Cloudflare production branch changed to main for the production-ready storefront deployment.
+- 2026-07-17: Final public domain set to https://alicapa.com; canonical URLs, social metadata, structured data, robots.txt, and sitemap.xml updated to the permanent domain.

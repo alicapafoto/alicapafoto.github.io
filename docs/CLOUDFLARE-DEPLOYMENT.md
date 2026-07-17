@@ -35,7 +35,7 @@ Encrypted secrets:
 Non-secret settings:
 
 - `STORE_ENV=live`
-- `SITE_URL=https://FINAL-DOMAIN`
+- `SITE_URL=https://alicapa.com`
 - `GOOGLE_SHEET_NAME=Orders`
 - `PRODIGI_DEFAULT_TAX_RATE=0.20` — verify against live account quotes
 - `PRODIGI_TAX_RATES_JSON={"US":0}` — keep valid JSON and expand only from verified data
@@ -48,7 +48,7 @@ Never put real keys in GitHub, client-side JavaScript, screenshots, or the downl
 
 1. Use the Stripe live-mode secret key.
 2. Create or update the live webhook endpoint:
-   `https://FINAL-DOMAIN/api/stripe-webhook`
+   `https://alicapa.com/api/stripe-webhook`
 3. Subscribe to:
    - `checkout.session.completed`
    - `checkout.session.async_payment_succeeded`
@@ -102,5 +102,5 @@ Before announcing the shop:
 `SITE_URL`, the public site domain, Stripe webhook URL, and Stripe Terms/Privacy URLs must all use the final production host. Run the existing domain update script when needed:
 
 ```bash
-npm run set-domain -- https://FINAL-DOMAIN
+npm run set-domain -- https://alicapa.com
 ```
