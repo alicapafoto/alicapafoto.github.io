@@ -27,7 +27,10 @@ import { PRINT_CATALOG, PRINT_CATEGORIES } from './catalog/prints.js';
   const lightboxClose = document.getElementById('lightboxClose');
 
   const formatEuro = (cents) => new Intl.NumberFormat('en-IE', {
-    style: 'currency', currency: 'EUR', maximumFractionDigits: 0,
+    style: 'currency',
+currency: 'EUR',
+minimumFractionDigits: 0,
+maximumFractionDigits: 2,
   }).format((Number(cents) || 0) / 100);
 
   function borderPercent(work) {
