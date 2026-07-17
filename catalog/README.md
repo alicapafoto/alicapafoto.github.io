@@ -1,46 +1,54 @@
 # Adding and updating prints
 
-The site no longer requires hand-editing seven separate blocks of HTML. The public catalogue and checkout both read from one file:
+The public catalogue and checkout both read from one file:
 
 `catalog/prints.js`
 
 ## Add a future print
 
-1. Prepare two optimized web files:
+1. Prepare optimized web files:
    - `images/prints/<slug>.jpg` — artwork
    - `images/prints/<slug>-mockup.jpg` — framed room view
-2. Add one work object to `PRINT_CATALOG` and one or more variant objects inside it.
-3. Run:
+   - optionally `images/prints/<slug>-preview.jpg` — lightweight card/Stripe preview
+2. Copy `NEW-PRINT-TEMPLATE.js.txt` and add one work object to `PRINT_CATALOG`.
+3. Add one or more variant objects inside the work.
+4. Run:
 
 ```bash
 npm test
 npm run validate
 ```
 
-## Availability values
+## Availability values currently used
 
-- `available` — may be purchased when its fulfilment/shipping profile is configured.
+- `available` — may be purchased when the core backend and its fulfilment profile are configured.
 - `upcoming` — visible with a disabled **Available soon** button.
-- `proof-hold` — visible but withheld until physical print approval.
-- `sold-out` — visible as sold out and blocked by the server.
+
+Limited variants are also blocked when `soldCount >= editionSize`.
 
 ## Fulfilment modes
 
-- `prodigi-live` — requests a current Prodigi quote by provider SKU.
-- `configured-fixed` — reads destination shipping from Cloudflare environment variables.
+- `prodigi-live` — requests a current server-side Prodigi quote by provider SKU.
+- `configured-fixed` — uses server-trusted customer shipping stored in the catalogue, with optional Cloudflare-variable fallback.
 - `unavailable` — no checkout.
 
-For a configured fixed variant whose prefix is `MERANO_REVERIE`, set:
+Collector shipping is currently stored in the variant objects in `catalog/prints.js`:
 
-- `MERANO_REVERIE_SHIPPING_EU_CENTS`
-- `MERANO_REVERIE_SHIPPING_US_CENTS`
+- EU: €15
+- United States: €15
+- Canada: €15
+- Rest of world: €45, reserved for later expansion
 
-Values are customer-facing shipping-and-handling charges in euro cents. Leave them unset until verified. The server keeps checkout disabled rather than guessing.
+The country selector currently exposes the EU, United States, and Canada only.
 
 ## Limited-edition counts
 
-`soldCount` is the current public catalogue count and must be updated after a confirmed sale. The server blocks checkout when `soldCount >= editionSize`. This is a manual catalogue safeguard, not an atomic reservation system; do not launch a high-traffic limited release without adding stronger inventory reservation.
+`soldCount` is the current public catalogue count and must be updated after a confirmed sale. The server blocks checkout when `soldCount >= editionSize`.
+
+This is a manual catalogue safeguard, not an atomic reservation system. Before a heavily promoted limited release, add a stronger server-side reservation/inventory mechanism.
 
 ## Security and ease of maintenance
 
-This is a centralized code-based catalogue, not a public browser-based admin dashboard. That avoids exposing an upload endpoint or admin credentials on the static storefront. For a new work, use `NEW-PRINT-TEMPLATE.js.txt`, add the two web images, and run the two validation commands above.
+This is a centralized code-based catalogue, not a public browser-based admin dashboard. That avoids exposing an upload endpoint or admin credentials on the storefront.
+
+For a new photograph, use `NEW-PRINT-TEMPLATE.js.txt`, add the web assets, update one catalogue object, and run the validation commands.

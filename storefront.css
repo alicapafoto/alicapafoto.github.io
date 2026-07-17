@@ -1,25 +1,3 @@
-.store-status {
-  display: inline-flex;
-  align-items: center;
-  gap: .55rem;
-  margin-top: 1.5rem;
-  color: #6e6a63;
-  font-size: .6rem;
-  font-weight: 500;
-  letter-spacing: .16em;
-  text-transform: uppercase;
-}
-.store-status::before {
-  content: '';
-  width: .48rem;
-  height: .48rem;
-  border-radius: 50%;
-  background: #b89255;
-  box-shadow: 0 0 0 .25rem rgba(184,146,85,.12);
-}
-.store-status.is-live::before { background: #4f7b5d; box-shadow: 0 0 0 .25rem rgba(79,123,93,.12); }
-.store-status.is-error::before { background: #8b1a1a; box-shadow: 0 0 0 .25rem rgba(139,26,26,.12); }
-
 .product-panel {
   max-width: 1180px;
   margin: clamp(4rem, 7vw, 7rem) auto 0;
@@ -46,7 +24,14 @@
   font-weight: 300;
   line-height: 1;
 }
-.product-panel__description,
+.product-panel__description {
+  max-width: 43rem;
+  margin: 0 0 1.25rem;
+  color: rgba(255,255,255,.88);
+  font-family: 'Cormorant Garamond', serif;
+  font-size: clamp(1.08rem, 1.65vw, 1.38rem);
+  line-height: 1.55;
+}
 .product-panel__specs,
 .product-panel__note {
   margin: 0;
@@ -54,7 +39,6 @@
   font-size: .72rem;
   line-height: 1.75;
 }
-.product-panel__description { max-width: 48rem; margin-bottom: .7rem; color: rgba(255,255,255,.78); }
 .product-panel__note { margin-top: .65rem; color: rgba(255,255,255,.48); }
 .product-panel__price { min-width: 0; text-align: right; }
 .product-panel__price strong {

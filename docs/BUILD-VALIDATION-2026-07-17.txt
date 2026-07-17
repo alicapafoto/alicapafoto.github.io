@@ -1,0 +1,23 @@
+ALI CAPA FOTO — FINAL STOREFRONT BUILD VALIDATION
+17 July 2026
+
+BUILD STATUS
+- Final corrected site package prepared for GitHub/Cloudflare deployment.
+- Live backend secrets are intentionally absent and will be connected after deployment.
+- Dream Editions and Collector Editions catalogue copy is final for this build.
+- Updated Mèranö mockup is present.
+- Mobile spacing corrections are present.
+- All three Collector Editions are catalogue-enabled.
+- Öppiä and IndepenDienta remain Available soon.
+
+AUTOMATED CHECKS
+- node --check storefront.js: PASS
+- node --check catalog/prints.js: PASS
+- npm test: PASS
+- npm run validate: PASS
+- HTML files validated: 9
+- Secret-pattern scan: PASS
+- Packaging-backup scan: PASS
+
+IMPORTANT
+A live end-to-end checkout is not proven until production Cloudflare secrets, the live Stripe webhook, Prodigi, Google Sheets credentials, and ORDER_EVENTS KV are connected and one controlled payment is completed.

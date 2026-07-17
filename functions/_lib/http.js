@@ -50,7 +50,6 @@ export function isCheckoutOperational(env = {}) {
   return Boolean(
     env.STRIPE_SECRET_KEY
     && env.STRIPE_WEBHOOK_SECRET
-    && env.PRODIGI_API_KEY
     && env.GOOGLE_SHEET_ID
     && env.GOOGLE_SERVICE_ACCOUNT_EMAIL
     && env.GOOGLE_PRIVATE_KEY

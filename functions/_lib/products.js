@@ -7,10 +7,10 @@ export const COUNTRIES = Object.freeze([
   ["HU", "Hungary"], ["IE", "Ireland"], ["IT", "Italy"], ["LV", "Latvia"],
   ["LT", "Lithuania"], ["LU", "Luxembourg"], ["MT", "Malta"], ["NL", "Netherlands"],
   ["PL", "Poland"], ["PT", "Portugal"], ["RO", "Romania"], ["SK", "Slovakia"],
-  ["SI", "Slovenia"], ["ES", "Spain"], ["SE", "Sweden"], ["US", "United States"],
+  ["SI", "Slovenia"], ["ES", "Spain"], ["SE", "Sweden"], ["US", "United States"], ["CA", "Canada"],
 ]);
 
-export const EU_COUNTRY_CODES = new Set(COUNTRIES.map(([code]) => code).filter((code) => code !== "US"));
+export const EU_COUNTRY_CODES = new Set(COUNTRIES.map(([code]) => code).filter((code) => !["US", "CA"].includes(code)));
 export const ALLOWED_COUNTRY_CODES = new Set(COUNTRIES.map(([code]) => code));
 export const PRODUCTS = Object.freeze(Object.fromEntries(flattenVariants().map((entry) => [entry.id, Object.freeze(entry)])));
 
@@ -38,9 +38,16 @@ export function isPubliclyAvailable(product) {
 
 export function getFixedShippingCents(product, countryCode, env = {}) {
   const prefix = product?.fulfillment?.envPrefix;
+  const region = EU_COUNTRY_CODES.has(countryCode)
+    ? "EU"
+    : countryCode === "US"
+      ? "US"
+      : countryCode === "CA"
+        ? "CA"
+        : "ROW";
+  const configured = product?.fulfillment?.shippingCents?.[region];
+  if (Number.isInteger(configured) && configured >= 0) return configured;
   if (!prefix) return null;
-  const region = EU_COUNTRY_CODES.has(countryCode) ? "EU" : countryCode === "US" ? "US" : null;
-  if (!region) return null;
   const raw = env[`${prefix}_SHIPPING_${region}_CENTS`];
   if (raw === undefined || raw === null || raw === "") return null;
   const cents = Number.parseInt(String(raw), 10);
@@ -53,7 +60,8 @@ export function isProductCheckoutConfigured(product, env = {}) {
   if (mode === "prodigi-live") return Boolean(env.PRODIGI_API_KEY && product.providerSku);
   if (mode === "configured-fixed") {
     return getFixedShippingCents(product, "PT", env) !== null
-      && getFixedShippingCents(product, "US", env) !== null;
+      && getFixedShippingCents(product, "US", env) !== null
+      && getFixedShippingCents(product, "CA", env) !== null;
   }
   return false;
 }
@@ -61,9 +69,8 @@ export function isProductCheckoutConfigured(product, env = {}) {
 export function publicProductStatus(product, env = {}) {
   if (isSoldOut(product)) return { code: "sold-out", label: "Sold out", checkoutReady: false };
   if (product?.availability === "upcoming") return { code: "upcoming", label: "Available soon", checkoutReady: false };
-  if (product?.availability === "proof-hold") return { code: "proof-hold", label: "Awaiting print approval", checkoutReady: false };
   if (!isProductCheckoutConfigured(product, env)) return { code: "shipping-setup", label: "Shipping setup in progress", checkoutReady: false };
-  return { code: "available", label: "Choose destination", checkoutReady: true };
+  return { code: "available", label: "Checkout", checkoutReady: true };
 }
 
 export function getPublicWorks() {

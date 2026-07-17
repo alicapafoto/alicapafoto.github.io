@@ -13,7 +13,6 @@ import { PRINT_CATALOG, PRINT_CATEGORIES } from './catalog/prints.js';
     [...document.querySelectorAll('[data-catalogue-group]')].map((node) => [node.dataset.catalogueGroup, node]),
   );
   const deepView = document.querySelector('[data-deep-view]');
-  const status = document.querySelector('[data-store-status]');
   const dialog = document.getElementById('storeDialog');
   const title = dialog?.querySelector('[data-dialog-title]');
   const dialogVariant = dialog?.querySelector('[data-dialog-variant]');
@@ -51,7 +50,7 @@ import { PRINT_CATALOG, PRINT_CATEGORIES } from './catalog/prints.js';
       node.innerHTML = `
         <header class="catalogue-group__header">
           <div><p class="eyebrow">${category.eyebrow}</p><h2 id="${categoryId}EditionsTitle">${category.title}</h2></div>
-          <p>${category.description}</p>
+          <p>${category.overviewDescription}</p>
         </header>
         <div class="catalogue-grid">
           ${categoryWorks(categoryId).map(renderCard).join('')}
@@ -64,12 +63,10 @@ import { PRINT_CATALOG, PRINT_CATEGORIES } from './catalog/prints.js';
     const availability = work.variants[0]?.availability;
     const badge = availability === 'upcoming'
       ? 'Available soon'
-      : availability === 'proof-hold'
-        ? 'Print approval pending'
-        : work.category === 'collector' ? 'Collector edition' : 'Open edition';
+      : work.category === 'collector' ? 'Collector Edition' : 'Dream Edition';
     const image = bordered
-      ? `<span class="catalogue-card__paper" style="--card-border:${borderPercent(work)}"><img alt="${work.title}, a photographic work by Ali Capa" decoding="async" loading="eager" src="${work.previewPath}"/></span>`
-      : `<img alt="${work.title}, a photographic work by Ali Capa" decoding="async" loading="eager" src="${work.previewPath}"/>`;
+      ? `<span class="catalogue-card__paper" style="--card-border:${borderPercent(work)}"><img alt="${work.title}, a photograph by Ali Capa" decoding="async" loading="eager" src="${work.previewPath}"/></span>`
+      : `<img alt="${work.title}, a photograph by Ali Capa" decoding="async" loading="eager" src="${work.previewPath}"/>`;
     return `
       <article class="catalogue-card">
         <a class="catalogue-card__link" href="#${work.id}" aria-label="View ${work.title} print details">
@@ -85,7 +82,7 @@ import { PRINT_CATALOG, PRINT_CATEGORIES } from './catalog/prints.js';
       const category = PRINT_CATEGORIES[categoryId];
       return `
         <header class="deep-category">
-          <div class="deep-category__inner"><p class="eyebrow">${category.eyebrow}</p><h2>${category.title}</h2><p>${category.description}</p></div>
+          <div class="deep-category__inner"><p class="eyebrow">${category.eyebrow}</p><h2>${category.title}</h2><p>${category.deepDescription}</p></div>
         </header>
         ${categoryWorks(categoryId).map(renderWork).join('')}`;
     }).join('');
@@ -93,13 +90,13 @@ import { PRINT_CATALOG, PRINT_CATEGORIES } from './catalog/prints.js';
 
   function renderWork(work) {
     const artworkMedia = work.borderMm > 0
-      ? `<span class="carousel-slide__paper" style="--print-border:${borderPercent(work)}"><img alt="${work.title}, a photographic work by Ali Capa" decoding="async" loading="lazy" src="${work.artworkPath}"/></span>`
-      : `<img alt="${work.title}, a photographic work by Ali Capa" decoding="async" loading="lazy" src="${work.artworkPath}"/>`;
+      ? `<span class="carousel-slide__paper" style="--print-border:${borderPercent(work)}"><img alt="${work.title}, a photograph by Ali Capa" decoding="async" loading="lazy" src="${work.artworkPath}"/></span>`
+      : `<img alt="${work.title}, a photograph by Ali Capa" decoding="async" loading="lazy" src="${work.artworkPath}"/>`;
     const category = PRINT_CATEGORIES[work.category];
     return `
       <section class="print-reveal" id="${work.id}" data-work="${work.id}">
         <div class="reveal-heading">
-          <div><span class="reveal-heading__category">${category.title}</span><h2>${work.title}</h2></div>
+          <div><span class="reveal-heading__category">${category.revealLabel}</span><h2>${work.title}</h2></div>
           <a href="#selection">Return to selection</a>
         </div>
         <div class="artwork-carousel" data-title="${work.title}">
@@ -107,9 +104,9 @@ import { PRINT_CATALOG, PRINT_CATEGORIES } from './catalog/prints.js';
             <button aria-label="Open ${work.title} full screen" class="carousel-slide artwork-expand is-active" data-full="${work.artworkPath}" data-title="${work.title}" data-border="${work.borderMm}" type="button">${artworkMedia}<span>View full screen</span></button>
             <button aria-label="Open framed wall view of ${work.title} full screen" class="carousel-slide artwork-expand" data-full="${work.mockupPath}" data-title="${work.title} — framed view" data-border="0" type="button"><img alt="${work.title} displayed as a framed print in an interior" decoding="async" loading="lazy" src="${work.mockupPath}"/><span>View full screen</span></button>
           </div>
-          <div aria-label="Artwork views" class="carousel-controls">
+          <div aria-label="Photograph views" class="carousel-controls">
             <button aria-label="Previous view" class="carousel-prev" type="button">←</button>
-            <span><button aria-label="Show artwork view" class="carousel-dot is-active" type="button">01</button><button aria-label="Show framed view" class="carousel-dot" type="button">02</button></span>
+            <span><button aria-label="Show photograph view" class="carousel-dot is-active" type="button">01</button><button aria-label="Show framed view" class="carousel-dot" type="button">02</button></span>
             <button aria-label="Next view" class="carousel-next" type="button">→</button>
           </div>
         </div>
@@ -129,7 +126,7 @@ import { PRINT_CATALOG, PRINT_CATEGORIES } from './catalog/prints.js';
     return `
       <div class="product-panel" data-product-panel="${work.id}" data-selected-variant="${first.id}">
         <div>
-          <p class="product-panel__eyebrow">${work.category === 'collector' ? 'Limited collector edition' : first.availability === 'upcoming' ? 'In development' : 'Available now'}</p>
+          <p class="product-panel__eyebrow">${work.category === 'collector' ? 'Limited Collector Edition' : first.availability === 'upcoming' ? 'In development' : 'Dream Edition'}</p>
           <h3>${work.title}</h3>
           <p class="product-panel__description">${work.description}</p>
           <p class="product-panel__specs" data-product-specs>${first.size} · ${first.paper} · Unframed</p>
@@ -153,9 +150,8 @@ import { PRINT_CATALOG, PRINT_CATEGORIES } from './catalog/prints.js';
 
   function initialButtonLabel(variant) {
     if (variant.availability === 'upcoming') return 'Available soon';
-    if (variant.availability === 'proof-hold') return 'Awaiting print approval';
     if (variant.availability === 'sold-out') return 'Sold out';
-    return 'Checking availability';
+    return 'Checkout';
   }
 
   function bindCarouselsAndLightbox() {
@@ -245,21 +241,13 @@ import { PRINT_CATALOG, PRINT_CATEGORIES } from './catalog/prints.js';
       state.api.countries.forEach(({ code, name }) => countrySelect.add(new Option(name, code)));
       PRINT_CATALOG.forEach((work) => updatePanel(work, document.querySelector(`[data-product-panel="${work.id}"]`)?.dataset.selectedVariant || work.variants[0].id));
       bindBuyButtons();
-      if (status) {
-        status.textContent = state.api.checkoutReady ? 'Secure checkout available' : 'Catalogue ready · checkout activation in progress';
-        status.classList.toggle('is-live', state.api.checkoutReady);
-      }
     } catch (error) {
       console.error(error);
       document.querySelectorAll('[data-store-product]').forEach((button) => {
         const staticVariant = PRINT_CATALOG.flatMap((work) => work.variants).find((variant) => variant.id === button.dataset.storeProduct);
-        if (staticVariant?.availability === 'available') button.textContent = 'Checkout temporarily unavailable';
+        if (staticVariant?.availability === 'available') button.textContent = 'Checkout unavailable';
         button.disabled = true;
       });
-      if (status) {
-        status.textContent = 'Catalogue available · checkout temporarily unavailable';
-        status.classList.add('is-error');
-      }
     }
   }
 

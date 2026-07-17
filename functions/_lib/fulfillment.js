@@ -18,10 +18,13 @@ export async function quoteProduct({ product, countryCode, env }) {
   if (mode === "configured-fixed") {
     const customerCents = getFixedShippingCents(product, countryCode, env);
     if (customerCents === null) throw new Error("Collector delivery has not been configured for this destination");
+    const providerItemCents = Number(product.fulfillment.providerPrintCostCents || 0)
+      + Number(product.fulfillment.providerExtrasCents || 0);
+    const providerShippingCents = Number(product.fulfillment.providerShippingEstimateCents || customerCents);
     const quote = {
       method: "tracked",
-      itemAmount: 0,
-      shippingAmount: customerCents / 100,
+      itemAmount: providerItemCents / 100,
+      shippingAmount: providerShippingCents / 100,
       currency: "EUR",
       carrier: "Creativehub / theprintspace",
       service: "Tracked delivery",
@@ -31,11 +34,11 @@ export async function quoteProduct({ product, countryCode, env }) {
     };
     const shipping = {
       taxRate: 0,
-      itemBaseCents: 0,
-      shippingBaseCents: customerCents,
+      itemBaseCents: providerItemCents,
+      shippingBaseCents: providerShippingCents,
       itemTaxCents: 0,
       shippingTaxCents: 0,
-      estimatedProviderTotalCents: customerCents,
+      estimatedProviderTotalCents: providerItemCents + providerShippingCents,
       processingRate: 0,
       handlingCents: 0,
       customerCents,

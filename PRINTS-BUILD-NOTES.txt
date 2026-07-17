@@ -1,13 +1,13 @@
 ALI CAPA PRINTS PAGE — FINAL BUILD NOTES
-16 July 2026
+17 July 2026
 
 LAYOUT
-- Open editions: 4 cards across on desktop, 2 across on mobile.
-- Collector editions: 3 cards across on desktop, 2 across on mobile.
-- The old staggered cascade has been removed.
-- Every work has exactly two views: artwork and framed-room mockup.
+- Dream Editions: 4 cards across on desktop, 2 across on mobile.
+- Collector Editions: 3 cards across on desktop, 2 across on mobile.
+- Mobile vertical spacing is intentionally compact to reduce scrolling.
+- Every photograph has exactly two views: artwork and framed-room mockup.
 
-OPEN EDITIONS
+DREAM EDITIONS
 - AtaquaS: 30 × 45 cm, €30, Prodigi GLOBAL-PAP-12X18.
 - EclaircissE: 40 × 50 cm, €35, Prodigi GLOBAL-PAP-16X20.
 - Öppiä: visual preview only; Available soon.
@@ -20,11 +20,18 @@ COLLECTOR EDITIONS
 - Mèranö Reverie: 60 × 75 cm, 20 mm border, edition 10, €225, V-GDH2VKCH.
 - Ràábta Veil: 40 × 50 cm, 25 mm border, edition 10, €175, V-K5SCKYN3.
 - Collector paper: Hahnemühle Pearl 285 gsm Giclée.
-- All are unframed and include a COA and personal letter.
-- Ràábta remains disabled until a physical proof is approved.
-- K.aisa.R and Mèranö checkout remains disabled until verified shipping values are configured.
+- All are unframed and include their configured COA and personal letter.
+- All three Collector Edition photographs are enabled for checkout once the core live backend is connected.
+- Customer delivery: €15 EU / US / Canada. A €45 ROW value is stored for future country expansion.
+
+FULFILMENT
+- Customer pays through Stripe first.
+- Order is recorded in the private Google Sheet.
+- Ali waits for the payout to be visibly available in Wise.
+- Ali then manually places the matching Prodigi or Creativehub/theprintspace order.
+- Creativehub is not API-connected and should remain manual.
 
 FUTURE PRINTS
-- Add images and one catalogue entry in catalog/prints.js.
+- Add optimized artwork/mockup files and one catalogue entry in catalog/prints.js.
 - No repeated hand-built HTML sections are required.
 - See catalog/README.md.

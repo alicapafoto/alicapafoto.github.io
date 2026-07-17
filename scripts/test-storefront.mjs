@@ -41,7 +41,8 @@ assert.equal(catalogPayload.checkoutReady, true);
 assert.equal(catalogPayload.products.find((p) => p.id === 'ataquas-open').priceCents, 3000);
 assert.equal(catalogPayload.products.find((p) => p.id === 'eclaircisse-open').priceCents, 3500);
 assert.equal(catalogPayload.products.find((p) => p.id === 'kaisar-presence').checkoutReady, true);
-assert.equal(catalogPayload.products.find((p) => p.id === 'raabta-veil').checkoutReady, false);
+assert.equal(catalogPayload.products.find((p) => p.id === 'raabta-veil').checkoutReady, true);
+assert.ok(catalogPayload.countries.some((country) => country.code === 'CA'));
 
 const realFetch = globalThis.fetch;
 globalThis.fetch = async (url, init = {}) => {
@@ -68,8 +69,8 @@ const collectorQuoteResponse = await quote({
 });
 const collectorQuotePayload = await collectorQuoteResponse.json();
 assert.equal(collectorQuotePayload.priceCents, 25000);
-assert.equal(collectorQuotePayload.shippingCents, 2500);
-assert.equal(collectorQuotePayload.totalCents, 27500);
+assert.equal(collectorQuotePayload.shippingCents, 1500);
+assert.equal(collectorQuotePayload.totalCents, 26500);
 
 let stripeBody = '';
 globalThis.fetch = async (url, init = {}) => {
@@ -96,7 +97,7 @@ const collectorCheckoutResponse = await checkout({
 assert.equal(collectorCheckoutResponse.status, 200);
 const collectorStripeParams = new URLSearchParams(stripeBody);
 assert.equal(collectorStripeParams.get('line_items[0][price_data][unit_amount]'), '25000');
-assert.equal(collectorStripeParams.get('shipping_options[0][shipping_rate_data][fixed_amount][amount]'), '2500');
+assert.equal(collectorStripeParams.get('shipping_options[0][shipping_rate_data][fixed_amount][amount]'), '1500');
 assert.equal(collectorStripeParams.get('metadata[store_sku]'), 'KSR-PRL-PRESENCE-60X90');
 
 const payload = JSON.stringify({ id: 'evt_test' });

@@ -161,11 +161,11 @@
     "source": "merano-mockup.jpg",
     "output": "images/prints/merano-mockup.jpg",
     "dimensions": [
-      1122,
-      1402
+      1400,
+      2086
     ],
-    "bytes": 208992,
-    "sha256": "08a38bca217fe2c8cf6769e6e590986fd1260c1dc7ee34c4e692e71a94594ac5"
+    "bytes": 296253,
+    "sha256": "e14f673253ded9b6515132cb3506795184a7dfe6f65058b2cbbe58d61e5b2ee9"
   },
   {
     "slug": "merano",
