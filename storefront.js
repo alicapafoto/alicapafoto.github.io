@@ -7,6 +7,7 @@ import { PRINT_CATALOG, PRINT_CATEGORIES } from './catalog/prints.js';
     product: null,
     country: '',
     quote: null,
+    checkout: null,
   };
 
   const groupNodes = new Map(
@@ -28,15 +29,20 @@ import { PRINT_CATALOG, PRINT_CATEGORIES } from './catalog/prints.js';
 
   const formatEuro = (cents) => new Intl.NumberFormat('en-IE', {
     style: 'currency',
-currency: 'EUR',
-minimumFractionDigits: 0,
-maximumFractionDigits: 2,
+    currency: 'EUR',
+    minimumFractionDigits: 0,
+    maximumFractionDigits: 2,
   }).format((Number(cents) || 0) / 100);
 
-  function borderPercent(work) {
-    if (work.borderMm >= 25) return '6%';
-    if (work.borderMm >= 20) return '4%';
-    return '0';
+  function borderClass(work) {
+    if (work.borderMm >= 25) return ' border-25';
+    if (work.borderMm >= 20) return ' border-20';
+    return '';
+  }
+
+  function pictureMarkup({ src, webp, alt, loading = 'lazy', eager = false }) {
+    const source = webp ? `<source srcset="${webp}" type="image/webp"/>` : '';
+    return `<picture>${source}<img alt="${alt}" decoding="async" loading="${eager ? 'eager' : loading}" src="${src}"/></picture>`;
   }
 
   function categoryWorks(categoryId) {
@@ -67,9 +73,15 @@ maximumFractionDigits: 2,
     const badge = availability === 'upcoming'
       ? 'Available soon'
       : work.category === 'collector' ? 'Collector Edition' : 'Dream Edition';
+    const preview = pictureMarkup({
+      src: work.previewPath,
+      webp: work.previewWebpPath,
+      alt: `${work.title}, a photograph by Ali Capa`,
+      eager: true,
+    });
     const image = bordered
-      ? `<span class="catalogue-card__paper" style="--card-border:${borderPercent(work)}"><img alt="${work.title}, a photograph by Ali Capa" decoding="async" loading="eager" src="${work.previewPath}"/></span>`
-      : `<img alt="${work.title}, a photograph by Ali Capa" decoding="async" loading="eager" src="${work.previewPath}"/>`;
+      ? `<span class="catalogue-card__paper${borderClass(work)}">${preview}</span>`
+      : preview;
     return `
       <article class="catalogue-card">
         <a class="catalogue-card__link" href="#${work.id}" aria-label="View ${work.title} print details">
@@ -92,9 +104,14 @@ maximumFractionDigits: 2,
   }
 
   function renderWork(work) {
+    const artworkPicture = pictureMarkup({
+      src: work.artworkPath,
+      webp: work.artworkWebpPath,
+      alt: `${work.title}, a photograph by Ali Capa`,
+    });
     const artworkMedia = work.borderMm > 0
-      ? `<span class="carousel-slide__paper" style="--print-border:${borderPercent(work)}"><img alt="${work.title}, a photograph by Ali Capa" decoding="async" loading="lazy" src="${work.artworkPath}"/></span>`
-      : `<img alt="${work.title}, a photograph by Ali Capa" decoding="async" loading="lazy" src="${work.artworkPath}"/>`;
+      ? `<span class="carousel-slide__paper${borderClass(work)}">${artworkPicture}</span>`
+      : artworkPicture;
     const category = PRINT_CATEGORIES[work.category];
     return `
       <section class="print-reveal" id="${work.id}" data-work="${work.id}">
@@ -104,8 +121,8 @@ maximumFractionDigits: 2,
         </div>
         <div class="artwork-carousel" data-title="${work.title}">
           <div class="carousel-track">
-            <button aria-label="Open ${work.title} full screen" class="carousel-slide artwork-expand is-active" data-full="${work.artworkPath}" data-title="${work.title}" data-border="${work.borderMm}" type="button">${artworkMedia}<span>View full screen</span></button>
-            <button aria-label="Open framed wall view of ${work.title} full screen" class="carousel-slide artwork-expand" data-full="${work.mockupPath}" data-title="${work.title} — framed view" data-border="0" type="button"><img alt="${work.title} displayed as a framed print in an interior" decoding="async" loading="lazy" src="${work.mockupPath}"/><span>View full screen</span></button>
+            <button aria-label="Open ${work.title} full screen" class="carousel-slide artwork-expand is-active" data-full="${work.artworkWebpPath || work.artworkPath}" data-title="${work.title}" data-border="${work.borderMm}" type="button">${artworkMedia}<span>View full screen</span></button>
+            <button aria-label="Open framed wall view of ${work.title} full screen" class="carousel-slide artwork-expand" data-full="${work.mockupPath}" data-title="${work.title}, framed view" data-border="0" type="button">${pictureMarkup({ src: work.mockupPath, webp: work.mockupWebpPath, alt: `${work.title} displayed as a framed print in an interior` })}<span>View full screen</span></button>
           </div>
           <div aria-label="Photograph views" class="carousel-controls">
             <button aria-label="Previous view" class="carousel-prev" type="button">←</button>
@@ -163,8 +180,8 @@ maximumFractionDigits: 2,
       lightboxImage.src = button.dataset.full;
       lightboxImage.alt = `${button.dataset.title}, full-screen view`;
       const lightboxBorder = Number(button.dataset.border || 0);
-      lightboxImage.style.padding = lightboxBorder >= 25 ? '3.5vh' : lightboxBorder >= 20 ? '2.5vh' : '0';
-      lightboxImage.style.background = lightboxBorder > 0 ? '#fff' : 'transparent';
+      lightboxImage.classList.toggle('border-25', lightboxBorder >= 25);
+      lightboxImage.classList.toggle('border-20', lightboxBorder >= 20 && lightboxBorder < 25);
       lightboxTitle.textContent = button.dataset.title;
       lightbox.showModal();
       document.body.classList.add('lightbox-open');
@@ -177,7 +194,6 @@ maximumFractionDigits: 2,
       let index = 0;
       const show = (next) => {
         index = (next + slides.length) % slides.length;
-        track.style.transform = `translateX(-${index * 100}%)`;
         slides.forEach((slide, position) => slide.classList.toggle('is-active', position === index));
         dots.forEach((dot, position) => dot.classList.toggle('is-active', position === index));
       };
@@ -197,8 +213,7 @@ maximumFractionDigits: 2,
     if (!lightbox) return;
     lightbox.close();
     lightboxImage.src = '';
-    lightboxImage.style.padding = '0';
-    lightboxImage.style.background = 'transparent';
+    lightboxImage.classList.remove('border-20', 'border-25');
     document.body.classList.remove('lightbox-open');
   }
 
@@ -269,12 +284,32 @@ maximumFractionDigits: 2,
     action.textContent = busy ? label : 'Continue to secure checkout';
   }
 
+  function renderQuote(payload) {
+    if (!quoteBox || !payload) return;
+    quoteBox.innerHTML = `
+      <div class="store-quote__row"><span>${payload.product.title}, ${payload.product.label}</span><strong>${formatEuro(payload.priceCents)}</strong></div>
+      <div class="store-quote__row"><span>Shipping &amp; handling</span><strong>${formatEuro(payload.shippingCents)}</strong></div>
+      <div class="store-quote__row store-quote__row--total"><span>Total</span><strong>${formatEuro(payload.totalCents)}</strong></div>
+      <p class="store-quote__note">${payload.estimateNote} Shipping is paid by the purchaser.</p>`;
+    quoteBox.hidden = false;
+  }
+
+  function rememberCheckout(payload) {
+    sessionStorage.setItem('aliCapaLastOrder', JSON.stringify({
+      title: state.product.title,
+      variant: state.product.label,
+      sessionId: payload.sessionId,
+      createdAt: new Date().toISOString(),
+    }));
+  }
+
   function openFor(productId) {
     const product = state.apiProducts.get(productId);
     if (!product?.checkoutReady || !dialog) return;
     state.product = product;
     state.country = '';
     state.quote = null;
+    state.checkout = null;
     title.textContent = product.title;
     dialogVariant.textContent = `${product.label} · ${product.size}`;
     countrySelect.value = '';
@@ -289,6 +324,7 @@ maximumFractionDigits: 2,
   async function getQuote() {
     state.country = countrySelect.value;
     state.quote = null;
+    state.checkout = null;
     quoteBox.hidden = true;
     setMessage('');
     setBusy(true, 'Calculating delivery…');
@@ -302,12 +338,7 @@ maximumFractionDigits: 2,
       const payload = await response.json();
       if (!response.ok) throw new Error(payload.error || 'Delivery could not be calculated');
       state.quote = payload;
-      quoteBox.innerHTML = `
-        <div class="store-quote__row"><span>${payload.product.title} — ${payload.product.label}</span><strong>${formatEuro(payload.priceCents)}</strong></div>
-        <div class="store-quote__row"><span>Shipping &amp; handling</span><strong>${formatEuro(payload.shippingCents)}</strong></div>
-        <div class="store-quote__row store-quote__row--total"><span>Total</span><strong>${formatEuro(payload.totalCents)}</strong></div>
-        <p class="store-quote__note">${payload.estimateNote} Shipping is paid by the purchaser.</p>`;
-      quoteBox.hidden = false;
+      renderQuote(payload);
       setBusy(false);
     } catch (error) {
       setMessage(error.message);
@@ -317,8 +348,15 @@ maximumFractionDigits: 2,
 
   async function startCheckout() {
     if (!state.quote || !state.product || !state.country) return;
+
+    if (state.checkout?.url) {
+      rememberCheckout(state.checkout);
+      window.location.assign(state.checkout.url);
+      return;
+    }
+
     setMessage('');
-    setBusy(true, 'Opening secure checkout…');
+    setBusy(true, 'Confirming final delivery…');
     try {
       const response = await fetch('/api/create-checkout', {
         method: 'POST',
@@ -327,14 +365,33 @@ maximumFractionDigits: 2,
       });
       const payload = await response.json();
       if (!response.ok || !payload.url) throw new Error(payload.error || 'Secure checkout could not be opened');
-      sessionStorage.setItem('aliCapaLastOrder', JSON.stringify({
-        title: state.product.title,
-        variant: state.product.label,
-        sessionId: payload.sessionId,
-        createdAt: new Date().toISOString(),
-      }));
-      window.location.assign(payload.url);
+
+      const finalQuote = {
+        ...state.quote,
+        priceCents: payload.priceCents,
+        shippingCents: payload.shippingCents,
+        totalCents: payload.totalCents,
+        shippingMethod: payload.shippingMethod,
+        estimateNote: payload.estimateNote || state.quote.estimateNote,
+      };
+      const amountChanged = Number(finalQuote.totalCents) !== Number(state.quote.totalCents)
+        || Number(finalQuote.shippingCents) !== Number(state.quote.shippingCents);
+
+      state.quote = finalQuote;
+      state.checkout = { url: payload.url, sessionId: payload.sessionId };
+      renderQuote(finalQuote);
+
+      if (amountChanged) {
+        setMessage('The live delivery rate changed while checkout was prepared. Review the exact total below, then confirm to continue.');
+        action.disabled = false;
+        action.textContent = `Confirm ${formatEuro(finalQuote.totalCents)} and continue`;
+        return;
+      }
+
+      rememberCheckout(state.checkout);
+      window.location.assign(state.checkout.url);
     } catch (error) {
+      state.checkout = null;
       setMessage(error.message);
       setBusy(false);
     }
@@ -351,7 +408,7 @@ maximumFractionDigits: 2,
   action?.addEventListener('click', startCheckout);
   closeButton?.addEventListener('click', () => dialog.close());
   dialog?.addEventListener('click', (event) => { if (event.target === dialog) dialog.close(); });
-  dialog?.addEventListener('close', () => { state.product = null; state.quote = null; setMessage(''); });
+  dialog?.addEventListener('close', () => { state.product = null; state.quote = null; state.checkout = null; setMessage(''); });
   lightboxClose?.addEventListener('click', closeViewer);
   lightbox?.addEventListener('click', (event) => { if (event.target === lightbox) closeViewer(); });
   lightbox?.addEventListener('cancel', (event) => { event.preventDefault(); closeViewer(); });

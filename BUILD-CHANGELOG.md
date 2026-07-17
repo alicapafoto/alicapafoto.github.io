@@ -42,4 +42,17 @@
 - Expanded automated tests to cover collector pricing and configured shipping.
 - 2026-07-17: Cloudflare production branch changed to main for the production-ready storefront deployment.
 - 2026-07-17: Final public domain set to https://alicapa.com; canonical URLs, social metadata, structured data, robots.txt, and sitemap.xml updated to the permanent domain.
-- 2026-07-17: Updated storefront checkout display to preserve exact shipping and total cents.
+- 2026-07-17: Added final live-rate confirmation so the storefront displays the exact server-approved Stripe total before redirecting whenever a fresh fulfilment quote changes.
+
+## 2026-07-17, worldwide launch consolidation
+
+- Expanded the country selector to Stripe-supported worldwide destination codes.
+- Kept Dream Edition delivery provider-aware through live Prodigi quotes.
+- Added approved regional Collector Edition delivery charges and regional provider-cost estimates.
+- Preserved final server-side quote confirmation before Stripe redirect.
+- Rewrote public descriptions and labels to remove editorial dashes while preserving Ali Capa's poetic voice.
+- Moved inline page scripts and styles into external files and removed `unsafe-inline` from Content Security Policy.
+- Added WebP alternatives for five large artwork views while retaining JPEG fallbacks.
+- Added Cloudflare rate-limiting deployment guidance for quote and checkout endpoints.
+- Added a separate Cloudflare Worker foundation for a private daily 10 p.m. Lisbon order digest.
+- Kept Öppiä and IndepenDienta visible as Available soon; all completed Dream and Collector Editions remain enabled.

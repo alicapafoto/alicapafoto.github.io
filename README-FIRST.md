@@ -1,10 +1,10 @@
-# Ali Capa Foto — final storefront handoff build
+# Ali Capa Foto, worldwide launch master
 
 ## Status
 
-This is the current authoritative full-site package prepared on 17 July 2026 from the Cloudflare storefront codebase, the final seven-print image handoff, and Ali's approved desktop/mobile correction batches.
+This is the current authoritative full-site package prepared on 17 July 2026. It consolidates the permanent `alicapa.com` domain, worldwide destination selection, the approved Collector Edition delivery charges, final Stripe total confirmation, dash-free public copy, stricter Content Security Policy, optimized artwork delivery, and the private daily order digest Worker foundation.
 
-The package is **ready to upload to GitHub**, but live checkout still requires the production Cloudflare secrets, bindings, and Stripe webhook to be connected after deployment. No real API keys, passwords, Google credentials, or customer data are included.
+No real API keys, passwords, Google credentials, payment details, or customer data are included.
 
 ## Public Prints catalogue
 
@@ -21,11 +21,12 @@ The package is **ready to upload to GitHub**, but live checkout still requires t
 - Mèranö — Reverie €225.
 - Ràábta — Veil €175.
 
-All three Collector Editions are enabled in the catalogue. Their checkout uses fixed customer delivery charges of €15 for the EU, United States, and Canada. The €45 rest-of-world value is stored for future expansion, but rest-of-world countries are not yet exposed in the country selector.
+All three Collector Editions are enabled. Delivery is configured for the United Kingdom, Germany, the European Union, EFTA, the United States, Canada, Australia, New Zealand, and other supported destinations. Dream Editions use a fresh live Prodigi quote and remain unavailable whenever Prodigi cannot quote the selected route.
 
 ## What is ready
 
-- Final artwork and room-mockup web assets for all seven works, including the updated Mèranö mockup.
+- Final artwork and room mockup web assets for all seven works, including the updated Mèranö mockup.
+- WebP alternatives for five large artwork views, with the original JPEGs retained as fallbacks.
 - Four-across Dream Editions desktop grid and three-across Collector Editions grid.
 - Compact two-column mobile catalogue with tightened vertical spacing.
 - Two views per work only: artwork and framed-room reference.
@@ -33,6 +34,9 @@ All three Collector Editions are enabled in the catalogue. Their checkout uses f
 - Server-trusted Stripe Checkout creation.
 - Live Prodigi quote integration for AtaquaS and EclaircissE once `PRODIGI_API_KEY` is connected.
 - Stripe webhook verification, duplicate suppression through KV, and private Google Sheets order recording.
+- Final live quote confirmation before redirecting to Stripe whenever a provider rate changes.
+- CSP hardening with no `unsafe-inline` allowance.
+- A separate hourly Worker foundation for a private 10 p.m. Lisbon order digest.
 - Manual fulfilment only after the Stripe payout is visibly available in Wise.
 - Original Works page copy and acquisition workflow updated.
 
@@ -67,4 +71,6 @@ Never commit `.dev.vars` or any real secret.
 4. Create or update the live Stripe webhook endpoint.
 5. Confirm the live Prodigi API quote flow.
 6. Perform one controlled end-to-end payment and verify exactly one Google Sheets order row.
-7. Archive the deployed ZIP and the final business-documentation package on the E drive.
+7. Add the combined Cloudflare rate-limiting rule before the public marketing push.
+8. Deploy the optional daily order digest Worker after Email Service is configured.
+9. Archive the deployed ZIP and the final business documentation package on the E drive.

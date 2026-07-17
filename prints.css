@@ -248,10 +248,9 @@ main { padding-top: 4rem; }
 .reveal-heading > a:hover { color: #fff; }
 
 .artwork-carousel { width: min(82vw, 980px); margin: 0 auto; overflow: hidden; }
-.carousel-track { display: flex; width: 100%; transition: transform .65s cubic-bezier(.2,.7,.2,1); }
+.carousel-track { width: 100%; }
 .carousel-slide {
   position: relative;
-  flex: 0 0 100%;
   width: 100%;
   min-height: 30rem;
   padding: 0;
@@ -292,7 +291,7 @@ main { padding-top: 4rem; }
 }
 .carousel-slide:hover img,
 .carousel-slide:focus-visible img { transform: scale(1.01); opacity: .96; }
-.carousel-slide:not(.is-active) { pointer-events: none; }
+.carousel-slide:not(.is-active) { display: none; }
 .carousel-controls {
   margin-top: 3.1rem;
   display: grid;
@@ -438,3 +437,13 @@ main { padding-top: 4rem; }
   .carousel-slide img { transition: none; }
 }
 .lightbox-stage img { box-sizing: border-box; }
+
+
+.catalogue-card__paper.border-20 { padding: 4%; }
+.catalogue-card__paper.border-25 { padding: 6%; }
+.carousel-slide__paper.border-20 { padding: 4%; }
+.carousel-slide__paper.border-25 { padding: 6%; }
+.carousel-slide picture,
+.catalogue-card picture { display: contents; }
+#printLightbox img.border-20 { padding: 2.5vh; background: #fff; }
+#printLightbox img.border-25 { padding: 3.5vh; background: #fff; }
