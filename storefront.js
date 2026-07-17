@@ -1,4 +1,4 @@
-import { PRINT_CATALOG, PRINT_CATEGORIES } from './catalog/prints.js';
+import { PRINT_CATALOG, PRINT_CATEGORIES } from './catalog/prints.js?v=20260717-final-copy-quote';
 
 (() => {
   const state = {
