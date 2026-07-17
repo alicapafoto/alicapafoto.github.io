@@ -22,7 +22,7 @@ export async function onRequest(context) {
     if (!ALLOWED_COUNTRY_CODES.has(country)) return json({ error: "Delivery is not currently available for that country." }, 400);
 
     // Re-quote server-side so a browser cannot alter product or shipping amounts.
-    const { quote, shipping } = await quoteProduct({ product, countryCode: country, env: context.env });
+    const { quote, shipping, estimateNote } = await quoteProduct({ product, countryCode: country, env: context.env });
     const priceCents = getCurrentPriceCents(product);
     const siteOrigin = getSiteOrigin(context.request, context.env);
 
@@ -35,7 +35,16 @@ export async function onRequest(context) {
       shipping,
       quote,
     });
-    return json({ url: session.url, sessionId: session.id });
+    return json({
+      url: session.url,
+      sessionId: session.id,
+      currency: "EUR",
+      priceCents,
+      shippingCents: shipping.customerCents,
+      totalCents: priceCents + shipping.customerCents,
+      shippingMethod: quote.method,
+      estimateNote,
+    });
   } catch (error) {
     return json({ error: publicError(error, "Secure checkout could not be started. Please try again.") }, 502);
   }

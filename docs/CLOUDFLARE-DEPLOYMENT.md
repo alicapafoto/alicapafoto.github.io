@@ -1,6 +1,6 @@
-# Ali Capa Foto — Cloudflare Pages deployment and live activation
+# Ali Capa Foto, Cloudflare Pages deployment and live activation
 
-This package keeps GitHub as the source-code archive and uses Cloudflare Pages Functions for private server-side checkout logic.
+This package keeps GitHub as the source code archive and uses Cloudflare Pages Functions for private server-side checkout logic.
 
 ## 1. Deploy from GitHub
 
@@ -37,8 +37,8 @@ Non-secret settings:
 - `STORE_ENV=live`
 - `SITE_URL=https://alicapa.com`
 - `GOOGLE_SHEET_NAME=Orders`
-- `PRODIGI_DEFAULT_TAX_RATE=0.20` — verify against live account quotes
-- `PRODIGI_TAX_RATES_JSON={"US":0}` — keep valid JSON and expand only from verified data
+- `PRODIGI_DEFAULT_TAX_RATE=0.20`, verified against live account quotes
+- `PRODIGI_TAX_RATES_JSON={"US":0}`, kept as valid JSON and expanded only from verified data
 - `SHIPPING_PROCESSING_RATE=0.035`
 - `SHIPPING_HANDLING_CENTS=50`
 
@@ -67,12 +67,16 @@ The storefront creates one server-side Checkout Session per purchase. Browser-su
 
 ## 6. Collector Editions
 
-Collector delivery charges are already stored in `catalog/prints.js`:
+Collector delivery charges are stored in `catalog/prints.js`:
 
-- €15 EU
-- €15 US
-- €15 Canada
-- €45 rest of world, reserved for later expansion
+- €9 United Kingdom
+- €9 Germany
+- €19 other EU countries
+- €21 EFTA
+- €31 United States
+- €44 Canada
+- €82 Australia and New Zealand
+- €82 other supported destinations
 
 Collector products do not require a Creativehub API connection. After payment and Wise confirmation, Ali places the matching Creativehub / theprintspace order manually using the provider SKU recorded in the order ledger.
 
@@ -104,3 +108,12 @@ Before announcing the shop:
 ```bash
 npm run set-domain -- https://alicapa.com
 ```
+
+
+## 10. Rate limiting before public promotion
+
+Create the single combined rate-limiting rule described in `CLOUDFLARE-RATE-LIMITING.md`. Protect `/api/quote` and `/api/create-checkout`, but do not include `/api/stripe-webhook`.
+
+## 11. Daily order digest Worker
+
+The order digest is a separate Worker because Pages Functions do not receive Cron Triggers. Follow `DAILY-ORDER-DIGEST.md` and `cloudflare-order-digest/README.md`. Enable Email Service, verify the destination address, onboard `orders@alicapa.com`, add encrypted Google credentials, and deploy from the `cloudflare-order-digest` directory.

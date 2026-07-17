@@ -37,13 +37,13 @@ export async function createStripeCheckoutSession({
   append(params, "line_items[0][quantity]", "1");
   append(params, "line_items[0][price_data][currency]", "eur");
   append(params, "line_items[0][price_data][unit_amount]", priceCents);
-  append(params, "line_items[0][price_data][product_data][name]", `${work.title} — ${product.label}`);
+  append(params, "line_items[0][price_data][product_data][name]", `${work.title}, ${product.label}`);
   append(params, "line_items[0][price_data][product_data][description]", `${product.size} · ${product.paper} · Unframed`);
   append(params, "line_items[0][price_data][product_data][images][0]", `${siteOrigin}${work.previewPath}`);
 
   append(params, "shipping_address_collection[allowed_countries][0]", countryCode);
   append(params, "shipping_options[0][shipping_rate_data][type]", "fixed_amount");
-  append(params, "shipping_options[0][shipping_rate_data][display_name]", `Shipping & handling · ${formatMethod(quote.method)}`);
+  append(params, "shipping_options[0][shipping_rate_data][display_name]", `Shipping and handling · ${formatMethod(quote.method)}`);
   append(params, "shipping_options[0][shipping_rate_data][fixed_amount][amount]", shipping.customerCents);
   append(params, "shipping_options[0][shipping_rate_data][fixed_amount][currency]", "eur");
 

@@ -1,5 +1,5 @@
 import { calculateCustomerShippingCents, chooseBestQuote, getProdigiQuotes } from "./prodigi.js";
-import { getFixedShippingCents } from "./products.js";
+import { getFixedShippingCents, getRegionalCents } from "./products.js";
 
 export async function quoteProduct({ product, countryCode, env }) {
   const mode = product?.fulfillment?.mode;
@@ -20,7 +20,8 @@ export async function quoteProduct({ product, countryCode, env }) {
     if (customerCents === null) throw new Error("Collector delivery has not been configured for this destination");
     const providerItemCents = Number(product.fulfillment.providerPrintCostCents || 0)
       + Number(product.fulfillment.providerExtrasCents || 0);
-    const providerShippingCents = Number(product.fulfillment.providerShippingEstimateCents || customerCents);
+    const providerShippingCents = getRegionalCents(product.fulfillment.providerShippingEstimateCents, countryCode)
+      ?? customerCents;
     const quote = {
       method: "tracked",
       itemAmount: providerItemCents / 100,
@@ -46,7 +47,7 @@ export async function quoteProduct({ product, countryCode, env }) {
     return {
       quote,
       shipping,
-      estimateNote: "Produced to order by Creativehub / theprintspace. A Certificate of Authenticity and personal letter are included.",
+      estimateNote: "Produced to order by Creativehub / theprintspace. A Certificate of Authenticity and personal letter are included. Destination duties or taxes not collected at checkout may remain the purchaser’s responsibility.",
     };
   }
 

@@ -30,8 +30,8 @@ The customer pays shipping. Ali Capa Foto does not absorb shipping unless Ali ex
 
 | Photograph | Internal SKU | Provider SKU | Size | Price | Status |
 |---|---|---|---|---:|---|
-| AtaquaS | `ATQ-LPP-30X45` | `GLOBAL-PAP-12X18` | 30 × 45 cm | €30 | Available after live backend connection |
-| EclaircissE | `ECL-LPP-40X50` | `GLOBAL-PAP-16X20` | 40 × 50 cm | €35 | Available after live backend connection |
+| AtaquaS | `ATQ-LPP-30X45` | `GLOBAL-PAP-12X18` | 30 × 45 cm | €30 | Available |
+| EclaircissE | `ECL-LPP-40X50` | `GLOBAL-PAP-16X20` | 40 × 50 cm | €35 | Available |
 | Öppiä | pending | pending | final size pending | — | Available soon |
 | IndepenDienta | pending | pending | final size pending | — | Available soon |
 
@@ -39,23 +39,27 @@ The customer pays shipping. Ali Capa Foto does not absorb shipping unless Ali ex
 
 | Photograph / variant | Internal SKU | Creativehub SKU | Size | Edition | Price | Status |
 |---|---|---|---|---:|---:|---|
-| K.aisa.R — Presence | `KSR-PRL-PRESENCE-60X90` | `V-XL076PZL` | 60 × 90 cm | 5 | €250 | Available after live backend connection |
-| K.aisa.R — Immersion | `KSR-PRL-IMMERSION-80X120` | `V-Y6L6H5YT` | 80 × 120 cm | 5 | €450 | Available after live backend connection |
-| Mèranö — Reverie | `MER-PRL-REVERIE-60X75` | `V-GDH2VKCH` | 60 × 75 cm | 10 | €225 | Available after live backend connection |
-| Ràábta — Veil | `RBT-PRL-VEIL-40X50` | `V-K5SCKYN3` | 40 × 50 cm | 10 | €175 | Available after live backend connection |
+| K.aisa.R, Presence | `KSR-PRL-PRESENCE-60X90` | `V-XL076PZL` | 60 × 90 cm | 5 | €250 | Available |
+| K.aisa.R, Immersion | `KSR-PRL-IMMERSION-80X120` | `V-Y6L6H5YT` | 80 × 120 cm | 5 | €450 | Available |
+| Mèranö, Reverie | `MER-PRL-REVERIE-60X75` | `V-GDH2VKCH` | 60 × 75 cm | 10 | €225 | Available |
+| Ràábta, Veil | `RBT-PRL-VEIL-40X50` | `V-K5SCKYN3` | 40 × 50 cm | 10 | €175 | Available |
 
 Collector products are unframed, printed on Hahnemühle Pearl 285 gsm, and include the configured Certificate of Authenticity and personal letter.
 
 ## Collector shipping
 
-Customer-facing shipping is currently fixed at:
+Customer-facing delivery is configured at:
 
-- €15 — European Union
-- €15 — United States
-- €15 — Canada
-- €45 — stored for later rest-of-world expansion
+- €9 for the United Kingdom
+- €9 for Germany
+- €19 for other European Union countries
+- €21 for Norway, Iceland, Liechtenstein, and Switzerland
+- €31 for the United States
+- €44 for Canada
+- €82 for Australia and New Zealand
+- €82 for other supported destinations
 
-Creativehub / theprintspace fulfilment remains fully manual. No Creativehub API connection is required or intended.
+Creativehub / theprintspace fulfilment remains fully manual. No Creativehub API connection is required or intended. Import duties or destination taxes not collected at checkout may remain the purchaser's responsibility.
 
 ## Dream Edition thank-you flyer
 
@@ -68,3 +72,10 @@ Follow `catalog/README.md`. Do not hand-copy product HTML.
 ## Limited-edition safeguard
 
 The catalogue blocks a variant when its manually maintained `soldCount` reaches `editionSize`. This does not create an atomic reservation across simultaneous Stripe sessions. For a heavily promoted release, add stronger inventory reservation before launch.
+
+## Final live-rate confirmation
+The storefront first presents an indicative live delivery quote. When the buyer continues, the server refreshes the provider quote and creates the Stripe Checkout Session. If the final shipping amount changes, the storefront displays the exact Stripe total and requires a second confirmation before redirecting.
+
+## Daily 10 p.m. order digest
+
+The `cloudflare-order-digest/` project can be deployed as a separate Worker. It reads the private order ledger, sends a privacy-conscious daily summary at 10 p.m. Lisbon time, and uses the production KV namespace to prevent duplicate daily emails.

@@ -1,0 +1,23 @@
+Ali Capa Foto storefront — live quote confirmation validation
+Date: 2026-07-17
+
+Purpose
+- Keep the initial live delivery quote visible to the buyer.
+- Refresh the provider quote server-side while creating the Stripe Checkout Session.
+- If the refreshed shipping or total changes, display the exact Stripe amount and require explicit confirmation before redirecting.
+- Preserve server-side price and shipping integrity; browser-supplied amounts remain ignored.
+
+Files changed
+- storefront.js
+- functions/api/create-checkout.js
+- scripts/test-storefront.mjs
+- wrangler.toml
+- BUILD-CHANGELOG.md
+- docs/STOREFRONT-OPERATIONS.md
+
+Validation completed
+- node --check storefront.js: PASS
+- node --check functions/api/create-checkout.js: PASS
+- npm test: PASS
+- npm run validate: PASS
+- No live API keys, webhook secrets, Google private keys, customer data, or card data included.

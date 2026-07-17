@@ -7,9 +7,10 @@ The public catalogue and checkout both read from one file:
 ## Add a future print
 
 1. Prepare optimized web files:
-   - `images/prints/<slug>.jpg` — artwork
-   - `images/prints/<slug>-mockup.jpg` — framed room view
-   - optionally `images/prints/<slug>-preview.jpg` — lightweight card/Stripe preview
+   - `images/prints/<slug>.jpg` for the artwork fallback
+   - optionally `images/prints/<slug>.webp` for a smaller modern artwork view
+   - `images/prints/<slug>-mockup.jpg` for the framed room view
+   - optionally `images/prints/<slug>-preview.jpg` for the lightweight card and Stripe preview
 2. Copy `NEW-PRINT-TEMPLATE.js.txt` and add one work object to `PRINT_CATALOG`.
 3. Add one or more variant objects inside the work.
 4. Run:
@@ -32,14 +33,18 @@ Limited variants are also blocked when `soldCount >= editionSize`.
 - `configured-fixed` — uses server-trusted customer shipping stored in the catalogue, with optional Cloudflare-variable fallback.
 - `unavailable` — no checkout.
 
-Collector shipping is currently stored in the variant objects in `catalog/prints.js`:
+Collector shipping is stored by region in each variant object in `catalog/prints.js`:
 
-- EU: €15
-- United States: €15
-- Canada: €15
-- Rest of world: €45, reserved for later expansion
+- United Kingdom: €9
+- Germany: €9
+- Other EU countries: €19
+- EFTA: €21
+- United States: €31
+- Canada: €44
+- Australia and New Zealand: €82
+- Other supported destinations: €82
 
-The country selector currently exposes the EU, United States, and Canada only.
+The selector exposes the destination codes accepted by Stripe Checkout. Dream Editions are still accepted only when Prodigi returns a valid live route.
 
 ## Limited-edition counts
 

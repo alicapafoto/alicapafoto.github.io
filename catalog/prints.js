@@ -1,5 +1,5 @@
 /**
- * Ali Capa print catalogue — single source of truth.
+ * Ali Capa print catalogue, the single source of truth.
  *
  * To add a future print:
  * 1. Add optimized files at /images/prints/<slug>.jpg and <slug>-mockup.jpg.
@@ -16,7 +16,7 @@ export const PRINT_CATEGORIES = Object.freeze({
     eyebrow: "Dream Editions",
     title: "Dare to Dream",
     revealLabel: "Dream Editions",
-    overviewDescription: "Made to order on lustre photographic paper — a personal way to bring the archive into everyday spaces.",
+    overviewDescription: "Made to order on lustre photographic paper. A personal way to bring the archive into everyday spaces.",
     deepDescription: "Made to order on lustre photographic paper, each Dream Edition offers a personal way to live with a photograph from the archive.",
   }),
   collector: Object.freeze({
@@ -41,7 +41,7 @@ export const PRINT_CATALOG = Object.freeze([
     aspectRatio: "2:3 portrait",
     borderMm: 0,
     cardSummary: "Dream Edition · €30",
-    description: "A crown of small white flowers, a blue-painted gaze, and a hand still bright with yellow. AtaquaS holds one saturated, suspended moment — playful, intimate, and entirely alive.",
+    description: "A crown of small white flowers, a gaze painted blue, and a hand still bright with yellow. AtaquaS holds one saturated, suspended moment. It is playful, intimate, and entirely alive.",
     variants: Object.freeze([
       Object.freeze({
         id: "ataquas-open",
@@ -63,6 +63,7 @@ export const PRINT_CATALOG = Object.freeze([
     category: "open",
     order: 2,
     artworkPath: "/images/prints/eclaircisse.jpg",
+    artworkWebpPath: "/images/prints/eclaircisse.webp",
     previewPath: "/images/prints/eclaircisse-preview.jpg",
     mockupPath: "/images/prints/eclaircisse-mockup.jpg",
     aspectRatio: "4:5 portrait",
@@ -90,6 +91,7 @@ export const PRINT_CATALOG = Object.freeze([
     category: "open",
     order: 3,
     artworkPath: "/images/prints/oppia.jpg",
+    artworkWebpPath: "/images/prints/oppia.webp",
     previewPath: "/images/prints/oppia-preview.jpg",
     mockupPath: "/images/prints/oppia-mockup.jpg",
     aspectRatio: "4:3 landscape collage",
@@ -117,12 +119,13 @@ export const PRINT_CATALOG = Object.freeze([
     category: "open",
     order: 4,
     artworkPath: "/images/prints/independienta.jpg",
+    artworkWebpPath: "/images/prints/independienta.webp",
     previewPath: "/images/prints/independienta-preview.jpg",
     mockupPath: "/images/prints/independienta-mockup.jpg",
     aspectRatio: "4:3 landscape collage",
     borderMm: 0,
     cardSummary: "Dream Edition · Available soon",
-    description: "Eight private moments held inside one frame — warm light, inward gestures, and a woman becoming her own shelter. IndepenDienta is still being rebuilt; this remains a preview of the final work.",
+    description: "Eight private moments are held inside one frame. Warm light and inward gestures follow a woman becoming her own shelter. IndepenDienta is still being rebuilt; this remains a preview of the final work.",
     variants: Object.freeze([
       Object.freeze({
         id: "independienta-open",
@@ -144,12 +147,13 @@ export const PRINT_CATALOG = Object.freeze([
     category: "collector",
     order: 1,
     artworkPath: "/images/prints/kaisar.jpg",
+    artworkWebpPath: "/images/prints/kaisar.webp",
     previewPath: "/images/prints/kaisar-preview.jpg",
     mockupPath: "/images/prints/kaisar-mockup.jpg",
     aspectRatio: "2:3 portrait",
     borderMm: 0,
     cardSummary: "Edition of 10 · from €250",
-    description: "Warm shadow, red silk, and a small offering of white flowers. K.aisa.R turns a backward glance into something between invitation and farewell — quiet, self-possessed, and impossible to hurry.",
+    description: "Warm shadow, red silk, and a small offering of white flowers. K.aisa.R turns a backward glance into something between invitation and farewell. It is quiet, self-possessed, and impossible to hurry.",
     certificate: "Clean",
     letterIncluded: true,
     variants: Object.freeze([
@@ -168,10 +172,10 @@ export const PRINT_CATALOG = Object.freeze([
         fulfillment: Object.freeze({
           mode: "configured-fixed",
           envPrefix: "KAISAR_PRESENCE",
-          shippingCents: Object.freeze({ EU: 1500, US: 1500, CA: 1500, ROW: 4500 }),
+          shippingCents: Object.freeze({ GB: 900, DE: 900, EU: 1900, EFTA: 2100, US: 3100, CA: 4400, ANZ: 8200, ROW: 8200 }),
           providerPrintCostCents: 6490,
           providerExtrasCents: 488,
-          providerShippingEstimateCents: 2427,
+          providerShippingEstimateCents: Object.freeze({ GB: 695, DE: 695, EU: 1463, EFTA: 1960, US: 2867, CA: 4095, ANZ: 7697, ROW: 7697 }),
         }),
       }),
       Object.freeze({
@@ -189,10 +193,10 @@ export const PRINT_CATALOG = Object.freeze([
         fulfillment: Object.freeze({
           mode: "configured-fixed",
           envPrefix: "KAISAR_IMMERSION",
-          shippingCents: Object.freeze({ EU: 1500, US: 1500, CA: 1500, ROW: 4500 }),
+          shippingCents: Object.freeze({ GB: 900, DE: 900, EU: 1900, EFTA: 2100, US: 3100, CA: 4400, ANZ: 8200, ROW: 8200 }),
           providerPrintCostCents: 11268,
           providerExtrasCents: 488,
-          providerShippingEstimateCents: 2427,
+          providerShippingEstimateCents: Object.freeze({ GB: 695, DE: 695, EU: 1463, EFTA: 1960, US: 2867, CA: 4095, ANZ: 7697, ROW: 7697 }),
         }),
       }),
     ]),
@@ -227,10 +231,10 @@ export const PRINT_CATALOG = Object.freeze([
         fulfillment: Object.freeze({
           mode: "configured-fixed",
           envPrefix: "MERANO_REVERIE",
-          shippingCents: Object.freeze({ EU: 1500, US: 1500, CA: 1500, ROW: 4500 }),
+          shippingCents: Object.freeze({ GB: 900, DE: 900, EU: 1900, EFTA: 2100, US: 3100, CA: 4400, ANZ: 8200, ROW: 8200 }),
           providerPrintCostCents: 5753,
           providerExtrasCents: 488,
-          providerShippingEstimateCents: 2427,
+          providerShippingEstimateCents: Object.freeze({ GB: 695, DE: 695, EU: 1463, EFTA: 1960, US: 2867, CA: 4095, ANZ: 7697, ROW: 7697 }),
         }),
       }),
     ]),
@@ -241,12 +245,13 @@ export const PRINT_CATALOG = Object.freeze([
     category: "collector",
     order: 3,
     artworkPath: "/images/prints/raabta.jpg",
+    artworkWebpPath: "/images/prints/raabta.webp",
     previewPath: "/images/prints/raabta-preview.jpg",
     mockupPath: "/images/prints/raabta-mockup.jpg",
     aspectRatio: "4:5 portrait",
     borderMm: 25,
     cardSummary: "Edition of 10 · €175",
-    description: "Hair, pearls, and skin move between concealment and revelation. Ràábta is not about what is hidden, but the trust held inside vulnerability — the quiet moment when presence becomes connection.",
+    description: "Hair, pearls, and skin move between concealment and revelation. Ràábta is not about what is hidden. It is about the trust held inside vulnerability, and the quiet moment when presence becomes connection.",
     certificate: "Traditional",
     letterIncluded: true,
     variants: Object.freeze([
@@ -265,10 +270,10 @@ export const PRINT_CATALOG = Object.freeze([
         fulfillment: Object.freeze({
           mode: "configured-fixed",
           envPrefix: "RAABTA_VEIL",
-          shippingCents: Object.freeze({ EU: 1500, US: 1500, CA: 1500, ROW: 4500 }),
+          shippingCents: Object.freeze({ GB: 900, DE: 900, EU: 1900, EFTA: 2100, US: 3100, CA: 4400, ANZ: 8200, ROW: 8200 }),
           providerPrintCostCents: 2813,
           providerExtrasCents: 488,
-          providerShippingEstimateCents: 2427,
+          providerShippingEstimateCents: Object.freeze({ GB: 695, DE: 695, EU: 1463, EFTA: 1960, US: 2867, CA: 4095, ANZ: 7697, ROW: 7697 }),
         }),
       }),
     ]),

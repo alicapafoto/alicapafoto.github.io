@@ -1,0 +1,35 @@
+ALI CAPA FOTO WORLDWIDE LAUNCH BUILD VALIDATION
+Date: 17 July 2026
+Build: WORLDWIDE_LAUNCH_READY
+
+RESULT: PASSED
+
+Validated changes
+- Permanent public domain remains https://alicapa.com.
+- Worldwide destination selector uses Stripe Checkout country enums.
+- Dream Editions request live Prodigi quotes and fail closed when no route can be quoted.
+- Collector Edition delivery charges use the approved regional matrix.
+- Final Stripe total is created server-side and must be confirmed again if the live provider rate changes.
+- Public product and artwork copy was reviewed to remove editorial em dashes.
+- Content Security Policy no longer permits unsafe-inline scripts or styles.
+- Page-level scripts and styles were moved into external files.
+- Five artwork assets include optimized WebP alternatives with JPEG fallbacks.
+- Stripe webhook signature verification and KV duplicate protection remain intact.
+- Google Sheets appends remain RAW to prevent formula interpretation.
+- Separate private 10 p.m. Lisbon order digest Worker foundation is included and tested.
+- Cloudflare rate-limiting setup is documented for quote and checkout endpoints.
+
+Automated checks
+- npm test: passed
+- npm run validate: passed
+- JavaScript syntax checks: passed
+- Daily digest Worker tests: passed
+- HTML pages validated: 9
+- Secret scan: no live Stripe, webhook, Prodigi, or Google private credentials found
+
+Important activation notes
+- The daily digest is not activated by the Pages deployment. It must be deployed separately after Email Service is onboarded and the private destination is verified.
+- The Cloudflare rate-limiting rule must be created in the alicapa.com security dashboard.
+- One controlled live payment is still required to confirm Stripe, webhook, production KV, and exactly one Google Sheets row.
+
+Optimized WebP assets: 0

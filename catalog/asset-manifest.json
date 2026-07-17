@@ -250,5 +250,65 @@
     ],
     "bytes": 66954,
     "sha256": "37d1a1312d4948b38b098330ef997053032814739ac66d03badd592bda51f483"
+  },
+  {
+    "slug": "eclaircisse",
+    "kind": "artwork-webp",
+    "source": "eclaircisse-artwork.jpg",
+    "output": "images/prints/eclaircisse.webp",
+    "dimensions": [
+      2240,
+      2800
+    ],
+    "bytes": 487290,
+    "sha256": "aab8d41fb15f86c8030903fbf8319a38fa3c93287110befe6c0d2465d45d235e"
+  },
+  {
+    "slug": "independienta",
+    "kind": "artwork-webp",
+    "source": "independienta-artwork.jpg",
+    "output": "images/prints/independienta.webp",
+    "dimensions": [
+      2308,
+      1570
+    ],
+    "bytes": 329852,
+    "sha256": "0a9bceedb917a8ff201a21fa67db5f49f1e4c4511cbdc75eb7dd992383a9341f"
+  },
+  {
+    "slug": "kaisar",
+    "kind": "artwork-webp",
+    "source": "kaisar-artwork.jpg",
+    "output": "images/prints/kaisar.webp",
+    "dimensions": [
+      1867,
+      2800
+    ],
+    "bytes": 309672,
+    "sha256": "8003cadef21004c2f07a859d992cf9a4e55817008beb37042e9172c1d0beaa2c"
+  },
+  {
+    "slug": "oppia",
+    "kind": "artwork-webp",
+    "source": "oppia-artwork.jpg",
+    "output": "images/prints/oppia.webp",
+    "dimensions": [
+      2332,
+      1585
+    ],
+    "bytes": 903860,
+    "sha256": "df96966eaf08010c3c454ef75aa44751cebf97c2c23e40fcb0240c0e79336312"
+  },
+  {
+    "slug": "raabta",
+    "kind": "artwork-webp",
+    "source": "raabta-artwork.jpg",
+    "output": "images/prints/raabta.webp",
+    "dimensions": [
+      2241,
+      2800
+    ],
+    "bytes": 216644,
+    "sha256": "27c04a2a085474590ae142896e0fc05e9d7a96ab3ad310379b44795e40dca413"
   }
 ]
