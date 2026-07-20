@@ -1,0 +1,238 @@
+/* Prints page parity and mobile viewport correction — 21 July 2026 */
+
+/* The bordered print wrapper is also a span. Keep it as media, not as the
+   "View full screen" caption targeted by an older selector. */
+.carousel-slide > .carousel-slide__paper {
+  position: relative !important;
+  inset: auto !important;
+  right: auto !important;
+  bottom: auto !important;
+  color: inherit !important;
+  font: inherit !important;
+  letter-spacing: normal !important;
+  text-transform: none !important;
+}
+
+.carousel-slide > span:not(.carousel-slide__paper) {
+  right: 1rem !important;
+  bottom: 1rem !important;
+  z-index: 4;
+  padding: .38rem .52rem;
+  background: rgba(8,8,8,.72);
+  color: rgba(255,255,255,.84) !important;
+  line-height: 1.2;
+  white-space: nowrap;
+}
+
+.carousel-caption {
+  left: 1rem !important;
+  right: auto !important;
+  bottom: 1rem !important;
+  z-index: 3;
+  max-width: min(62%, 23rem);
+  padding: .32rem .45rem;
+  background: rgba(8,8,8,.62);
+}
+
+@media (max-width: 860px) {
+  html,
+  body {
+    inline-size: 100% !important;
+    max-inline-size: 100% !important;
+    min-inline-size: 0 !important;
+    overflow-x: hidden !important;
+  }
+
+  body {
+    position: relative;
+  }
+
+  main,
+  .prints-intro,
+  .catalogue,
+  .edition-principle,
+  .deep-view,
+  .deep-category,
+  .print-reveal,
+  .reveal-heading,
+  .artwork-carousel,
+  .carousel-track,
+  .carousel-slide,
+  .carousel-controls,
+  .product-panel {
+    inline-size: 100% !important;
+    max-inline-size: 100% !important;
+    min-inline-size: 0 !important;
+  }
+
+  main,
+  .prints-intro,
+  .catalogue,
+  .edition-principle,
+  .deep-view,
+  .deep-category,
+  .print-reveal {
+    overflow-x: clip !important;
+  }
+
+  .mobile-nav {
+    inline-size: 100% !important;
+    max-inline-size: 100% !important;
+    left: 0 !important;
+    right: 0 !important;
+    padding-inline: .16rem !important;
+    contain: layout paint;
+  }
+
+  .mobile-nav a {
+    min-inline-size: 0 !important;
+    overflow: hidden;
+  }
+
+  .prints-intro {
+    padding-inline: 1rem !important;
+    align-items: center !important;
+    text-align: center;
+  }
+
+  .prints-intro h1 {
+    inline-size: 100% !important;
+    max-inline-size: 100% !important;
+    margin-inline: auto !important;
+    font-size: clamp(3rem, 13.6vw, 4.15rem) !important;
+    line-height: .88 !important;
+    letter-spacing: -.035em !important;
+    text-align: center;
+    white-space: normal;
+    overflow-wrap: normal;
+    word-break: normal;
+  }
+
+  .prints-intro .eyebrow,
+  .prints-intro .intro-copy,
+  .prints-intro .intro-link {
+    margin-inline: auto;
+  }
+
+  .print-reveal {
+    padding-inline: .8rem !important;
+  }
+
+  .reveal-heading {
+    margin-inline: 0 !important;
+  }
+
+  /* Match the stable Original Artworks mobile viewer geometry. */
+  .artwork-carousel {
+    margin-inline: auto !important;
+    overflow: hidden !important;
+  }
+
+  .carousel-track {
+    position: relative !important;
+    min-height: min(118vw, 42rem) !important;
+    overflow: hidden !important;
+    background: #090909;
+    touch-action: pan-y !important;
+  }
+
+  .carousel-slide,
+  .carousel-slide:not(.is-active) {
+    position: absolute !important;
+    inset: 0 !important;
+    display: grid !important;
+    inline-size: 100% !important;
+    block-size: 100% !important;
+    min-block-size: 0 !important;
+    padding: 0 !important;
+    place-items: center;
+    opacity: 0;
+    pointer-events: none;
+    transition: opacity .3s ease;
+  }
+
+  .carousel-slide.is-active {
+    opacity: 1;
+    pointer-events: auto;
+  }
+
+  .carousel-slide > picture,
+  .carousel-slide > picture img {
+    inline-size: 100% !important;
+    block-size: 100% !important;
+  }
+
+  .carousel-slide img {
+    inline-size: auto !important;
+    block-size: auto !important;
+    max-inline-size: 100% !important;
+    max-block-size: 100% !important;
+    object-fit: contain !important;
+  }
+
+  .carousel-slide__paper {
+    position: relative !important;
+    inline-size: auto !important;
+    block-size: auto !important;
+    max-inline-size: calc(100% - 1.4rem) !important;
+    max-block-size: calc(100% - 1.4rem) !important;
+    margin: auto !important;
+  }
+
+  .carousel-slide__paper picture,
+  .carousel-slide__paper img {
+    inline-size: auto !important;
+    block-size: auto !important;
+    max-inline-size: 100% !important;
+    max-block-size: 100% !important;
+  }
+
+  .carousel-controls {
+    margin-top: .85rem !important;
+    grid-template-columns: 3rem minmax(0, 1fr) 3rem !important;
+    gap: .5rem !important;
+  }
+
+  .carousel-controls > span {
+    min-inline-size: 0;
+  }
+
+  .carousel-slide > span:not(.carousel-slide__paper) {
+    right: .7rem !important;
+    bottom: .7rem !important;
+  }
+
+  .carousel-caption {
+    left: .7rem !important;
+    bottom: .7rem !important;
+    max-width: 57%;
+  }
+
+  .product-panel {
+    margin-inline: 0 !important;
+    overflow: hidden;
+  }
+
+  .print-lightbox,
+  #printLightbox,
+  .lightbox-stage,
+  .lightbox-bar {
+    inline-size: 100% !important;
+    max-inline-size: 100% !important;
+    min-inline-size: 0 !important;
+  }
+}
+
+@supports not (overflow: clip) {
+  @media (max-width: 860px) {
+    main,
+    .prints-intro,
+    .catalogue,
+    .edition-principle,
+    .deep-view,
+    .deep-category,
+    .print-reveal {
+      overflow-x: hidden !important;
+    }
+  }
+}
