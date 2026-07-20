@@ -1,8 +1,12 @@
 name = "ali-capa-storefront-staging"
-compatibility_date = "2026-07-15"
+compatibility_date = "2026-07-20"
 pages_build_output_dir = "."
+
 [vars]
-STORE_ENV = "live"
-[[kv_namespaces]]
-binding = "ORDER_EVENTS"
-id = "422b786723514dbe84c23779062f9892"
+STORE_ENV = "staging"
+STAGING_SAFE_MODE = "true"
+ANALYTICS_MODE = "staging"
+
+[[analytics_engine_datasets]]
+binding = "ANALYTICS_ENGINE"
+dataset = "ali_capa_storefront_staging_events"
