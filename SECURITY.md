@@ -1,11 +1,11 @@
 # Security model
 
-- Card information is handled only by Stripe-hosted Checkout.
+- Card information is handled only by Stripe hosted Checkout.
 - Product IDs, SKUs, print prices, destination rules, and shipping charges are recalculated server-side.
 - Browser-submitted prices and shipping amounts are ignored.
 - Stripe webhook signatures are verified before an order is recorded.
-- A Checkout Session–based idempotency key suppresses duplicate ledger rows from webhook retries.
-- Google Sheets appends use `valueInputOption=RAW` so customer-controlled text is not interpreted as formulas.
+- A Checkout Session based idempotency key suppresses duplicate ledger rows from webhook retries.
+- Google Sheets appends use `valueInputOption=RAW` so customer controlled text is not interpreted as formulas.
 - Real Stripe, Prodigi, and Google credentials belong only in encrypted Cloudflare secrets.
 - The repository, ZIP archive, HTML, and browser JavaScript must never contain secret keys.
 - Checkout stays disabled unless Stripe, Prodigi, Google Sheets, webhook, and KV requirements are all present.
@@ -25,3 +25,12 @@ If a credential is exposed:
 3. Review Stripe events, Prodigi activity, Cloudflare logs, and Google Sheet sharing.
 4. Remove the secret from Git history if it was ever committed.
 5. Do not reuse the exposed value.
+
+## Browser and endpoint hardening
+
+- The public Content Security Policy no longer permits `unsafe-inline` scripts or styles.
+- Inline page scripts and style blocks have been moved into static external files.
+- JSON request bodies are limited to 8 KB.
+- Same-origin checks protect quote and checkout creation requests.
+- Add the documented Cloudflare rate-limiting rule for `/api/quote` and `/api/create-checkout` before a public marketing push.
+- Do not rate-limit the signed Stripe webhook endpoint.

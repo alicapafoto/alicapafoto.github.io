@@ -1,47 +1,61 @@
-# Ali Capa Foto — Cloudflare storefront staging package
+# Ali Capa Foto, worldwide launch master
 
 ## Status
 
-This package is a **tested staging build**, not a live store. It contains no real API keys, passwords, Google credentials, or customer data. Checkout remains disabled until every required secret and binding is configured in Cloudflare.
+This is the current authoritative full-site package prepared on 17 July 2026. It consolidates the permanent `alicapa.com` domain, worldwide destination selection, the approved Collector Edition delivery charges, final Stripe total confirmation, dash-free public copy, stricter Content Security Policy, optimized artwork delivery, and the private daily order digest Worker foundation.
+
+No real API keys, passwords, Google credentials, payment details, or customer data are included.
+
+## Public Prints catalogue
+
+### Dream Editions
+
+- AtaquaS — €30 — checkout-ready once the live backend is connected.
+- EclaircissE — €35 — checkout-ready once the live backend is connected.
+- Öppiä — visible as **Available soon**.
+- IndepenDienta — visible as **Available soon**.
+
+### Collector Editions
+
+- K.aisa.R — Presence €250 / Immersion €450.
+- Mèranö — Reverie €225.
+- Ràábta — Veil €175.
+
+All three Collector Editions are enabled. Delivery is configured for the United Kingdom, Germany, the European Union, EFTA, the United States, Canada, Australia, New Zealand, and other supported destinations. Dream Editions use a fresh live Prodigi quote and remain unavailable whenever Prodigi cannot quote the selected route.
 
 ## What is ready
 
-- Existing Ali Capa website preserved.
-- Public commercial hosting structure prepared for Cloudflare Pages.
-- Two active accessible open editions:
-  - AtaquaS — `GLOBAL-PAP-12X18` — €30 launch / €35 regular.
-  - EclaircissE — `GLOBAL-PAP-16X20` — €30 launch / €35 regular.
-- Öppiä and IndepenDienta shown as Coming soon and cannot be purchased.
-- Server-side Prodigi quote lookup.
-- Server-trusted product, SKU, price, destination, and shipping calculation.
-- Stripe-hosted Checkout Session creation.
-- Stripe webhook verification and duplicate suppression.
-- Private Google Sheets order-ledger append.
-- Customer-supplied sheet values written as RAW data to prevent spreadsheet-formula execution.
-- Customer-paid shipping and manual fulfilment after Wise availability.
-- Terms, privacy, security headers, success/cancel pages, tests, and operating documentation.
-
-## Initial delivery coverage
-
-The launch selector intentionally contains the European Union and the United States only. Additional countries should be enabled only after live quote, tax, returns, and margin checks.
+- Final artwork and room mockup web assets for all seven works, including the updated Mèranö mockup.
+- WebP alternatives for five large artwork views, with the original JPEGs retained as fallbacks.
+- Four-across Dream Editions desktop grid and three-across Collector Editions grid.
+- Compact two-column mobile catalogue with tightened vertical spacing.
+- Two views per work only: artwork and framed-room reference.
+- A single shared catalogue file at `catalog/prints.js` controls page content, checkout metadata, prices, availability, provider SKUs, editions, borders, and shipping rules.
+- Server-trusted Stripe Checkout creation.
+- Live Prodigi quote integration for AtaquaS and EclaircissE once `PRODIGI_API_KEY` is connected.
+- Stripe webhook verification, duplicate suppression through KV, and private Google Sheets order recording.
+- Final live quote confirmation before redirecting to Stripe whenever a provider rate changes.
+- CSP hardening with no `unsafe-inline` allowance.
+- A separate hourly Worker foundation for a private 10 p.m. Lisbon order digest.
+- Manual fulfilment only after the Stripe payout is visibly available in Wise.
+- Original Works page copy and acquisition workflow updated.
 
 ## First files to read
 
-1. `docs/CLOUDFLARE-DEPLOYMENT.md`
-2. `docs/GOOGLE-SHEETS-SETUP.md`
-3. `docs/STOREFRONT-OPERATIONS.md`
-4. `.dev.vars.example`
-5. `docs/ORDER_LEDGER_TEMPLATE.csv`
+1. `catalog/README.md`
+2. `catalog/prints.js`
+3. `docs/CLOUDFLARE-DEPLOYMENT.md`
+4. `docs/STOREFRONT-OPERATIONS.md`
+5. `docs/GOOGLE-SHEETS-SETUP.md`
 
 ## Local checks
 
 ```bash
-npm install
 npm test
 npm run validate
 ```
 
-For local Cloudflare Pages Functions testing, copy `.dev.vars.example` to `.dev.vars`, add **test credentials only**, and run:
+For local Cloudflare Pages Functions testing, copy `.dev.vars.example` to a private `.dev.vars`, insert test credentials, and run:
 
 ```bash
 npm run dev
@@ -49,25 +63,14 @@ npm run dev
 
 Never commit `.dev.vars` or any real secret.
 
-## Activation sequence
+## Next activation sequence
 
-1. Deploy to a Cloudflare staging URL.
-2. Create and bind `ORDER_EVENTS` KV.
-3. Create the private Google Sheet and service account.
-4. Add encrypted Cloudflare secrets and non-secret settings.
-5. Create the Stripe test webhook.
-6. Compare live/sandbox Prodigi quote output with the dashboard.
-7. Complete test purchases for Portugal, an EU destination, and the US.
-8. Confirm exactly one order-ledger row per paid Checkout Session.
-9. Set the final domain and retest.
-10. Switch to live Stripe/Prodigi credentials only after all checks pass.
-
-## Pricing switch
-
-Use `STORE_PRICE_MODE=launch` for the introductory €30 price. Seven days after the actual public launch, change it to:
-
-```text
-STORE_PRICE_MODE=regular
-```
-
-The server will then use €35 without editing product-page code.
+1. Upload this complete build to the GitHub repository.
+2. Confirm the Cloudflare Pages project deploys the intended branch.
+3. Connect the live Cloudflare variables, encrypted secrets, and `ORDER_EVENTS` KV binding.
+4. Create or update the live Stripe webhook endpoint.
+5. Confirm the live Prodigi API quote flow.
+6. Perform one controlled end-to-end payment and verify exactly one Google Sheets order row.
+7. Add the combined Cloudflare rate-limiting rule before the public marketing push.
+8. Deploy the optional daily order digest Worker after Email Service is configured.
+9. Archive the deployed ZIP and the final business documentation package on the E drive.
