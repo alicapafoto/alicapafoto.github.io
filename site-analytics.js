@@ -1,7 +1,7 @@
 (() => {
   const endpoint = "/api/track";
   const sentViews = new Set();
-  const release = "20260720-gallery-fixes-1";
+  const release = "20260721-gallery-fixes-2";
 
   function loadEnhancements() {
     if (!document.querySelector(`link[data-ali-capa-fixes="${release}"]`)) {
