@@ -17,6 +17,24 @@ for (const file of htmlFiles) {
   if (!/<meta[^>]+name=["']viewport["']/i.test(html)) errors.push(`${file}: missing viewport`);
 }
 
+
+const headers = fs.readFileSync(path.join(root, '_headers'), 'utf8');
+if (headers.includes("'unsafe-inline'")) errors.push('_headers: unsafe-inline remains in CSP');
+for (const file of htmlFiles) {
+  const html = fs.readFileSync(path.join(root, file), 'utf8');
+  if (/<style(?:\s|>)/i.test(html)) errors.push(`${file}: inline style block remains`);
+  if (/style=["']/i.test(html)) errors.push(`${file}: inline style attribute remains`);
+  if (/<script>(?:.|\n)*?<\/script>/i.test(html)) errors.push(`${file}: inline executable script remains`);
+  if (html.includes('—')) errors.push(`${file}: public em dash remains`);
+}
+for (const file of ['catalog/prints.js', 'storefront.js']) {
+  const content = fs.readFileSync(path.join(root, file), 'utf8');
+  if (content.includes('—')) errors.push(`${file}: public em dash remains`);
+}
+for (const file of ['index-page.css', 'about-page.css', 'artworks-page.css', 'support-page.css', 'privacy-page.css', 'terms-page.css', 'index-page.js', 'artworks-page.js']) {
+  if (!fs.existsSync(path.join(root, file))) errors.push(`missing ${file}`);
+}
+
 const required = [
   'functions/api/catalog.js',
   'functions/api/quote.js',

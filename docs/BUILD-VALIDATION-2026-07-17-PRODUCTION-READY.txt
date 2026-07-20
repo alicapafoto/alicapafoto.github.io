@@ -1,0 +1,25 @@
+Ali Capa Foto — Production-Ready Copy Pass Validation
+17 July 2026
+
+VALIDATION COMPLETED
+- npm test: PASS
+- npm run validate: PASS
+- storefront.js syntax: PASS
+- catalog/prints.js syntax/import: PASS
+- Seven print descriptions present and within the intended concise length range: PASS
+- Four Original Works descriptions present: PASS
+- JSON-LD blocks parse as valid JSON: PASS
+- Internal local asset references: PASS
+- Live API-secret pattern scan: PASS
+- Prices, sizes, SKUs, provider IDs, edition counts, borders, certificate settings, and fulfilment metadata unchanged from the uploaded authoritative build: PASS
+
+DESIGN DECISION
+- Catalogue grid remains minimal.
+- Full-screen artwork viewer remains text-free.
+- Print descriptions appear beneath the artwork/mockup carousel inside each dedicated work panel.
+- Original Works descriptions appear beneath the title/price and above factual specifications.
+
+PRODUCTION STATUS
+- Static build is ready for GitHub upload and Cloudflare production configuration.
+- No live secrets are included in this archive.
+- One controlled live checkout is still required after production variables and ORDER_EVENTS KV are connected.

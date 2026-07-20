@@ -1,0 +1,31 @@
+/*
+COPY THIS OBJECT INTO PRINT_CATALOG IN catalog/prints.js.
+Replace every ALL-CAPS placeholder. Keep IDs and filenames lowercase and URL-safe.
+*/
+Object.freeze({
+  id: "PRINT-SLUG",
+  title: "PUBLIC TITLE",
+  category: "open", // open or collector
+  order: 99,
+  artworkPath: "/images/prints/PRINT-SLUG.jpg",
+  previewPath: "/images/prints/PRINT-SLUG-preview.jpg",
+  mockupPath: "/images/prints/PRINT-SLUG-mockup.jpg",
+  aspectRatio: "PORTRAIT OR LANDSCAPE RATIO",
+  borderMm: 0,
+  cardSummary: "Open edition · €PRICE",
+  description: "CUSTOMER-FACING DESCRIPTION",
+  variants: Object.freeze([
+    Object.freeze({
+      id: "PRINT-SLUG-open",
+      label: "Open edition",
+      storeSku: "INTERNAL-SKU",
+      provider: "Prodigi",
+      providerSku: "PROVIDER-SKU",
+      paper: "PAPER AND WEIGHT",
+      size: "CM SIZE / INCH SIZE",
+      priceCents: 0000,
+      availability: "upcoming", // change to available only after fulfilment setup
+      fulfillment: Object.freeze({ mode: "unavailable" }),
+    }),
+  ]),
+}),

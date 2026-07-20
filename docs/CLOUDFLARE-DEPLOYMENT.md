@@ -1,28 +1,27 @@
-# Ali Capa Foto — Cloudflare Pages deployment
+# Ali Capa Foto, Cloudflare Pages deployment and live activation
 
-This package keeps GitHub as the source-code archive while moving the commercial storefront to Cloudflare Pages and Pages Functions.
+This package keeps GitHub as the source code archive and uses Cloudflare Pages Functions for private server-side checkout logic.
 
-## 1. Create the Pages project
+## 1. Deploy from GitHub
 
-1. In Cloudflare, open **Workers & Pages**.
-2. Choose **Create application → Pages → Connect to Git**.
-3. Select the existing `alicapafoto.github.io` repository.
-4. Production branch: `main`.
-5. Build command: leave blank.
-6. Build output directory: `.`.
-7. Deploy first as a preview/staging site. Do not point the public domain at it yet.
+1. Upload the complete build to the intended GitHub repository and branch.
+2. In Cloudflare, open **Workers & Pages**.
+3. Connect the repository if it is not already connected.
+4. Build command: leave blank.
+5. Build output directory: `.`.
+6. Confirm Pages Functions under `/functions` are detected.
 
-## 2. Create a KV namespace for webhook idempotency
+## 2. KV binding
 
-Create a KV namespace called `ali-capa-order-events` and bind it to the Pages project as:
+Bind the existing KV namespace to the Pages project as:
 
 `ORDER_EVENTS`
 
-This prevents Stripe webhook retries from creating duplicate rows.
+This prevents Stripe webhook retries from creating duplicate Google Sheets rows.
 
-## 3. Set variables and encrypted secrets
+## 3. Variables and encrypted secrets
 
-In **Settings → Variables and Secrets**, add the values listed in `.dev.vars.example`.
+Use `.dev.vars.example` as the names-only checklist.
 
 Encrypted secrets:
 
@@ -35,65 +34,86 @@ Encrypted secrets:
 
 Non-secret settings:
 
-- `STORE_ENV=test` during setup; change to `live` only at launch.
-- `STORE_PRICE_MODE=launch` for the first seven days; change to `regular` afterward.
-- `SITE_URL=https://your-pages-domain.pages.dev` during staging, then the final public domain.
+- `STORE_ENV=live`
+- `SITE_URL=https://alicapa.com`
 - `GOOGLE_SHEET_NAME=Orders`
-- `PRODIGI_DEFAULT_TAX_RATE=0.20` — current EU calibration value; verify with live quotes.
-- `PRODIGI_TAX_RATES_JSON={"US":0}` — destination overrides; keep this valid JSON and add countries only after their tax treatment is verified.
+- `PRODIGI_DEFAULT_TAX_RATE=0.20`, verified against live account quotes
+- `PRODIGI_TAX_RATES_JSON={"US":0}`, kept as valid JSON and expanded only from verified data
 - `SHIPPING_PROCESSING_RATE=0.035`
 - `SHIPPING_HANDLING_CENTS=50`
 
-Never put real keys in GitHub, HTML, JavaScript sent to the browser, screenshots, or the master business archive.
+Never put real keys in GitHub, client-side JavaScript, screenshots, or the downloadable business archive.
 
-## 4. Stripe setup
+## 4. Stripe live setup
 
-1. Stay in Stripe test mode.
-2. Create a webhook endpoint:
-   `https://YOUR-STAGING-DOMAIN/api/stripe-webhook`
+1. Use the Stripe live-mode secret key.
+2. Create or update the live webhook endpoint:
+   `https://alicapa.com/api/stripe-webhook`
 3. Subscribe to:
    - `checkout.session.completed`
    - `checkout.session.async_payment_succeeded`
-4. Copy the signing secret into `STRIPE_WEBHOOK_SECRET`.
-5. Confirm the public business settings include the correct Terms and Privacy URLs so Checkout can require terms acceptance.
-6. Enable Stripe customer receipts in the Dashboard.
+4. Save the live endpoint signing secret as `STRIPE_WEBHOOK_SECRET`.
+5. Confirm Stripe Checkout displays the correct business name, Terms, Privacy, receipts, and EUR currency.
 
-The storefront creates one Checkout Session per purchase. Product price and SKU are selected server-side; browser-submitted prices are never trusted.
+The storefront creates one server-side Checkout Session per purchase. Browser-submitted prices and shipping amounts are never trusted.
 
-## 5. Prodigi setup
+## 5. Prodigi live quoting
 
-1. Use the Prodigi sandbox API key while testing.
-2. The server calls the Quote endpoint for all available methods and selects the lowest shipping price returned.
-3. Confirm at least one quote for Portugal, Germany/France, and the United States. The initial storefront intentionally enables EU destinations and the US only.
-4. Compare API results against the manual dashboard. Adjust `PRODIGI_DEFAULT_TAX_RATE` and `PRODIGI_TAX_RATES_JSON` only from verified account data.
-5. Automatic Prodigi order creation remains disabled. Ali manually orders only after the Stripe payout is visibly available in Wise.
+1. Add the live Prodigi API key.
+2. Keep automatic order creation disabled.
+3. Confirm live quotes for AtaquaS and EclaircissE to Portugal and at least one additional EU destination.
+4. Confirm a United States quote before promoting US delivery.
+5. Ali manually places each Prodigi order only after the payout is visibly available in Wise.
 
-## 6. Google Sheets order ledger
+## 6. Collector Editions
 
-Follow `GOOGLE-SHEETS-SETUP.md`. The webhook appends each paid order to the private `Orders` worksheet with the initial status:
+Collector delivery charges are stored in `catalog/prints.js`:
+
+- €9 United Kingdom
+- €9 Germany
+- €19 other EU countries
+- €21 EFTA
+- €31 United States
+- €44 Canada
+- €82 Australia and New Zealand
+- €82 other supported destinations
+
+Collector products do not require a Creativehub API connection. After payment and Wise confirmation, Ali places the matching Creativehub / theprintspace order manually using the provider SKU recorded in the order ledger.
+
+## 7. Google Sheets order ledger
+
+Follow `GOOGLE-SHEETS-SETUP.md`. Share the private order sheet with the service-account email and use the `Orders` worksheet unless intentionally changed.
+
+The webhook appends each paid order with the initial status:
 
 `Paid — Awaiting Wise`
 
-## 7. Test before launch
+## 8. Final controlled test
 
-- Run `npm install`, `npm test`, and `npm run validate` locally.
-- Run `npm run dev` with a private `.dev.vars` file.
-- Use Stripe test cards.
-- Confirm a successful test purchase creates exactly one Google Sheet row.
-- Re-send the same Stripe event and confirm it is marked as a duplicate rather than appended again.
-- Confirm no API key appears in page source, browser network responses, Git history, or the ZIP.
-- Confirm the selected shipping country is the only country accepted by the Checkout Session.
-- Confirm the order appears as `Paid — Awaiting Wise` and not `Ready to Fulfil`.
+Before announcing the shop:
 
-## 8. Domain cutover
+- Run `npm test` and `npm run validate` locally.
+- Confirm `/api/catalog` reports checkout-ready products once all bindings are present.
+- Complete one controlled live payment for the lowest-priced available print.
+- Confirm Stripe marks it paid.
+- Confirm exactly one Google Sheets row is created.
+- Confirm a repeated webhook event does not create a duplicate row.
+- Refund the controlled payment if appropriate.
+- Confirm no secret appears in page source, browser responses, Git history, or the ZIP.
 
-When the staging checkout passes:
+## 9. Domain consistency
 
-1. Choose the final Cloudflare Pages/custom domain.
-2. Run:
-   `npm run set-domain -- https://FINAL-DOMAIN`
-3. Set `SITE_URL` to the same domain in Cloudflare.
-4. Update the Stripe webhook URL if the host changed.
-5. Test again in Stripe test mode.
-6. Change to live Stripe and Prodigi keys only after the final test passes.
-7. Keep GitHub Pages online briefly as a fallback, then redirect or retire it once the Cloudflare site is verified.
+`SITE_URL`, the public site domain, Stripe webhook URL, and Stripe Terms/Privacy URLs must all use the final production host. Run the existing domain update script when needed:
+
+```bash
+npm run set-domain -- https://alicapa.com
+```
+
+
+## 10. Rate limiting before public promotion
+
+Create the single combined rate-limiting rule described in `CLOUDFLARE-RATE-LIMITING.md`. Protect `/api/quote` and `/api/create-checkout`, but do not include `/api/stripe-webhook`.
+
+## 11. Daily order digest Worker
+
+The order digest is a separate Worker because Pages Functions do not receive Cron Triggers. Follow `DAILY-ORDER-DIGEST.md` and `cloudflare-order-digest/README.md`. Enable Email Service, verify the destination address, onboard `orders@alicapa.com`, add encrypted Google credentials, and deploy from the `cloudflare-order-digest` directory.

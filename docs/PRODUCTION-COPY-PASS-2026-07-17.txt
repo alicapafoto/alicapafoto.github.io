@@ -1,0 +1,14 @@
+Ali Capa Foto — Production Copy Pass
+17 July 2026
+
+PLACEMENT DECISION
+- No descriptive paragraphs were added to the compact catalogue grid.
+- No descriptive text overlays the artwork or appears in the full-screen viewer.
+- Print descriptions appear only beneath the two-view artwork/mockup carousel, inside the dedicated work panel.
+- Original Works descriptions appear between each title/price line and the factual dimensions/materials table.
+
+SCOPE
+- Copy and presentation refinement only.
+- Public artist branding standardized to Ali Capa / Ali Capa Foto.
+- Prices, sizes, SKUs, provider IDs, edition counts, shipping settings, and fulfillment logic were not changed.
+- Production secrets are still absent and must be added only through Cloudflare environment variables.

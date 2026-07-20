@@ -1,6 +1,13 @@
-import { ALLOWED_COUNTRY_CODES, getCurrentPriceCents, getProduct } from "../_lib/products.js";
-import { assertSameOrigin, json, methodNotAllowed, publicError, readJson } from "../_lib/http.js";
-import { calculateCustomerShippingCents, chooseBestQuote, getProdigiQuotes } from "../_lib/prodigi.js";
+import {
+  ALLOWED_COUNTRY_CODES,
+  getCurrentPriceCents,
+  getProduct,
+  isPubliclyAvailable,
+  isProductCheckoutConfigured,
+} from "../_lib/products.js";
+import { assertSameOrigin, isCheckoutOperational, json, methodNotAllowed, publicError, readJson } from "../_lib/http.js";
+import { quoteProduct } from "../_lib/fulfillment.js";
+import { writeAnalyticsEvent } from "../_lib/analytics.js";
 
 export async function onRequest(context) {
   if (context.request.method !== "POST") return methodNotAllowed("POST");
@@ -9,16 +16,31 @@ export async function onRequest(context) {
     const { productId, countryCode } = await readJson(context.request);
     const product = getProduct(productId);
     const country = String(countryCode || "").toUpperCase();
-    if (!product || !product.active) return json({ error: "This print is not currently available." }, 404);
-    if (!ALLOWED_COUNTRY_CODES.has(country)) return json({ error: "Delivery is not currently available for that country." }, 400);
+    if (!product || !isPubliclyAvailable(product)) return json({ error: "This print is not currently available." }, 404);
+    if (!isCheckoutOperational(context.env) || !isProductCheckoutConfigured(product, context.env)) {
+      return json({ error: "This print is temporarily unavailable." }, 409);
+    }
+    if (!ALLOWED_COUNTRY_CODES.has(country)) return json({ error: "Delivery is temporarily unavailable for that destination." }, 400);
 
-    const payload = await getProdigiQuotes({ env: context.env, sku: product.sku, countryCode: country });
-    const quote = chooseBestQuote(payload);
-    const shipping = calculateCustomerShippingCents(quote, country, context.env);
-    const priceCents = getCurrentPriceCents(product, context.env);
+    const { quote, shipping, estimateNote } = await quoteProduct({ product, countryCode: country, env: context.env });
+    const priceCents = getCurrentPriceCents(product);
+    writeAnalyticsEvent(context.env, "delivery_quote_succeeded", {
+      page: "/prints.html",
+      product: product.id,
+      variant: product.label,
+      country,
+      outcome: "success",
+      source: "server",
+    });
 
     return json({
-      product: { id: product.id, title: product.title, size: product.size, paper: product.paper },
+      product: {
+        id: product.id,
+        title: product.work.title,
+        label: product.label,
+        size: product.size,
+        paper: product.paper,
+      },
       countryCode: country,
       currency: "EUR",
       priceCents,
@@ -26,7 +48,7 @@ export async function onRequest(context) {
       totalCents: priceCents + shipping.customerCents,
       shippingMethod: quote.method,
       fulfillmentCountry: quote.fulfillmentCountry,
-      estimateNote: "Made to order. Production normally takes 36–72 hours before dispatch.",
+      estimateNote,
     });
   } catch (error) {
     return json({ error: publicError(error, "A live shipping quote could not be calculated. Please try again.") }, 502);

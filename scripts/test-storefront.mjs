@@ -27,12 +27,25 @@ const env = {
   PRODIGI_TAX_RATES_JSON: '{"US":0}',
   SHIPPING_PROCESSING_RATE: '0.035',
   SHIPPING_HANDLING_CENTS: '50',
+  KAISAR_PRESENCE_SHIPPING_EU_CENTS: '2500',
+  KAISAR_PRESENCE_SHIPPING_US_CENTS: '4500',
+  KAISAR_IMMERSION_SHIPPING_EU_CENTS: '3500',
+  KAISAR_IMMERSION_SHIPPING_US_CENTS: '5500',
+  MERANO_REVERIE_SHIPPING_EU_CENTS: '2500',
+  MERANO_REVERIE_SHIPPING_US_CENTS: '4500',
 };
 
 const catalogResponse = await catalog({ request: new Request('https://example.test/api/catalog'), env });
 const catalogPayload = await catalogResponse.json();
 assert.equal(catalogPayload.checkoutReady, true);
 assert.equal(catalogPayload.products.find((p) => p.id === 'ataquas-open').priceCents, 3000);
+assert.equal(catalogPayload.products.find((p) => p.id === 'eclaircisse-open').priceCents, 3500);
+assert.equal(catalogPayload.products.find((p) => p.id === 'kaisar-presence').checkoutReady, true);
+assert.equal(catalogPayload.products.find((p) => p.id === 'raabta-veil').checkoutReady, true);
+assert.ok(catalogPayload.countries.length > 200);
+assert.ok(catalogPayload.countries.some((country) => country.code === 'CA'));
+assert.ok(catalogPayload.countries.some((country) => country.code === 'JP'));
+assert.ok(catalogPayload.countries.some((country) => country.code === 'AU'));
 
 const realFetch = globalThis.fetch;
 globalThis.fetch = async (url, init = {}) => {
@@ -53,6 +66,22 @@ const usQuoteResponse = await quote({
 });
 const usQuotePayload = await usQuoteResponse.json();
 assert.ok(usQuotePayload.shippingCents < quotePayload.shippingCents);
+const collectorQuoteResponse = await quote({
+  request: new Request('https://example.test/api/quote', { method: 'POST', headers: { origin: 'https://example.test', 'content-type': 'application/json' }, body: JSON.stringify({ productId: 'kaisar-presence', countryCode: 'PT' }) }),
+  env,
+});
+const collectorQuotePayload = await collectorQuoteResponse.json();
+assert.equal(collectorQuotePayload.priceCents, 25000);
+assert.equal(collectorQuotePayload.shippingCents, 1900);
+assert.equal(collectorQuotePayload.totalCents, 26900);
+for (const [countryCode, expectedShipping] of [["GB", 900], ["DE", 900], ["NO", 2100], ["US", 3100], ["CA", 4400], ["AU", 8200], ["JP", 8200]]) {
+  const response = await quote({
+    request: new Request('https://example.test/api/quote', { method: 'POST', headers: { origin: 'https://example.test', 'content-type': 'application/json' }, body: JSON.stringify({ productId: 'kaisar-presence', countryCode }) }),
+    env,
+  });
+  assert.equal(response.status, 200);
+  assert.equal((await response.json()).shippingCents, expectedShipping);
+}
 
 let stripeBody = '';
 globalThis.fetch = async (url, init = {}) => {
@@ -68,10 +97,23 @@ const checkoutResponse = await checkout({
   env,
 });
 assert.equal(checkoutResponse.status, 200);
+const checkoutPayload = await checkoutResponse.json();
 const stripeParams = new URLSearchParams(stripeBody);
 assert.equal(stripeParams.get('line_items[0][price_data][unit_amount]'), '3000');
 assert.equal(stripeParams.get('shipping_address_collection[allowed_countries][0]'), 'PT');
 assert.notEqual(stripeParams.get('shipping_options[0][shipping_rate_data][fixed_amount][amount]'), '1');
+assert.equal(checkoutPayload.priceCents, 3000);
+assert.equal(checkoutPayload.shippingCents, Number(stripeParams.get('shipping_options[0][shipping_rate_data][fixed_amount][amount]')));
+assert.equal(checkoutPayload.totalCents, checkoutPayload.priceCents + checkoutPayload.shippingCents);
+const collectorCheckoutResponse = await checkout({
+  request: new Request('https://example.test/api/create-checkout', { method: 'POST', headers: { origin: 'https://example.test', 'content-type': 'application/json' }, body: JSON.stringify({ productId: 'kaisar-presence', countryCode: 'PT' }) }),
+  env,
+});
+assert.equal(collectorCheckoutResponse.status, 200);
+const collectorStripeParams = new URLSearchParams(stripeBody);
+assert.equal(collectorStripeParams.get('line_items[0][price_data][unit_amount]'), '25000');
+assert.equal(collectorStripeParams.get('shipping_options[0][shipping_rate_data][fixed_amount][amount]'), '1900');
+assert.equal(collectorStripeParams.get('metadata[store_sku]'), 'KSR-PRL-PRESENCE-60X90');
 
 const payload = JSON.stringify({ id: 'evt_test' });
 const timestamp = Math.floor(Date.now() / 1000);

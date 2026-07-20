@@ -1,0 +1,24 @@
+ALI CAPA FOTO — DOMAIN FINALIZATION RECORD
+
+Date: 17 July 2026
+Final primary domain: https://alicapa.com
+Cloudflare Pages project: ali-capa-storefront-staging
+Production branch: main
+Custom-domain status at handoff: Active
+SSL status at handoff: Enabled
+
+Build changes in this package:
+- Canonical URLs now use https://alicapa.com
+- Open Graph and Twitter image/URL metadata now use https://alicapa.com
+- JSON-LD structured data now uses https://alicapa.com
+- robots.txt and sitemap.xml now use https://alicapa.com
+- Cloudflare deployment documentation now contains the final production host
+
+Still to complete in the Cloudflare/Stripe production activation workflow:
+- Set SITE_URL to https://alicapa.com
+- Confirm ORDER_EVENTS KV binding in Production
+- Set live Stripe and Prodigi secrets
+- Set Google Sheets production credentials
+- Configure the live Stripe webhook at https://alicapa.com/api/stripe-webhook
+- Add optional www.alicapa.com fallback/redirect
+- Run one controlled live checkout and confirm exactly one order row
