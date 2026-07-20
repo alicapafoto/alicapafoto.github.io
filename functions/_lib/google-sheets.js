@@ -1,3 +1,5 @@
+import { fetchWithTimeout } from "./fetch-timeout.js";
+
 const TOKEN_URL = "https://oauth2.googleapis.com/token";
 const SCOPE = "https://www.googleapis.com/auth/spreadsheets";
 
@@ -54,14 +56,14 @@ async function createServiceAccountToken(env) {
   const assertion = `${unsigned}.${base64Url(new Uint8Array(signature))}`;
 
   const body = new URLSearchParams({
-    grant_type: "urn:ietf:params:oauth:grant-type:jwt-bearer",
+    grant_type: "urn:ietf:params:oauth-grant-type:jwt-bearer",
     assertion,
   });
-  const response = await fetch(TOKEN_URL, {
+  const response = await fetchWithTimeout(TOKEN_URL, {
     method: "POST",
     headers: { "content-type": "application/x-www-form-urlencoded" },
     body,
-  });
+  }, 10_000, "Google authentication");
   const payload = await response.json().catch(() => ({}));
   if (!response.ok || !payload.access_token) {
     throw new Error(payload?.error_description || "Could not authenticate with Google Sheets");
@@ -69,20 +71,39 @@ async function createServiceAccountToken(env) {
   return payload.access_token;
 }
 
+function sheetRange(env, columns) {
+  const sheetName = env.GOOGLE_SHEET_NAME || "Orders";
+  return encodeURIComponent(`'${sheetName.replace(/'/g, "''")}'!${columns}`);
+}
+
+export async function hasOrderSession(env, sessionId) {
+  if (!env.GOOGLE_SHEET_ID) throw new Error("GOOGLE_SHEET_ID is not configured");
+  if (!sessionId) return false;
+  const token = await createServiceAccountToken(env);
+  const range = sheetRange(env, "C:C");
+  const url = `https://sheets.googleapis.com/v4/spreadsheets/${encodeURIComponent(env.GOOGLE_SHEET_ID)}/values/${range}?majorDimension=COLUMNS`;
+  const response = await fetchWithTimeout(url, {
+    headers: { authorization: `Bearer ${token}` },
+  }, 10_000, "Google Sheets duplicate check");
+  const payload = await response.json().catch(() => ({}));
+  if (!response.ok) throw new Error(payload?.error?.message || "Could not check the order ledger");
+  const values = Array.isArray(payload.values?.[0]) ? payload.values[0] : [];
+  return values.some((value) => String(value) === String(sessionId));
+}
+
 export async function appendOrderRow(env, values) {
   if (!env.GOOGLE_SHEET_ID) throw new Error("GOOGLE_SHEET_ID is not configured");
-  const sheetName = env.GOOGLE_SHEET_NAME || "Orders";
   const token = await createServiceAccountToken(env);
-  const range = encodeURIComponent(`'${sheetName.replace(/'/g, "''")}'!A:AZ`);
+  const range = sheetRange(env, "A:AZ");
   const url = `https://sheets.googleapis.com/v4/spreadsheets/${encodeURIComponent(env.GOOGLE_SHEET_ID)}/values/${range}:append?valueInputOption=RAW&insertDataOption=INSERT_ROWS`;
-  const response = await fetch(url, {
+  const response = await fetchWithTimeout(url, {
     method: "POST",
     headers: {
       authorization: `Bearer ${token}`,
       "content-type": "application/json",
     },
     body: JSON.stringify({ majorDimension: "ROWS", values: [values] }),
-  });
+  }, 12_000, "Google Sheets order append");
   const payload = await response.json().catch(() => ({}));
   if (!response.ok) throw new Error(payload?.error?.message || "Could not append the order to Google Sheets");
   return payload;
