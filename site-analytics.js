@@ -1,6 +1,59 @@
 (() => {
   const endpoint = "/api/track";
   const sentViews = new Set();
+  const release = "20260720-gallery-fixes-1";
+
+  function loadEnhancements() {
+    if (!document.querySelector(`link[data-ali-capa-fixes="${release}"]`)) {
+      const stylesheet = document.createElement("link");
+      stylesheet.rel = "stylesheet";
+      stylesheet.href = `/site-fixes.css?v=${release}`;
+      stylesheet.dataset.aliCapaFixes = release;
+      document.head.append(stylesheet);
+    }
+
+    const page = window.location.pathname;
+    const needsGallery = page.endsWith("/prints.html")
+      || page.endsWith("/artworks.html")
+      || page.endsWith("prints.html")
+      || page.endsWith("artworks.html");
+    if (needsGallery && !document.querySelector(`script[data-ali-capa-gallery="${release}"]`)) {
+      const script = document.createElement("script");
+      script.src = `/gallery-enhancements.js?v=${release}`;
+      script.async = false;
+      script.dataset.aliCapaGallery = release;
+      document.body.append(script);
+    }
+  }
+
+  function restoreSafeExternalLinks() {
+    const externalLinks = [
+      {
+        selector: '[data-analytics-event="nine_purchase_clicked"][data-analytics-source="americas"]',
+        href: "https://mixam.com/print-on-demand/6a417907f343e9478f5c9f85",
+      },
+      {
+        selector: '[data-analytics-event="nine_purchase_clicked"][data-analytics-source="europe"]',
+        href: "https://mixam.de/print-on-demand/6a43f46089757fcb48bb3c67",
+      },
+      {
+        selector: '#patreon[data-analytics-event="patreon_clicked"]',
+        href: "https://www.patreon.com/AliCapa",
+      },
+      {
+        selector: '#contribution[data-analytics-event="contribution_clicked"]',
+        href: "https://buy.stripe.com/7sY6oI4iWbND0OO759gIo00",
+      },
+    ];
+
+    externalLinks.forEach(({ selector, href }) => {
+      const link = document.querySelector(selector);
+      if (!link) return;
+      link.href = href;
+      link.removeAttribute("data-staging-disabled");
+      link.removeAttribute("aria-disabled");
+    });
+  }
 
   function clean(value, max = 80) {
     return String(value || "").replace(/[\r\n\t]/g, " ").trim().slice(0, max);
@@ -25,6 +78,8 @@
     }).catch(() => {});
   }
 
+  loadEnhancements();
+  restoreSafeExternalLinks();
   window.AliCapaAnalytics = Object.freeze({ track });
 
   document.addEventListener("click", (event) => {
@@ -33,7 +88,7 @@
       const stagingEvent = disabled.dataset.analyticsEvent;
       if (stagingEvent) track(stagingEvent, { source: disabled.dataset.analyticsSource || "staging-preview", outcome: "blocked-preview" });
       event.preventDefault();
-      window.alert("Preview only. Live purchases are disabled on this staging site.");
+      window.alert("Preview only. Live print and original artwork purchases are not yet enabled on this site.");
       return;
     }
 
