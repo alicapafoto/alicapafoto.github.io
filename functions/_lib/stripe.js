@@ -20,11 +20,12 @@ export async function createStripeCheckoutSession({
   shipping,
   quote,
 }) {
+  const work = product.work;
   const params = new URLSearchParams();
   append(params, "mode", "payment");
   append(params, "payment_method_types[0]", "card");
   append(params, "success_url", `${siteOrigin}/checkout-success.html?session_id={CHECKOUT_SESSION_ID}`);
-  append(params, "cancel_url", `${siteOrigin}/checkout-cancelled.html#${product.anchor}`);
+  append(params, "cancel_url", `${siteOrigin}/checkout-cancelled.html#${work.id}`);
   append(params, "client_reference_id", `acf_${crypto.randomUUID()}`);
   append(params, "customer_creation", "if_required");
   append(params, "billing_address_collection", "auto");
@@ -36,32 +37,35 @@ export async function createStripeCheckoutSession({
   append(params, "line_items[0][quantity]", "1");
   append(params, "line_items[0][price_data][currency]", "eur");
   append(params, "line_items[0][price_data][unit_amount]", priceCents);
-  append(params, "line_items[0][price_data][product_data][name]", product.title);
-  append(params, "line_items[0][price_data][product_data][description]", `${product.subtitle} · ${product.size} · ${product.paper}`);
-  append(params, "line_items[0][price_data][product_data][images][0]", `${siteOrigin}${product.imagePath}`);
+  append(params, "line_items[0][price_data][product_data][name]", `${work.title}, ${product.label}`);
+  append(params, "line_items[0][price_data][product_data][description]", `${product.size} · ${product.paper} · Unframed`);
+  append(params, "line_items[0][price_data][product_data][images][0]", `${siteOrigin}${work.previewPath}`);
 
   append(params, "shipping_address_collection[allowed_countries][0]", countryCode);
   append(params, "shipping_options[0][shipping_rate_data][type]", "fixed_amount");
-  append(params, "shipping_options[0][shipping_rate_data][display_name]", `Shipping & handling · ${formatMethod(quote.method)}`);
+  append(params, "shipping_options[0][shipping_rate_data][display_name]", `Shipping and handling · ${formatMethod(quote.method)}`);
   append(params, "shipping_options[0][shipping_rate_data][fixed_amount][amount]", shipping.customerCents);
   append(params, "shipping_options[0][shipping_rate_data][fixed_amount][currency]", "eur");
 
   const metadata = {
-    schema_version: "1",
+    schema_version: "2",
     product_id: product.id,
-    artwork: product.title,
+    artwork: work.title,
+    variant_label: product.label,
+    store_sku: product.storeSku,
     provider: product.provider,
-    provider_sku: product.sku,
+    provider_sku: product.providerSku,
     paper: product.paper,
     print_size: product.size,
+    edition_size: product.editionSize || "",
     destination_country: countryCode,
-    prodigi_shipping_method: quote.method,
-    prodigi_item_quote_eur: quote.itemAmount.toFixed(2),
-    prodigi_shipping_quote_eur: quote.shippingAmount.toFixed(2),
+    shipping_method: quote.method,
+    provider_item_quote_eur: quote.itemAmount.toFixed(2),
+    provider_shipping_quote_eur: quote.shippingAmount.toFixed(2),
     customer_shipping_cents: String(shipping.customerCents),
-    prodigi_tax_rate: shipping.taxRate.toFixed(4),
-    prodigi_item_tax_cents: String(shipping.itemTaxCents),
-    prodigi_shipping_tax_cents: String(shipping.shippingTaxCents),
+    provider_tax_rate: shipping.taxRate.toFixed(4),
+    provider_item_tax_cents: String(shipping.itemTaxCents),
+    provider_shipping_tax_cents: String(shipping.shippingTaxCents),
     estimated_provider_total_cents: String(shipping.estimatedProviderTotalCents),
     quote_created_at: new Date().toISOString(),
     fulfillment_country: quote.fulfillmentCountry,

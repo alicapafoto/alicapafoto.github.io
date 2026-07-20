@@ -1,9 +1,11 @@
-import { json, methodNotAllowed } from "../_lib/http.js";
+import { isStagingSafeMode, json, methodNotAllowed } from "../_lib/http.js";
+import { writeAnalyticsEvent } from "../_lib/analytics.js";
 import { appendOrderRow } from "../_lib/google-sheets.js";
 import { retrieveCheckoutSession, verifyStripeWebhook } from "../_lib/stripe.js";
 
 export async function onRequest(context) {
   if (context.request.method !== "POST") return methodNotAllowed("POST");
+  if (isStagingSafeMode(context.env)) return json({ received: true, ignored: "staging-safe-mode" });
   const payload = await context.request.text();
   const signatureHeader = context.request.headers.get("stripe-signature");
   const verified = await verifyStripeWebhook({
@@ -51,9 +53,10 @@ export async function onRequest(context) {
   const shippingChargedCents = cents(metadata.customer_shipping_cents || session.total_details?.amount_shipping);
   const customerTotalCents = cents(session.amount_total);
   const stripeFeeCents = centsOrNull(balanceTransaction.fee);
-  const providerItemCents = euroStringToCents(metadata.prodigi_item_quote_eur);
-  const providerShippingCents = euroStringToCents(metadata.prodigi_shipping_quote_eur);
-  const providerTaxCents = cents(metadata.prodigi_item_tax_cents) + cents(metadata.prodigi_shipping_tax_cents);
+  const providerItemCents = euroStringToCents(metadata.provider_item_quote_eur || metadata.prodigi_item_quote_eur);
+  const providerShippingCents = euroStringToCents(metadata.provider_shipping_quote_eur || metadata.prodigi_shipping_quote_eur);
+  const providerTaxCents = cents(metadata.provider_item_tax_cents || metadata.prodigi_item_tax_cents)
+    + cents(metadata.provider_shipping_tax_cents || metadata.prodigi_shipping_tax_cents);
   const providerTotalCents = cents(metadata.estimated_provider_total_cents)
     || providerItemCents + providerShippingCents + providerTaxCents;
   const contributionCents = stripeFeeCents === null
@@ -86,7 +89,7 @@ export async function onRequest(context) {
     euros(Math.round(printRevenueCents * 0.10)),
     contributionCents === null ? "" : euros(Math.max(0, Math.round(contributionCents * 0.30))),
     contributionCents === null ? "" : euros(Math.max(0, Math.round(contributionCents * 0.10))),
-    metadata.prodigi_shipping_method || "",
+    metadata.shipping_method || metadata.prodigi_shipping_method || "",
     metadata.fulfillment_country || "",
     metadata.fulfillment_lab || "",
     address.country || metadata.destination_country || "",
@@ -102,12 +105,20 @@ export async function onRequest(context) {
     "",
     "",
     "",
-    "",
+    buildNotes(metadata),
     updatedIso,
   ];
 
   try {
     await appendOrderRow(context.env, values);
+    writeAnalyticsEvent(context.env, "checkout_completed", {
+      page: "/checkout-success.html",
+      product: metadata.product_id || metadata.store_sku || "",
+      variant: metadata.variant_label || "",
+      country: address.country || metadata.destination_country || "",
+      outcome: "paid",
+      source: "stripe-webhook",
+    });
     if (context.env.ORDER_EVENTS) {
       await context.env.ORDER_EVENTS.put(idempotencyKey, "processed", { expirationTtl: 60 * 60 * 24 * 180 });
     }
@@ -116,6 +127,14 @@ export async function onRequest(context) {
     console.error("Order ledger append failed", error);
     return json({ error: "Order recording failed; Stripe should retry this webhook." }, 500);
   }
+}
+
+function buildNotes(metadata) {
+  const notes = [];
+  if (metadata.store_sku) notes.push(`Store SKU: ${metadata.store_sku}`);
+  if (metadata.variant_label) notes.push(`Variant: ${metadata.variant_label}`);
+  if (metadata.edition_size) notes.push(`Edition size: ${metadata.edition_size}`);
+  return notes.join(" · ");
 }
 
 function cents(value) {

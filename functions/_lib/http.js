@@ -46,11 +46,16 @@ export function publicError(error, fallback = "The request could not be complete
   return fallback;
 }
 
+
+export function isStagingSafeMode(env = {}) {
+  return String(env.STAGING_SAFE_MODE || "").toLowerCase() === "true";
+}
+
 export function isCheckoutOperational(env = {}) {
+  if (isStagingSafeMode(env)) return false;
   return Boolean(
     env.STRIPE_SECRET_KEY
     && env.STRIPE_WEBHOOK_SECRET
-    && env.PRODIGI_API_KEY
     && env.GOOGLE_SHEET_ID
     && env.GOOGLE_SERVICE_ACCOUNT_EMAIL
     && env.GOOGLE_PRIVATE_KEY
