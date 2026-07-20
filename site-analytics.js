@@ -1,7 +1,13 @@
 (() => {
   const endpoint = "/api/track";
   const sentViews = new Set();
-  const release = "20260721-gallery-fixes-2";
+  const release = "20260721-gallery-fixes-3";
+
+  function normalizedPage() {
+    const pathname = window.location.pathname || "/";
+    const withoutTrailingSlash = pathname.length > 1 ? pathname.replace(/\/+$/, "") : pathname;
+    return withoutTrailingSlash.replace(/\.html$/i, "");
+  }
 
   function loadEnhancements() {
     if (!document.querySelector(`link[data-ali-capa-fixes="${release}"]`)) {
@@ -12,11 +18,19 @@
       document.head.append(stylesheet);
     }
 
-    const page = window.location.pathname;
-    const needsGallery = page.endsWith("/prints.html")
-      || page.endsWith("/artworks.html")
-      || page.endsWith("prints.html")
-      || page.endsWith("artworks.html");
+    const page = normalizedPage();
+    const isPrints = page === "/prints" || page.endsWith("/prints");
+    const isArtworks = page === "/artworks" || page.endsWith("/artworks");
+    const needsGallery = isPrints || isArtworks;
+
+    if (isPrints && !document.querySelector(`link[data-ali-capa-prints-parity="${release}"]`)) {
+      const printsStylesheet = document.createElement("link");
+      printsStylesheet.rel = "stylesheet";
+      printsStylesheet.href = `/prints-parity-fix.css?v=${release}`;
+      printsStylesheet.dataset.aliCapaPrintsParity = release;
+      document.head.append(printsStylesheet);
+    }
+
     if (needsGallery && !document.querySelector(`script[data-ali-capa-gallery="${release}"]`)) {
       const script = document.createElement("script");
       script.src = `/gallery-enhancements.js?v=${release}`;
@@ -119,10 +133,11 @@
     document.querySelectorAll("[data-work], .work-card[id]").forEach((node) => observer.observe(node));
   }
 
-  if (window.location.pathname.endsWith("/checkout-success.html") || window.location.pathname.endsWith("checkout-success.html")) {
+  const page = normalizedPage();
+  if (page === "/checkout-success" || page.endsWith("/checkout-success")) {
     track("checkout_returned_success", { outcome: "return", source: "browser" });
   }
-  if (window.location.pathname.endsWith("/checkout-cancelled.html") || window.location.pathname.endsWith("checkout-cancelled.html")) {
+  if (page === "/checkout-cancelled" || page.endsWith("/checkout-cancelled")) {
     track("checkout_cancelled", { outcome: "cancelled", source: "browser" });
   }
 })();
