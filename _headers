@@ -6,6 +6,15 @@
   Cross-Origin-Opener-Policy: same-origin
   Content-Security-Policy: default-src 'self'; base-uri 'self'; object-src 'none'; frame-ancestors 'none'; form-action 'self' https://checkout.stripe.com; img-src 'self' data: https:; font-src 'self' https://fonts.gstatic.com; style-src 'self' https://fonts.googleapis.com; script-src 'self' https://static.cloudflareinsights.com/beacon.min.js 'sha256-3XP6BNucUx4I/r9bGhqRxDvHKaePpHFJLBsC0YW6Rkg=' 'sha256-dbxmN191KpufehejwDBb+HipY9/dEZof3IYVZ8peLwo=' 'sha256-4HSrAv1JaImC1b5/tJI87E8qL/oyN5NJ92LlrTTJi6g=' 'sha256-IDgpOnout0hZ9z9NA5mwK14LOWy9HetctsZWlpgAKg8='; connect-src 'self'; upgrade-insecure-requests
 
+/site-analytics.js
+  Cache-Control: no-cache
+
+/site-fixes.css
+  Cache-Control: no-cache
+
+/gallery-enhancements.js
+  Cache-Control: no-cache
+
 /checkout-success.html
   Cache-Control: no-store
   X-Robots-Tag: noindex, nofollow
