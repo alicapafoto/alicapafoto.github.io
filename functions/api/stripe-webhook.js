@@ -1,9 +1,11 @@
-import { json, methodNotAllowed } from "../_lib/http.js";
+import { isStagingSafeMode, json, methodNotAllowed } from "../_lib/http.js";
+import { writeAnalyticsEvent } from "../_lib/analytics.js";
 import { appendOrderRow } from "../_lib/google-sheets.js";
 import { retrieveCheckoutSession, verifyStripeWebhook } from "../_lib/stripe.js";
 
 export async function onRequest(context) {
   if (context.request.method !== "POST") return methodNotAllowed("POST");
+  if (isStagingSafeMode(context.env)) return json({ received: true, ignored: "staging-safe-mode" });
   const payload = await context.request.text();
   const signatureHeader = context.request.headers.get("stripe-signature");
   const verified = await verifyStripeWebhook({
@@ -109,6 +111,14 @@ export async function onRequest(context) {
 
   try {
     await appendOrderRow(context.env, values);
+    writeAnalyticsEvent(context.env, "checkout_completed", {
+      page: "/checkout-success.html",
+      product: metadata.product_id || metadata.store_sku || "",
+      variant: metadata.variant_label || "",
+      country: address.country || metadata.destination_country || "",
+      outcome: "paid",
+      source: "stripe-webhook",
+    });
     if (context.env.ORDER_EVENTS) {
       await context.env.ORDER_EVENTS.put(idempotencyKey, "processed", { expirationTtl: 60 * 60 * 24 * 180 });
     }

@@ -1,0 +1,19 @@
+ALI CAPA FOTO — COLLECTOR DISPLAY FIX VALIDATION
+Date: 19 July 2026
+
+Scope
+- Mèranö and Ràábta bordered artwork display on mobile and desktop.
+- Current authoritative collector sizes, prices, border and certificate labels.
+- Cache invalidation for prints.css, storefront.js and catalog/prints.js.
+
+Preserved
+- Product IDs and variant IDs.
+- Provider SKUs and legacy Store_SKUs.
+- Stripe Checkout, fixed collector shipping, webhook verification, KV deduplication, Google Sheets logging and manual fulfilment.
+
+Required after deployment
+1. Open prints.html on an Android/mobile browser in a private tab.
+2. Confirm Mèranö and Ràábta show as full 4:5 portrait artworks with white borders.
+3. Swipe/click to confirm both room mockups still display.
+4. Confirm visible collector prices and sizes.
+5. Start (but do not necessarily pay) one collector checkout and confirm the selected product and price shown by Stripe.

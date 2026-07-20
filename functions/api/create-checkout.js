@@ -8,6 +8,7 @@ import {
 import { assertCheckoutOperational, assertSameOrigin, getSiteOrigin, json, methodNotAllowed, publicError, readJson } from "../_lib/http.js";
 import { quoteProduct } from "../_lib/fulfillment.js";
 import { createStripeCheckoutSession } from "../_lib/stripe.js";
+import { writeAnalyticsEvent } from "../_lib/analytics.js";
 
 export async function onRequest(context) {
   if (context.request.method !== "POST") return methodNotAllowed("POST");
@@ -18,8 +19,8 @@ export async function onRequest(context) {
     const product = getProduct(productId);
     const country = String(countryCode || "").toUpperCase();
     if (!product || !isPubliclyAvailable(product)) return json({ error: "This print is not currently available." }, 404);
-    if (!isProductCheckoutConfigured(product, context.env)) return json({ error: "Checkout for this print is still being prepared." }, 409);
-    if (!ALLOWED_COUNTRY_CODES.has(country)) return json({ error: "Delivery is not currently available for that country." }, 400);
+    if (!isProductCheckoutConfigured(product, context.env)) return json({ error: "This print is temporarily unavailable." }, 409);
+    if (!ALLOWED_COUNTRY_CODES.has(country)) return json({ error: "Delivery is temporarily unavailable for that destination." }, 400);
 
     // Re-quote server-side so a browser cannot alter product or shipping amounts.
     const { quote, shipping, estimateNote } = await quoteProduct({ product, countryCode: country, env: context.env });
@@ -34,6 +35,14 @@ export async function onRequest(context) {
       countryCode: country,
       shipping,
       quote,
+    });
+    writeAnalyticsEvent(context.env, "checkout_session_created", {
+      page: "/prints.html",
+      product: product.id,
+      variant: product.label,
+      country,
+      outcome: "success",
+      source: "server",
     });
     return json({
       url: session.url,

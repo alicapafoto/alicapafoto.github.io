@@ -1,0 +1,22 @@
+name = "ali-capa-order-digest"
+main = "src/index.js"
+compatibility_date = "2026-07-17"
+
+[triggers]
+# Run hourly, then send only when Europe/Lisbon local time is 22:00.
+# This keeps the digest at 10 p.m. through daylight-saving changes.
+crons = [ "5 * * * *" ]
+
+[vars]
+GOOGLE_SHEET_NAME = "Orders"
+ORDER_DIGEST_FROM_EMAIL = "orders@alicapa.com"
+ORDER_DIGEST_TO_EMAIL = "alicapafoto@gmail.com"
+ORDER_DIGEST_TIME_ZONE = "Europe/Lisbon"
+
+[[kv_namespaces]]
+binding = "ORDER_EVENTS"
+id = "ae92efcd1e894fa7ba9ca30bfdd3939a"
+
+[[send_email]]
+name = "ORDER_DIGEST_EMAIL"
+destination_address = "alicapafoto@gmail.com"

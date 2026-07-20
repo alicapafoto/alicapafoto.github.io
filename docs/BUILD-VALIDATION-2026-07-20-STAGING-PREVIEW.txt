@@ -1,0 +1,25 @@
+Ali Capa Staging Preview Validation
+Date: 20 July 2026
+
+Automated checks completed:
+PASS: node scripts/validate-site.mjs
+PASS: node scripts/test-storefront.mjs
+PASS: node --check storefront.js
+PASS: node --check artworks-page.js
+PASS: node --check index-page.js
+PASS: local asset and link existence audit across all HTML files
+PASS: duplicate HTML ID audit
+PASS: consistent desktop navigation across all public pages
+PASS: consistent mobile navigation across all public pages
+PASS: public terminology sweep for Original Works, Support the Archive, Living Archive, Acquire this work and View framed
+PASS: public em dash validation
+
+Visual rendering note:
+This environment blocked local browser navigation during automated screenshot generation. Browser-level visual inspection must therefore be completed after opening the staging files locally or deploying them to a preview URL. No claim of pixel-perfect visual approval is made.
+
+Pending before final production ZIP:
+- DHL carrier approval and insured Original Artwork delivery integration
+- Saal Digital NiNE premium edition completion and verified pricing
+- Product/SKU reconciliation where documented
+- Required backend security hardening and production verification
+- Ali's explicit final visual approval

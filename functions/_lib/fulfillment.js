@@ -11,7 +11,7 @@ export async function quoteProduct({ product, countryCode, env }) {
     return {
       quote,
       shipping,
-      estimateNote: "Made to order. Production normally takes 36–72 hours before dispatch.",
+      estimateNote: "Made to order. Production usually takes 2 to 3 business days before dispatch; delivery timing varies by destination.",
     };
   }
 
@@ -47,7 +47,7 @@ export async function quoteProduct({ product, countryCode, env }) {
     return {
       quote,
       shipping,
-      estimateNote: "Produced to order by Creativehub / theprintspace. A Certificate of Authenticity and personal letter are included. Destination duties or taxes not collected at checkout may remain the purchaser’s responsibility.",
+      estimateNote: "Produced to order; delivery timing varies by destination. Import duties or local taxes may apply outside the European Union.",
     };
   }
 

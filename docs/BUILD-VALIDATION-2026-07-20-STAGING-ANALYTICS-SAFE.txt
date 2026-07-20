@@ -1,0 +1,19 @@
+Ali Capa Colourful Dimensions staging analytics correction
+Date: 20 July 2026
+
+Safety state:
+- STORE_ENV=staging
+- STAGING_SAFE_MODE=true
+- No production KV binding in wrangler.toml
+- Checkout operational check returns false in safe mode
+- Stripe webhook is ignored in safe mode
+- Direct Mixam and contribution payment links are disabled
+
+Analytics state:
+- Cloudflare Web Analytics enabled in dashboard for next deployment
+- ANALYTICS_ENGINE -> ali_capa_storefront_staging_events
+- /api/track accepts only approved anonymous events
+- Browser and server funnel instrumentation included
+- Privacy Policy and CSP updated
+
+This package is a staging candidate only, not the authoritative production build.

@@ -1,0 +1,13 @@
+ALI CAPA FOTO — BUILD VALIDATION
+19 July 2026 — JOIN US NAVIGATION LABEL
+
+Scope
+- Full-site successor to the COLLECTOR_DISPLAY_FIX build.
+- Public navigation links to support.html now read “Join Us”.
+- The support page’s internal title/copy remains unchanged.
+- No storefront backend, Stripe, shipping, product, or webhook logic changed.
+
+Validation
+- npm test: PASS
+- npm run validate: PASS
+- No desktop/mobile support.html navigation anchor retains the old “Support” label: PASS
