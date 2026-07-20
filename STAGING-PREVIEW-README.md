@@ -50,3 +50,4 @@ Review sequence:
 - The staging build does not bind the production `ORDER_EVENTS` KV namespace.
 - Checkout APIs report unavailable while safe mode is active, webhooks are ignored, and direct Mixam / contribution payment links are disabled in this preview.
 - To test Stripe later, install test-only secrets and a staging-only order binding, then deliberately set `STAGING_SAFE_MODE = "false"`. Never reuse live payment secrets in this project.
+Deployment refresh after staging-safe configuration.
