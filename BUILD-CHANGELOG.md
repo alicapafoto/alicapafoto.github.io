@@ -56,3 +56,45 @@
 - Added Cloudflare rate-limiting deployment guidance for quote and checkout endpoints.
 - Added a separate Cloudflare Worker foundation for a private daily 10 p.m. Lisbon order digest.
 - Kept Öppiä and IndepenDienta visible as Available soon; all completed Dream and Collector Editions remain enabled.
+
+## 2026-07-19 — Collector display and catalogue correction
+
+- Fixed the Android/mobile collapse of bordered artwork views that squeezed Mèranö and Ràábta into thin horizontal strips.
+- Added explicit 4:5 paper sizing and normal block sizing for nested `<picture>` elements.
+- Updated the authoritative collector records while preserving existing product IDs, variant IDs, provider SKUs and legacy Store_SKUs:
+  - K.aisa.R Immersion: €350.
+  - Mèranö Reverie: 50 × 40 cm / 20 × 16 in, 25 mm border, Clean certificate, €150.
+  - Ràábta Veil: 75 × 60 cm / 30 × 24 in, 25 mm border, Clean certificate, €200.
+- Added cache-busting query strings to the corrected print CSS, storefront module and catalogue import.
+- Retained manual Creativehub fulfilment and all existing Stripe, shipping, webhook and Google Sheets safeguards.
+
+## 19 July 2026 — Join Us navigation label
+
+- Changed the public navigation label linking to `support.html` from **Support** to **Join Us** across desktop, mobile, and home overlay navigation.
+- Kept the existing support-page title and contribution copy unchanged pending the later artistic page-copy decision.
+- No checkout, payment, shipping, catalogue, webhook, or fulfilment logic was changed.
+
+
+## 20 July 2026, Colourful Dimensions staging preview
+
+- Renamed public Original Works language to Original Artworks.
+- Added two-image Original Artwork carousels and removed manual enquiry actions.
+- Added temporary insured-delivery preparation state for Original Artworks.
+- Introduced Colourful Dimensions as the Prints-page umbrella.
+- Updated Dream Editions and Collector Editions card and acquisition language.
+- Moved K.aisa.R Presence and Immersion selection into the acquisition panel.
+- Rewrote Join Us using Colourful Dimensions terminology.
+- Changed public artist narrative to first person where appropriate.
+- Updated success, cancellation, privacy and terms copy.
+- Validated HTML, storefront functions, JavaScript syntax, asset paths and navigation consistency.
+- Marked package as staging preview only; no production deployment completed.
+
+## 20 July 2026 — staging analytics and hard safety correction
+
+- Replaced live staging configuration with `STORE_ENV=staging` and `STAGING_SAFE_MODE=true`.
+- Removed production KV bindings from the staging Wrangler configuration.
+- Added Analytics Engine dataset binding and `/api/track`.
+- Added anonymous conversion events for print views, acquisition intent, variant selection, quotes, checkout, Patreon, contributions and NiNE purchase links.
+- Added server-confirmed checkout-completed tracking through the Stripe webhook path for future non-safe-mode use.
+- Updated the Privacy Policy and CSP for Cloudflare Web Analytics.
+- Disabled all live-payment routes and direct payment links in the staging preview.

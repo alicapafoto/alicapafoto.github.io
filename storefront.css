@@ -206,3 +206,112 @@
   .product-panel { grid-template-columns: 1fr; align-items: start; }
   .product-panel__price { text-align: left; }
 }
+
+
+.product-panel__facts {
+  display: grid;
+  gap: .28rem;
+  color: rgba(255,255,255,.72);
+  font-size: .72rem;
+  line-height: 1.65;
+}
+.product-panel__facts p,
+.product-panel__delivery { margin: 0; }
+.product-panel__delivery {
+  margin-top: 1.1rem;
+  color: rgba(255,255,255,.48);
+  font-size: .64rem;
+  letter-spacing: .035em;
+}
+.edition-preview {
+  display: grid;
+  gap: .7rem;
+  margin-top: 1.2rem;
+}
+.edition-preview > div {
+  display: grid;
+  grid-template-columns: minmax(7rem, auto) 1fr;
+  gap: 1rem;
+  align-items: baseline;
+  padding-top: .7rem;
+  border-top: 1px solid rgba(255,255,255,.12);
+}
+.edition-preview strong {
+  font-size: .62rem;
+  font-weight: 500;
+  letter-spacing: .13em;
+  text-transform: uppercase;
+}
+.edition-preview span {
+  color: rgba(255,255,255,.58);
+  font-size: .67rem;
+}
+.store-dialog__intro {
+  margin: -1rem 0 1.7rem;
+  max-width: 31rem;
+  color: #625e57;
+  font-family: 'Cormorant Garamond', serif;
+  font-size: 1.18rem;
+  line-height: 1.5;
+}
+.dialog-variants {
+  margin-bottom: 1.5rem;
+}
+.dialog-variants[hidden] { display: none; }
+.dialog-variants__label {
+  margin: 0 0 .65rem;
+  color: #625e57;
+  font-size: .6rem;
+  font-weight: 500;
+  letter-spacing: .14em;
+  text-transform: uppercase;
+}
+.dialog-variants__grid {
+  display: grid;
+  grid-template-columns: repeat(2, minmax(0, 1fr));
+  gap: .65rem;
+}
+.dialog-variants__grid button {
+  padding: 1rem;
+  display: grid;
+  gap: .28rem;
+  border: 1px solid #c8c2b7;
+  background: #fff;
+  color: #1a1a1a;
+  text-align: left;
+  cursor: pointer;
+}
+.dialog-variants__grid button:hover,
+.dialog-variants__grid button:focus-visible,
+.dialog-variants__grid button.is-selected {
+  border-color: #1a1a1a;
+  background: #f0ece3;
+}
+.dialog-variants__grid button:disabled {
+  opacity: .42;
+  cursor: not-allowed;
+}
+.dialog-variants__grid strong {
+  font-size: .65rem;
+  font-weight: 500;
+  letter-spacing: .13em;
+  text-transform: uppercase;
+}
+.dialog-variants__grid span {
+  color: #6b655d;
+  font-size: .68rem;
+  line-height: 1.4;
+}
+.store-field select:disabled {
+  opacity: .5;
+  cursor: not-allowed;
+}
+.store-quote__note strong {
+  color: #4f4a43;
+  font-weight: 500;
+  letter-spacing: .04em;
+}
+@media (max-width: 560px) {
+  .dialog-variants__grid { grid-template-columns: 1fr; }
+  .edition-preview > div { grid-template-columns: 1fr; gap: .2rem; }
+}

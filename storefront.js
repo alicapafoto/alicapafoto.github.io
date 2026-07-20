@@ -1,9 +1,12 @@
-import { PRINT_CATALOG, PRINT_CATEGORIES } from './catalog/prints.js?v=20260717-final-copy-quote';
+import { PRINT_CATALOG, PRINT_CATEGORIES } from './catalog/prints.js?v=20260720-colourful-dimensions-staging';
 
 (() => {
+  const trackEvent = (event, details = {}) => window.AliCapaAnalytics?.track?.(event, details);
+
   const state = {
     api: null,
     apiProducts: new Map(),
+    work: null,
     product: null,
     country: '',
     quote: null,
@@ -17,6 +20,8 @@ import { PRINT_CATALOG, PRINT_CATEGORIES } from './catalog/prints.js?v=20260717-
   const dialog = document.getElementById('storeDialog');
   const title = dialog?.querySelector('[data-dialog-title]');
   const dialogVariant = dialog?.querySelector('[data-dialog-variant]');
+  const dialogIntro = dialog?.querySelector('[data-dialog-intro]');
+  const dialogVariants = dialog?.querySelector('[data-dialog-variants]');
   const countrySelect = dialog?.querySelector('[data-country]');
   const quoteBox = dialog?.querySelector('[data-quote]');
   const action = dialog?.querySelector('[data-checkout]');
@@ -33,6 +38,9 @@ import { PRINT_CATALOG, PRINT_CATEGORIES } from './catalog/prints.js?v=20260717-
     minimumFractionDigits: 0,
     maximumFractionDigits: 2,
   }).format((Number(cents) || 0) / 100);
+
+  const metricSize = (size) => String(size || '').split('/')[0].trim();
+  const publicPaper = (work) => work.category === 'collector' ? 'Hahnemühle Pearl' : 'Lustre photographic paper';
 
   function borderClass(work) {
     if (work.borderMm >= 25) return ' border-25';
@@ -122,7 +130,7 @@ import { PRINT_CATALOG, PRINT_CATEGORIES } from './catalog/prints.js?v=20260717-
         <div class="artwork-carousel" data-title="${work.title}">
           <div class="carousel-track">
             <button aria-label="Open ${work.title} full screen" class="carousel-slide artwork-expand is-active" data-full="${work.artworkWebpPath || work.artworkPath}" data-title="${work.title}" data-border="${work.borderMm}" type="button">${artworkMedia}<span>View full screen</span></button>
-            <button aria-label="Open framed wall view of ${work.title} full screen" class="carousel-slide artwork-expand" data-full="${work.mockupPath}" data-title="${work.title}, framed view" data-border="0" type="button">${pictureMarkup({ src: work.mockupPath, webp: work.mockupWebpPath, alt: `${work.title} displayed as a framed print in an interior` })}<span>View full screen</span></button>
+            <button aria-label="Open framed wall view of ${work.title} full screen" class="carousel-slide artwork-expand" data-full="${work.mockupPath}" data-title="${work.title}, framed view" data-border="0" type="button">${pictureMarkup({ src: work.mockupPath, webp: work.mockupWebpPath, alt: `${work.title} displayed as a framed print in an interior` })}<span>View full screen</span><small class="carousel-caption">Shown framed for scale. Print supplied unframed.</small></button>
           </div>
           <div aria-label="Photograph views" class="carousel-controls">
             <button aria-label="Previous view" class="carousel-prev" type="button">←</button>
@@ -134,51 +142,51 @@ import { PRINT_CATALOG, PRINT_CATEGORIES } from './catalog/prints.js?v=20260717-
       </section>`;
   }
 
+  function editionText(variant) {
+    return variant.editionSize ? `Edition of ${variant.editionSize}` : 'Open edition';
+  }
+
   function renderProductPanel(work) {
     const first = work.variants[0];
-    const variantOptions = work.variants.length > 1
-      ? `<div class="variant-selector" role="group" aria-label="Choose ${work.title} size">${work.variants.map((variant, index) => `
-          <button class="variant-option${index === 0 ? ' is-selected' : ''}" data-variant-option="${variant.id}" type="button"><strong>${variant.label}</strong><span>${variant.size} · ${formatEuro(variant.priceCents)}</span></button>`).join('')}</div>`
+    const isCollector = work.category === 'collector';
+    const borderText = work.borderMm ? `${work.borderMm} mm white border · ` : '';
+    const sharedCertificate = isCollector ? '<p>Signed and numbered Certificate of Authenticity</p>' : '';
+    const variantPreview = work.variants.length > 1
+      ? `<div class="edition-preview">${work.variants.map((variant) => `
+          <div><strong>${variant.label}</strong><span>${metricSize(variant.size)} · ${editionText(variant)} · ${formatEuro(variant.priceCents)}</span></div>`).join('')}</div>`
       : '';
-    const extra = work.category === 'collector'
-      ? `${work.borderMm ? `${work.borderMm} mm even white border · ` : 'Full bleed · '}Certificate of Authenticity: ${work.certificate} · Personal letter included`
-      : 'Made to order · Supplied unframed · A printed thank-you note may be included where the fulfilment route permits';
+    const price = work.variants.length > 1 ? `From ${formatEuro(Math.min(...work.variants.map((variant) => variant.priceCents)))}` : (first.priceCents === null ? 'Soon' : formatEuro(first.priceCents));
     return `
-      <div class="product-panel" data-product-panel="${work.id}" data-selected-variant="${first.id}">
+      <div class="product-panel" data-product-panel="${work.id}">
         <div>
-          <p class="product-panel__eyebrow">${work.category === 'collector' ? 'Limited Collector Edition' : first.availability === 'upcoming' ? 'In development' : 'Dream Edition'}</p>
+          <p class="product-panel__eyebrow">${isCollector ? 'Collector Edition' : 'Dream Edition'}</p>
           <h3>${work.title}</h3>
-          <p class="product-panel__description">${work.description}</p>
-          <p class="product-panel__specs" data-product-specs>${first.size} · ${first.paper} · Unframed</p>
-          <p class="product-panel__note">${extra}</p>
-          ${variantOptions}
-          <p class="edition-note" data-edition-note>${editionText(first)}</p>
+          <div class="product-panel__facts">
+            ${work.variants.length === 1 ? `<p>${metricSize(first.size)} · ${borderText}Unframed</p><p>${publicPaper(work)}</p><p>${editionText(first)}</p>` : `<p>${publicPaper(work)} · Unframed</p>`}
+            ${sharedCertificate}
+          </div>
+          ${variantPreview}
+          <p class="product-panel__delivery">Delivery is calculated for your destination.</p>
         </div>
         <div class="product-panel__price">
-          <strong data-store-price>${first.priceCents === null ? 'Soon' : formatEuro(first.priceCents)}</strong>
-          <small data-store-price-label>${first.label}</small>
-          <button class="store-buy" data-store-product="${first.id}" disabled type="button">${initialButtonLabel(first)}</button>
+          <strong data-store-price>${price}</strong>
+          <small>${work.variants.length > 1 ? 'Choose inside' : first.label}</small>
+          <button class="store-buy" data-store-work="${work.id}" disabled type="button">${initialWorkButtonLabel(work)}</button>
         </div>
       </div>`;
   }
 
-  function editionText(variant) {
-    if (!variant.editionSize) return '';
-    const remaining = Math.max(0, variant.editionSize - Number(variant.soldCount || 0));
-    return `Edition of ${variant.editionSize} · ${remaining} currently available`;
-  }
-
-  function initialButtonLabel(variant) {
-    if (variant.availability === 'upcoming') return 'Available soon';
-    if (variant.availability === 'sold-out') return 'Sold out';
-    return 'Checkout';
+  function initialWorkButtonLabel(work) {
+    if (work.variants.every((variant) => variant.availability === 'upcoming')) return 'Available soon';
+    if (work.variants.every((variant) => variant.availability === 'sold-out')) return 'Sold out';
+    return 'Acquire this print';
   }
 
   function bindCarouselsAndLightbox() {
     document.querySelectorAll('.artwork-expand').forEach((button) => button.addEventListener('click', () => {
       if (!lightbox || !lightboxImage || !lightboxTitle) return;
       lightboxImage.src = button.dataset.full;
-      lightboxImage.alt = `${button.dataset.title}, full-screen view`;
+      lightboxImage.alt = `${button.dataset.title}, full screen view`;
       const lightboxBorder = Number(button.dataset.border || 0);
       lightboxImage.classList.toggle('border-25', lightboxBorder >= 25);
       lightboxImage.classList.toggle('border-20', lightboxBorder >= 20 && lightboxBorder < 25);
@@ -217,36 +225,24 @@ import { PRINT_CATALOG, PRINT_CATEGORIES } from './catalog/prints.js?v=20260717-
     document.body.classList.remove('lightbox-open');
   }
 
-  function bindVariantSelectors() {
-    document.querySelectorAll('[data-product-panel]').forEach((panel) => {
-      const work = PRINT_CATALOG.find((entry) => entry.id === panel.dataset.productPanel);
-      if (!work) return;
-      panel.querySelectorAll('[data-variant-option]').forEach((button) => button.addEventListener('click', () => {
-        panel.querySelectorAll('[data-variant-option]').forEach((option) => option.classList.toggle('is-selected', option === button));
-        panel.dataset.selectedVariant = button.dataset.variantOption;
-        updatePanel(work, button.dataset.variantOption);
-      }));
-    });
+  function workStatus(work) {
+    const apiVariants = work.variants.map((variant) => state.apiProducts.get(variant.id)).filter(Boolean);
+    if (!apiVariants.length) return { enabled: false, label: initialWorkButtonLabel(work) };
+    if (apiVariants.some((variant) => variant.checkoutReady)) return { enabled: true, label: 'Acquire this print' };
+    if (apiVariants.every((variant) => variant.availability === 'upcoming')) return { enabled: false, label: 'Available soon' };
+    if (apiVariants.every((variant) => variant.availability === 'sold-out')) return { enabled: false, label: 'Sold out' };
+    return { enabled: false, label: 'Temporarily unavailable' };
   }
 
-  function updatePanel(work, productId) {
-    const panel = document.querySelector(`[data-product-panel="${work.id}"]`);
-    const variant = work.variants.find((entry) => entry.id === productId);
-    if (!panel || !variant) return;
-    const apiProduct = state.apiProducts.get(productId);
-    panel.querySelector('[data-product-specs]').textContent = `${variant.size} · ${variant.paper} · Unframed`;
-    panel.querySelector('[data-store-price]').textContent = variant.priceCents === null ? 'Soon' : formatEuro(apiProduct?.priceCents ?? variant.priceCents);
-    panel.querySelector('[data-store-price-label]').textContent = apiProduct?.priceLabel || variant.label;
-    panel.querySelector('[data-edition-note]').textContent = editionText(variant);
-    const button = panel.querySelector('[data-store-product]');
-    button.dataset.storeProduct = variant.id;
-    if (apiProduct) {
-      button.disabled = !apiProduct.checkoutReady;
-      button.textContent = apiProduct.statusLabel;
-    } else {
-      button.disabled = true;
-      button.textContent = initialButtonLabel(variant);
-    }
+  function updateWorkButtons() {
+    PRINT_CATALOG.forEach((work) => {
+      const panel = document.querySelector(`[data-product-panel="${work.id}"]`);
+      const button = panel?.querySelector('[data-store-work]');
+      if (!button) return;
+      const status = workStatus(work);
+      button.disabled = !status.enabled;
+      button.textContent = status.label;
+    });
   }
 
   async function loadApiCatalogue() {
@@ -255,42 +251,125 @@ import { PRINT_CATALOG, PRINT_CATEGORIES } from './catalog/prints.js?v=20260717-
       if (!response.ok) throw new Error('Catalogue unavailable');
       state.api = await response.json();
       state.apiProducts = new Map(state.api.products.map((product) => [product.id, product]));
-      countrySelect.replaceChildren(new Option('Select delivery country', ''));
+      countrySelect.replaceChildren(new Option('Choose a country', ''));
       state.api.countries.forEach(({ code, name }) => countrySelect.add(new Option(name, code)));
-      PRINT_CATALOG.forEach((work) => updatePanel(work, document.querySelector(`[data-product-panel="${work.id}"]`)?.dataset.selectedVariant || work.variants[0].id));
+      updateWorkButtons();
       bindBuyButtons();
     } catch (error) {
       console.error(error);
-      document.querySelectorAll('[data-store-product]').forEach((button) => {
-        const staticVariant = PRINT_CATALOG.flatMap((work) => work.variants).find((variant) => variant.id === button.dataset.storeProduct);
-        if (staticVariant?.availability === 'available') button.textContent = 'Checkout unavailable';
+      document.querySelectorAll('[data-store-work]').forEach((button) => {
+        const work = PRINT_CATALOG.find((entry) => entry.id === button.dataset.storeWork);
+        if (work?.variants.every((variant) => variant.availability === 'upcoming')) {
+          button.textContent = 'Available soon';
+        } else {
+          button.textContent = 'Temporarily unavailable';
+        }
         button.disabled = true;
       });
     }
   }
 
   function bindBuyButtons() {
-    document.querySelectorAll('[data-store-product]').forEach((button) => {
+    document.querySelectorAll('[data-store-work]').forEach((button) => {
       if (button.dataset.bound === 'true') return;
       button.dataset.bound = 'true';
-      button.addEventListener('click', () => openFor(button.dataset.storeProduct));
+      button.addEventListener('click', () => openForWork(button.dataset.storeWork));
     });
   }
 
-  function setMessage(value) { if (message) message.textContent = value || ''; }
+  function setMessage(value) {
+    if (message) message.textContent = value || '';
+  }
+
   function setBusy(busy, label = 'Continue to secure checkout') {
     if (!action) return;
     action.disabled = busy || !state.quote;
     action.textContent = busy ? label : 'Continue to secure checkout';
   }
 
+  function clearQuote() {
+    state.country = '';
+    state.quote = null;
+    state.checkout = null;
+    if (countrySelect) countrySelect.value = '';
+    if (quoteBox) {
+      quoteBox.hidden = true;
+      quoteBox.innerHTML = '';
+    }
+    setMessage('');
+    setBusy(false);
+  }
+
+  function selectProduct(productId, recordSelection = false) {
+    const product = state.apiProducts.get(productId);
+    if (!product?.checkoutReady) return;
+    state.product = product;
+    if (recordSelection) trackEvent("print_variant_selected", { product: product.id, variant: product.label, source: "acquisition-dialog" });
+    if (dialogVariant) dialogVariant.textContent = `${product.label} · ${metricSize(product.size)}`;
+    dialogVariants?.querySelectorAll('[data-dialog-product]').forEach((button) => {
+      button.classList.toggle('is-selected', button.dataset.dialogProduct === productId);
+      button.setAttribute('aria-pressed', String(button.dataset.dialogProduct === productId));
+    });
+    if (countrySelect) countrySelect.disabled = false;
+    clearQuote();
+  }
+
+  function renderDialogVariants(work) {
+    if (!dialogVariants) return;
+    dialogVariants.innerHTML = '';
+    if (work.variants.length === 1) {
+      dialogVariants.hidden = true;
+      const only = state.apiProducts.get(work.variants[0].id);
+      if (only?.checkoutReady) selectProduct(only.id);
+      return;
+    }
+
+    dialogVariants.hidden = false;
+    dialogVariants.innerHTML = `
+      <p class="dialog-variants__label">Choose an edition</p>
+      <div class="dialog-variants__grid">
+        ${work.variants.map((variant) => {
+          const product = state.apiProducts.get(variant.id);
+          const disabled = !product?.checkoutReady;
+          return `<button type="button" data-dialog-product="${variant.id}" aria-pressed="false" ${disabled ? 'disabled' : ''}><strong>${variant.label}</strong><span>${metricSize(variant.size)}</span><span>${editionText(variant)} · ${formatEuro(variant.priceCents)}</span></button>`;
+        }).join('')}
+      </div>`;
+    dialogVariants.querySelectorAll('[data-dialog-product]').forEach((button) => {
+      button.addEventListener('click', () => selectProduct(button.dataset.dialogProduct, true));
+    });
+  }
+
+  function openForWork(workId) {
+    const work = PRINT_CATALOG.find((entry) => entry.id === workId);
+    if (!work || !dialog) return;
+    state.work = work;
+    trackEvent("acquire_print_clicked", { product: work.id, source: "print-card" });
+    state.product = null;
+    state.quote = null;
+    state.checkout = null;
+    title.textContent = `Acquire ${work.title}`;
+    dialogVariant.textContent = '';
+    dialogIntro.textContent = work.variants.length > 1
+      ? 'Choose an edition and your destination to see delivery and the complete price.'
+      : 'Choose your destination to see delivery and the complete price.';
+    countrySelect.disabled = work.variants.length > 1;
+    clearQuote();
+    renderDialogVariants(work);
+    dialog.showModal();
+    if (work.variants.length > 1) {
+      dialogVariants.querySelector('button:not([disabled])')?.focus();
+    } else {
+      countrySelect.focus();
+    }
+  }
+
   function renderQuote(payload) {
     if (!quoteBox || !payload) return;
     quoteBox.innerHTML = `
-      <div class="store-quote__row"><span>${payload.product.title}, ${payload.product.label}</span><strong>${formatEuro(payload.priceCents)}</strong></div>
-      <div class="store-quote__row"><span>Shipping &amp; handling</span><strong>${formatEuro(payload.shippingCents)}</strong></div>
+      <div class="store-quote__row"><span>Print</span><strong>${formatEuro(payload.priceCents)}</strong></div>
+      <div class="store-quote__row"><span>Delivery</span><strong>${formatEuro(payload.shippingCents)}</strong></div>
       <div class="store-quote__row store-quote__row--total"><span>Total</span><strong>${formatEuro(payload.totalCents)}</strong></div>
-      <p class="store-quote__note">${payload.estimateNote} Shipping is paid by the purchaser.</p>`;
+      <p class="store-quote__note"><strong>Estimated delivery</strong><br>${payload.estimateNote}</p>`;
     quoteBox.hidden = false;
   }
 
@@ -303,32 +382,18 @@ import { PRINT_CATALOG, PRINT_CATEGORIES } from './catalog/prints.js?v=20260717-
     }));
   }
 
-  function openFor(productId) {
-    const product = state.apiProducts.get(productId);
-    if (!product?.checkoutReady || !dialog) return;
-    state.product = product;
-    state.country = '';
-    state.quote = null;
-    state.checkout = null;
-    title.textContent = product.title;
-    dialogVariant.textContent = `${product.label} · ${product.size}`;
-    countrySelect.value = '';
-    quoteBox.hidden = true;
-    quoteBox.innerHTML = '';
-    setMessage('');
-    setBusy(false);
-    dialog.showModal();
-    countrySelect.focus();
-  }
-
   async function getQuote() {
     state.country = countrySelect.value;
     state.quote = null;
     state.checkout = null;
     quoteBox.hidden = true;
     setMessage('');
-    setBusy(true, 'Calculating delivery…');
-    if (!state.country || !state.product) { setBusy(false); return; }
+    if (!state.country || !state.product) {
+      setBusy(false);
+      return;
+    }
+    trackEvent("delivery_quote_requested", { product: state.product.id, variant: state.product.label, country: state.country, source: "browser" });
+    setBusy(true, 'Finding delivery options…');
     try {
       const response = await fetch('/api/quote', {
         method: 'POST',
@@ -336,12 +401,15 @@ import { PRINT_CATALOG, PRINT_CATEGORIES } from './catalog/prints.js?v=20260717-
         body: JSON.stringify({ productId: state.product.id, countryCode: state.country }),
       });
       const payload = await response.json();
-      if (!response.ok) throw new Error(payload.error || 'Delivery could not be calculated');
+      if (!response.ok) throw new Error(payload.error || 'Delivery is temporarily unavailable.');
       state.quote = payload;
+      trackEvent("delivery_quote_succeeded", { product: state.product.id, variant: state.product.label, country: state.country, outcome: "success", source: "browser" });
       renderQuote(payload);
       setBusy(false);
     } catch (error) {
-      setMessage(error.message);
+      console.error(error);
+      trackEvent("delivery_quote_failed", { product: state.product?.id, variant: state.product?.label, country: state.country, outcome: "failed", source: "browser" });
+      setMessage('Delivery is temporarily unavailable. Please try again shortly.');
       setBusy(false);
     }
   }
@@ -350,13 +418,15 @@ import { PRINT_CATALOG, PRINT_CATEGORIES } from './catalog/prints.js?v=20260717-
     if (!state.quote || !state.product || !state.country) return;
 
     if (state.checkout?.url) {
+      trackEvent("checkout_session_created", { product: state.product.id, variant: state.product.label, country: state.country, outcome: "redirect", source: "browser" });
       rememberCheckout(state.checkout);
       window.location.assign(state.checkout.url);
       return;
     }
 
     setMessage('');
-    setBusy(true, 'Confirming final delivery…');
+    trackEvent("checkout_started", { product: state.product.id, variant: state.product.label, country: state.country, source: "browser" });
+    setBusy(true, 'Preparing secure checkout…');
     try {
       const response = await fetch('/api/create-checkout', {
         method: 'POST',
@@ -364,7 +434,7 @@ import { PRINT_CATALOG, PRINT_CATEGORIES } from './catalog/prints.js?v=20260717-
         body: JSON.stringify({ productId: state.product.id, countryCode: state.country }),
       });
       const payload = await response.json();
-      if (!response.ok || !payload.url) throw new Error(payload.error || 'Secure checkout could not be opened');
+      if (!response.ok || !payload.url) throw new Error(payload.error || 'Checkout could not be opened');
 
       const finalQuote = {
         ...state.quote,
@@ -382,17 +452,19 @@ import { PRINT_CATALOG, PRINT_CATEGORIES } from './catalog/prints.js?v=20260717-
       renderQuote(finalQuote);
 
       if (amountChanged) {
-        setMessage('The live delivery rate changed while checkout was prepared. Review the exact total below, then confirm to continue.');
+        setMessage('The delivery total changed while checkout was prepared. Please review the updated total before continuing.');
         action.disabled = false;
         action.textContent = `Confirm ${formatEuro(finalQuote.totalCents)} and continue`;
         return;
       }
 
+      trackEvent("checkout_session_created", { product: state.product.id, variant: state.product.label, country: state.country, outcome: "redirect", source: "browser" });
       rememberCheckout(state.checkout);
       window.location.assign(state.checkout.url);
     } catch (error) {
+      console.error(error);
       state.checkout = null;
-      setMessage(error.message);
+      setMessage('Secure checkout is temporarily unavailable. Please try again shortly.');
       setBusy(false);
     }
   }
@@ -400,15 +472,20 @@ import { PRINT_CATALOG, PRINT_CATEGORIES } from './catalog/prints.js?v=20260717-
   renderCatalogue();
   renderDeepView();
   bindCarouselsAndLightbox();
-  bindVariantSelectors();
-  PRINT_CATALOG.forEach((work) => updatePanel(work, work.variants[0].id));
+  updateWorkButtons();
   loadApiCatalogue();
 
   countrySelect?.addEventListener('change', getQuote);
   action?.addEventListener('click', startCheckout);
   closeButton?.addEventListener('click', () => dialog.close());
   dialog?.addEventListener('click', (event) => { if (event.target === dialog) dialog.close(); });
-  dialog?.addEventListener('close', () => { state.product = null; state.quote = null; state.checkout = null; setMessage(''); });
+  dialog?.addEventListener('close', () => {
+    state.work = null;
+    state.product = null;
+    state.quote = null;
+    state.checkout = null;
+    setMessage('');
+  });
   lightboxClose?.addEventListener('click', closeViewer);
   lightbox?.addEventListener('click', (event) => { if (event.target === lightbox) closeViewer(); });
   lightbox?.addEventListener('cancel', (event) => { event.preventDefault(); closeViewer(); });

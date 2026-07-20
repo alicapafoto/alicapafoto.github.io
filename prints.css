@@ -443,7 +443,69 @@ main { padding-top: 4rem; }
 .catalogue-card__paper.border-25 { padding: 6%; }
 .carousel-slide__paper.border-20 { padding: 4%; }
 .carousel-slide__paper.border-25 { padding: 6%; }
-.carousel-slide picture,
-.catalogue-card picture { display: contents; }
+
+/*
+  Bordered collector artworks need a real sizing box. Android Chrome can
+  collapse a <picture style="display: contents"> inside the paper wrapper,
+  which previously squeezed Mèranö and Ràábta into a thin horizontal strip.
+*/
+.carousel-slide > picture,
+.catalogue-card__image > picture { display: contents; }
+
+.carousel-slide__paper,
+.catalogue-card__paper { box-sizing: border-box; }
+
+.carousel-slide__paper {
+  width: min(90%, calc(72vh * 4 / 5));
+  aspect-ratio: 4 / 5;
+}
+
+.carousel-slide__paper picture,
+.catalogue-card__paper picture {
+  width: 100%;
+  height: 100%;
+  display: block;
+}
+
+.carousel-slide__paper img,
+.catalogue-card__paper img {
+  width: 100%;
+  height: 100%;
+  max-width: none;
+  max-height: none;
+  object-fit: contain;
+}
+
+@media (max-width: 720px) {
+  .carousel-slide__paper {
+    width: min(90%, calc(64vh * 4 / 5));
+  }
+}
+
 #printLightbox img.border-20 { padding: 2.5vh; background: #fff; }
 #printLightbox img.border-25 { padding: 3.5vh; background: #fff; }
+
+
+.carousel-caption {
+  position: absolute;
+  left: 0;
+  right: auto;
+  bottom: -2.15rem;
+  color: rgba(255,255,255,.62);
+  font-family: 'Inter', sans-serif;
+  font-size: .55rem;
+  font-weight: 400;
+  letter-spacing: .06em;
+  line-height: 1.4;
+  text-transform: none;
+}
+.carousel-slide .carousel-caption + span,
+.carousel-slide > span:not(.carousel-slide__paper) {
+  z-index: 2;
+}
+@media (max-width: 680px) {
+  .carousel-caption {
+    max-width: 70%;
+    bottom: -2.7rem;
+  }
+}

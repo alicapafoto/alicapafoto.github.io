@@ -311,3 +311,14 @@
       .support-button { width: 100%; }
       .card-note { line-height: 1.6; }
     }
+
+
+    .closing-invitation {
+      max-width: 39rem;
+      margin-top: 3.25rem;
+      font-family: 'Cormorant Garamond', serif;
+      font-size: clamp(1.25rem, 1.9vw, 1.65rem);
+      font-weight: 300;
+      line-height: 1.55;
+      color: #44443F;
+    }

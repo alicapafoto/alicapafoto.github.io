@@ -467,3 +467,114 @@
     }
 
 body.lightbox-open { overflow: hidden; }
+
+
+.artwork-carousel {
+  width: 100%;
+}
+.artwork-carousel-track {
+  position: relative;
+  min-height: clamp(28rem, 54vw, 47rem);
+  overflow: hidden;
+  background: var(--soft);
+}
+.artwork-slide {
+  position: absolute;
+  inset: 0;
+  width: 100%;
+  height: 100%;
+  padding: 0;
+  display: grid;
+  place-items: center;
+  border: 0;
+  background: transparent;
+  opacity: 0;
+  pointer-events: none;
+  cursor: zoom-in;
+  transition: opacity .35s ease;
+}
+.artwork-slide.is-active {
+  opacity: 1;
+  pointer-events: auto;
+}
+.artwork-slide img {
+  width: 100%;
+  height: 100%;
+  display: block;
+  object-fit: contain;
+  transition: transform .45s ease, opacity .25s ease;
+}
+.artwork-slide:hover img,
+.artwork-slide:focus-visible img {
+  transform: scale(1.008);
+  opacity: .96;
+}
+.artwork-slide > span {
+  position: absolute;
+  right: 1rem;
+  bottom: 1rem;
+  padding: .35rem .5rem;
+  background: rgba(250,250,247,.86);
+  color: var(--mid);
+  font-size: .52rem;
+  font-weight: 500;
+  letter-spacing: .14em;
+  text-transform: uppercase;
+}
+.artwork-carousel-controls {
+  display: grid;
+  grid-template-columns: 3rem 1fr 3rem;
+  align-items: center;
+  gap: 1rem;
+  margin-top: .85rem;
+}
+.artwork-carousel-controls > span {
+  display: flex;
+  justify-content: center;
+  gap: .55rem;
+}
+.artwork-carousel-controls button {
+  border: 0;
+  background: transparent;
+  color: var(--mid);
+  cursor: pointer;
+}
+.artwork-carousel-prev,
+.artwork-carousel-next {
+  font-size: 1rem;
+}
+.artwork-carousel-dot {
+  padding: .2rem;
+  font-size: .55rem;
+  letter-spacing: .12em;
+  opacity: .45;
+}
+.artwork-carousel-dot.is-active {
+  color: var(--ink);
+  opacity: 1;
+  text-decoration: underline;
+  text-underline-offset: .35rem;
+}
+.action-link--disabled,
+.action-link--disabled:hover {
+  border-color: var(--rule);
+  background: transparent;
+  color: var(--mid);
+  cursor: not-allowed;
+}
+.work-details dd.upcoming {
+  color: var(--gold);
+}
+@media (max-width: 720px) {
+  .artwork-carousel-track {
+    min-height: min(118vw, 42rem);
+  }
+  .artwork-slide > span {
+    right: .7rem;
+    bottom: .7rem;
+  }
+}
+@media (prefers-reduced-motion: reduce) {
+  .artwork-slide,
+  .artwork-slide img { transition: none; }
+}
