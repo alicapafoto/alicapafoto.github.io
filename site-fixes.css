@@ -1,0 +1,222 @@
+/* Ali Capa responsive and gallery corrections — 20 July 2026 */
+html {
+  width: 100%;
+  max-width: 100%;
+  overflow-x: clip;
+}
+
+body {
+  width: 100%;
+  max-width: 100%;
+  overflow-x: clip !important;
+}
+
+main,
+section,
+header,
+footer,
+nav,
+figure,
+picture,
+img {
+  max-width: 100%;
+}
+
+/* Keep the five-destination mobile navigation fully inside the viewport. */
+.mobile-nav {
+  left: 0 !important;
+  right: 0 !important;
+  width: 100% !important;
+  max-width: 100% !important;
+  min-width: 0 !important;
+  padding-inline: .18rem !important;
+  grid-template-columns: repeat(5, minmax(0, 1fr)) !important;
+  overflow: hidden !important;
+}
+
+.mobile-nav a {
+  width: 100% !important;
+  min-width: 0 !important;
+  max-width: 100% !important;
+  padding-inline: .03rem !important;
+  font-size: clamp(.43rem, 2.05vw, .55rem) !important;
+  letter-spacing: .07em !important;
+  line-height: 1.08 !important;
+  white-space: normal !important;
+  overflow-wrap: normal !important;
+}
+
+.mobile-nav a[href="artworks.html"] {
+  font-size: clamp(.41rem, 1.88vw, .5rem) !important;
+  letter-spacing: .055em !important;
+}
+
+/* Prevent wide artwork stages and headings from creating sideways scrolling. */
+.prints-intro,
+.catalogue,
+.deep-view,
+.print-reveal,
+.artwork-carousel,
+.carousel-track,
+.collection,
+.collection-grid,
+.work-card,
+.artwork-carousel-track,
+.support-layout,
+.support-content,
+.support-visual {
+  width: 100%;
+  max-width: 100%;
+  min-width: 0;
+}
+
+.artwork-carousel,
+.artwork-carousel-track,
+.carousel-track,
+.lightbox-stage,
+.lightbox,
+.print-lightbox {
+  touch-action: pan-y;
+  overscroll-behavior-x: contain;
+}
+
+/* Let bordered Collector Edition images size from the photograph itself.
+   This avoids the Android collapse that reduced Mèranö and Ràábta to strips. */
+.carousel-slide__paper {
+  width: auto !important;
+  height: auto !important;
+  aspect-ratio: auto !important;
+  max-width: 90% !important;
+  max-height: 72vh !important;
+  display: inline-flex !important;
+  align-items: center;
+  justify-content: center;
+  overflow: hidden;
+  background: #fff;
+}
+
+.carousel-slide__paper.border-20 {
+  padding: clamp(.85rem, 2.4vw, 2rem) !important;
+}
+
+.carousel-slide__paper.border-25 {
+  padding: clamp(1rem, 3.2vw, 2.75rem) !important;
+}
+
+.carousel-slide__paper picture {
+  width: auto !important;
+  height: auto !important;
+  max-width: 100% !important;
+  max-height: 100% !important;
+  display: block !important;
+}
+
+.carousel-slide__paper img {
+  width: auto !important;
+  height: auto !important;
+  max-width: 100% !important;
+  max-height: calc(72vh - 3rem) !important;
+  object-fit: contain !important;
+  object-position: center !important;
+}
+
+.carousel-slide img,
+.artwork-slide img,
+.lightbox-stage img,
+.lightbox img {
+  object-fit: contain !important;
+  object-position: center !important;
+}
+
+/* Full-screen previous and next controls inserted by gallery-enhancements.js. */
+.gallery-lightbox-nav {
+  position: fixed;
+  z-index: 1002;
+  top: 50%;
+  width: 3rem;
+  height: 3rem;
+  display: grid;
+  place-items: center;
+  transform: translateY(-50%);
+  border: 1px solid rgba(255,255,255,.22);
+  border-radius: 50%;
+  background: rgba(5,5,5,.42);
+  color: rgba(255,255,255,.88);
+  font: 300 1.35rem/1 'Inter', sans-serif;
+  cursor: pointer;
+  backdrop-filter: blur(8px);
+  -webkit-backdrop-filter: blur(8px);
+}
+
+.gallery-lightbox-nav--prev { left: clamp(.65rem, 2vw, 2rem); }
+.gallery-lightbox-nav--next { right: clamp(.65rem, 2vw, 2rem); }
+.gallery-lightbox-nav:hover,
+.gallery-lightbox-nav:focus-visible { background: rgba(5,5,5,.72); color: #fff; }
+
+/* Original Artwork viewer uses a light background. */
+#lightbox .gallery-lightbox-nav {
+  border-color: rgba(24,24,23,.2);
+  background: rgba(250,250,247,.78);
+  color: rgba(24,24,23,.82);
+}
+
+#lightbox .gallery-lightbox-nav:hover,
+#lightbox .gallery-lightbox-nav:focus-visible {
+  background: rgba(250,250,247,.98);
+  color: #181817;
+}
+
+/* The Join Us photograph should remain uninterrupted by a caption. */
+.support-visual .visual-credit { display: none !important; }
+
+@media (max-width: 520px) {
+  .prints-intro {
+    align-items: center !important;
+    text-align: center;
+    overflow: hidden;
+  }
+
+  .prints-intro h1 {
+    width: 100%;
+    max-width: 100%;
+    font-size: clamp(3.75rem, 16vw, 5rem) !important;
+    line-height: .84 !important;
+    letter-spacing: -.04em !important;
+    overflow-wrap: normal;
+    word-break: normal;
+  }
+
+  .prints-intro .eyebrow,
+  .prints-intro .intro-copy,
+  .prints-intro .intro-link {
+    margin-inline: auto;
+  }
+
+  .carousel-slide__paper {
+    max-width: 94% !important;
+    max-height: 62vh !important;
+  }
+
+  .carousel-slide__paper img {
+    max-height: calc(62vh - 2rem) !important;
+  }
+
+  .carousel-slide__paper.border-20 { padding: .8rem !important; }
+  .carousel-slide__paper.border-25 { padding: 1rem !important; }
+
+  .gallery-lightbox-nav {
+    top: auto;
+    bottom: 1rem;
+    width: 2.7rem;
+    height: 2.7rem;
+    transform: none;
+  }
+
+  .gallery-lightbox-nav--prev { left: calc(50% - 3.2rem); }
+  .gallery-lightbox-nav--next { right: calc(50% - 3.2rem); }
+}
+
+@supports not (overflow: clip) {
+  html,
+  body { overflow-x: hidden !important; }
+}
