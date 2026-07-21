@@ -169,6 +169,22 @@ Plain definitions for:
 - carrier label;
 - tracking number.
 
+### 13 - Gmail Daily Operating Map
+
+The implemented file is `docs/layman/13-Gmail-Daily-Operating-Map.md`.
+
+It explains:
+
+- the difference between Gmail labels and traditional folders;
+- which labels Ali checks first every morning;
+- the difference between `01 Action Needed`, `02 Waiting External`, context labels, and `99 Reference Archive`;
+- how a print-order email moves from Stripe payment through Wise, provider fulfilment, tracking, and completion;
+- how an Original Artwork email moves through payment, packing, DHL, tracking, and completion;
+- how Stripe and DHL approval correspondence changes between waiting and action states;
+- how new business mail should be classified;
+- why Gmail is a notification layer rather than the sole source of truth for payment, inventory, or fulfilment;
+- which older empty experimental labels are not authoritative.
+
 ## Exclusions from the Layman folder
 
 Do not include:
