@@ -42,6 +42,8 @@ jobs:
           path: private-fulfilment-test.log
           if-no-files-found: error
           retention-days: 1
+      - name: Run private admin UI privacy tests
+        run: node scripts/test-original-artwork-admin-ui.mjs
       - name: Run storefront tests
         run: npm test
       - name: Validate site files
