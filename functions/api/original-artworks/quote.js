@@ -1,6 +1,10 @@
 import { findOriginalArtwork } from "../../../catalog/original-artworks.js";
 import { isOriginalWorksAcquisitionEnabled } from "../../_lib/original-artworks.js";
 import {
+  createOriginalArtworkQuoteToken,
+  isOriginalArtworkQuoteSigningConfigured,
+} from "../../_lib/original-artwork-quote-token.js";
+import {
   isOriginalArtworkShippingConfigured,
   normalizeOriginalArtworkShippingAddress,
   quoteOriginalArtworkShipping,
@@ -14,7 +18,7 @@ export async function onRequest(context) {
     if (!isOriginalWorksAcquisitionEnabled(context.env)) {
       return json({ error: "Original artwork acquisition is not open yet." }, 409);
     }
-    if (!isOriginalArtworkShippingConfigured(context.env)) {
+    if (!isOriginalArtworkShippingConfigured(context.env) || !isOriginalArtworkQuoteSigningConfigured(context.env)) {
       return json({ error: "Insured delivery is still being prepared." }, 409);
     }
 
@@ -27,6 +31,11 @@ export async function onRequest(context) {
       shippingAddress: normalizedAddress,
       env: context.env,
     });
+    const signedQuote = await createOriginalArtworkQuoteToken(context.env, {
+      artworkId: artwork.id,
+      shippingAddress: normalizedAddress,
+      shippingCents: quote.customerCents,
+    });
 
     return json({
       artwork: {
@@ -38,6 +47,8 @@ export async function onRequest(context) {
       shippingAddress: normalizedAddress,
       shipping: quote,
       totalCents: artwork.priceCents + quote.customerCents,
+      quoteToken: signedQuote.token,
+      quoteExpiresAt: signedQuote.expiresAt,
     });
   } catch (error) {
     return json({ error: publicError(error, "An insured delivery quote could not be calculated.") }, 400);
