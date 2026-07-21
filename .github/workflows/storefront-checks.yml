@@ -48,3 +48,102 @@ jobs:
         run: npm test
       - name: Validate site files
         run: npm run validate
+
+  package-v0-9:
+    if: github.event_name == 'push' && github.ref == 'refs/heads/original-works-automation-2026-07-21'
+    needs: test
+    runs-on: ubuntu-latest
+    timeout-minutes: 10
+    steps:
+      - name: Check out preproduction v0.9 source
+        uses: actions/checkout@v4
+        with:
+          ref: original-works-automation-2026-07-21
+          path: preproduction-source
+          fetch-depth: 1
+      - name: Check out exact live production source
+        uses: actions/checkout@v4
+        with:
+          ref: production-2026-07-21
+          path: production-source
+          fetch-depth: 1
+      - name: Build website and documentation archives
+        shell: bash
+        run: |
+          set -euo pipefail
+          DATE=2026-07-21
+          WEBSITE_ROOT="Ali_Capa_Website_Master_v0.9_${DATE}"
+          DOCS_ROOT="Ali_Capa_Master_Documentation_v0.9_${DATE}"
+          mkdir -p build/website/$WEBSITE_ROOT/01_LIVE_PRODUCTION_SITE
+          mkdir -p build/website/$WEBSITE_ROOT/02_PREPRODUCTION_ORIGINAL_WORKS_DO_NOT_DEPLOY
+          mkdir -p build/docs/$DOCS_ROOT/01_MASTER_DOCUMENTATION
+          mkdir -p build/docs/$DOCS_ROOT/02_LAYMAN_HANDOFF
+          mkdir -p build/docs/$DOCS_ROOT/03_OPERATIONAL_DIARY
+          mkdir -p build/docs/$DOCS_ROOT/04_ORIGINAL_WORKS_TECHNICAL
+          mkdir -p build/docs/$DOCS_ROOT/05_LEGAL_SITE_SNAPSHOTS
+
+          rsync -a --exclude='.git/' production-source/ build/website/$WEBSITE_ROOT/01_LIVE_PRODUCTION_SITE/
+          rsync -a --exclude='.git/' preproduction-source/ build/website/$WEBSITE_ROOT/02_PREPRODUCTION_ORIGINAL_WORKS_DO_NOT_DEPLOY/
+
+          PROD_SHA=$(git -C production-source rev-parse HEAD)
+          PREPROD_SHA=$(git -C preproduction-source rev-parse HEAD)
+          cat > build/website/$WEBSITE_ROOT/README-FIRST.txt <<EOF
+          ALI CAPA WEBSITE MASTER v0.9 — 21 JULY 2026
+
+          01_LIVE_PRODUCTION_SITE
+          Exact source snapshot of the current live-production branch. This is the safe restoration reference.
+
+          02_PREPRODUCTION_ORIGINAL_WORKS_DO_NOT_DEPLOY
+          Complete tested Original Works and documentation branch. Do not upload, merge, migrate, or enable it until Stripe and DHL gates, Preview testing, and Ali's final approval are complete.
+
+          Live production branch: production-2026-07-21
+          Live production commit: $PROD_SHA
+          Preproduction branch: original-works-automation-2026-07-21
+          Preproduction commit: $PREPROD_SHA
+          Version 1.0 is reserved for full Original Works activation.
+          EOF
+          printf 'live_production_branch=production-2026-07-21\nlive_production_commit=%s\npreproduction_branch=original-works-automation-2026-07-21\npreproduction_commit=%s\nfreeze_date=%s\n' "$PROD_SHA" "$PREPROD_SHA" "$DATE" > build/website/$WEBSITE_ROOT/VERSION-MANIFEST.txt
+
+          rsync -a preproduction-source/docs/master-archive/ build/docs/$DOCS_ROOT/01_MASTER_DOCUMENTATION/
+          rsync -a preproduction-source/docs/layman/ build/docs/$DOCS_ROOT/02_LAYMAN_HANDOFF/
+          rsync -a preproduction-source/docs/operational-diary/ build/docs/$DOCS_ROOT/03_OPERATIONAL_DIARY/
+          cp preproduction-source/docs/ORIGINAL-WORKS-AUTOMATION.md build/docs/$DOCS_ROOT/04_ORIGINAL_WORKS_TECHNICAL/
+          cp preproduction-source/docs/ORIGINAL-WORKS-FULFILMENT.md build/docs/$DOCS_ROOT/04_ORIGINAL_WORKS_TECHNICAL/
+          cp preproduction-source/docs/LAYMAN-HANDOFF-PLAN.md build/docs/$DOCS_ROOT/04_ORIGINAL_WORKS_TECHNICAL/
+          cp preproduction-source/terms.html build/docs/$DOCS_ROOT/05_LEGAL_SITE_SNAPSHOTS/
+          cp preproduction-source/privacy.html build/docs/$DOCS_ROOT/05_LEGAL_SITE_SNAPSHOTS/
+          cat > build/docs/$DOCS_ROOT/README-FIRST.txt <<EOF
+          ALI CAPA MASTER DOCUMENTATION v0.9 — 21 JULY 2026
+
+          This archive contains the comprehensive master control record, the separate safe Layman handoff folder, the Operational Diary, Original Works technical documentation, and snapshots of the current Terms and Privacy pages.
+
+          It intentionally contains no live secrets, API keys, recovery codes, customer records, complete payment details, or private sender address/telephone.
+
+          Source branch: original-works-automation-2026-07-21
+          Source commit: $PREPROD_SHA
+          Freeze status: v0.9, waiting for Stripe and DHL before v1.0.
+          EOF
+          printf 'source_branch=original-works-automation-2026-07-21\nsource_commit=%s\nfreeze_date=%s\nversion=0.9\n' "$PREPROD_SHA" "$DATE" > build/docs/$DOCS_ROOT/VERSION-MANIFEST.txt
+
+          (cd build/website && zip -qr "../Ali_Capa_Website_Master_v0.9_${DATE}.zip" "$WEBSITE_ROOT")
+          (cd build/docs && zip -qr "../Ali_Capa_Master_Documentation_v0.9_${DATE}.zip" "$DOCS_ROOT")
+          (cd build && sha256sum "Ali_Capa_Website_Master_v0.9_${DATE}.zip" > "Ali_Capa_Website_Master_v0.9_${DATE}_SHA256.txt")
+          (cd build && sha256sum "Ali_Capa_Master_Documentation_v0.9_${DATE}.zip" > "Ali_Capa_Master_Documentation_v0.9_${DATE}_SHA256.txt")
+      - name: Upload website master v0.9
+        uses: actions/upload-artifact@v4
+        with:
+          name: Ali_Capa_Website_Master_v0.9_2026-07-21
+          path: |
+            build/Ali_Capa_Website_Master_v0.9_2026-07-21.zip
+            build/Ali_Capa_Website_Master_v0.9_2026-07-21_SHA256.txt
+          if-no-files-found: error
+          retention-days: 7
+      - name: Upload master documentation v0.9
+        uses: actions/upload-artifact@v4
+        with:
+          name: Ali_Capa_Master_Documentation_v0.9_2026-07-21
+          path: |
+            build/Ali_Capa_Master_Documentation_v0.9_2026-07-21.zip
+            build/Ali_Capa_Master_Documentation_v0.9_2026-07-21_SHA256.txt
+          if-no-files-found: error
+          retention-days: 7
