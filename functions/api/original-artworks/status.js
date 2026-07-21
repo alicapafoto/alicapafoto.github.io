@@ -1,6 +1,7 @@
 import { listOriginalArtworkAvailabilityForCheckout } from "../../_lib/original-artwork-checkout.js";
 import { isOriginalWorksAcquisitionEnabled } from "../../_lib/original-artworks.js";
 import { isOriginalArtworkShippingConfigured } from "../../_lib/original-artwork-shipping.js";
+import { COUNTRIES } from "../../_lib/products.js";
 import { isCheckoutOperational, json, methodNotAllowed, publicError } from "../../_lib/http.js";
 
 function publicStatus(row, checkoutReady) {
@@ -36,6 +37,7 @@ export async function onRequest(context) {
         declaredValueCents: row.declared_value_cents,
         status: publicStatus(row, checkoutReady),
       })),
+      countries: COUNTRIES.map(([code, name]) => ({ code, name })),
     });
   } catch (error) {
     return json({ error: publicError(error, "Original artwork availability is temporarily unavailable.") }, 503);
