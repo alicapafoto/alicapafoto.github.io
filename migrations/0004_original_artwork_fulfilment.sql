@@ -69,3 +69,59 @@ CREATE TABLE IF NOT EXISTS original_artwork_fulfilment_events (
 
 CREATE INDEX IF NOT EXISTS original_artwork_fulfilment_events_idx
   ON original_artwork_fulfilment_events(fulfilment_id, created_at);
+
+CREATE TRIGGER IF NOT EXISTS original_artwork_paid_fulfilment_trigger
+AFTER UPDATE OF status ON original_artworks
+WHEN NEW.status = 'sold'
+  AND OLD.status <> 'sold'
+  AND NEW.checkout_session_id IS NOT NULL
+BEGIN
+  INSERT OR IGNORE INTO original_artwork_fulfilment (
+    fulfilment_id, artwork_id, reservation_id, checkout_session_id, payment_intent_id,
+    status, currency, sale_price_cents, shipping_charged_cents, declared_value_cents,
+    recipient_name, recipient_email, recipient_phone, destination_address_json,
+    provisional_length_cm, provisional_width_cm, provisional_height_cm, provisional_weight_kg,
+    created_at, updated_at
+  )
+  SELECT
+    'owf_' || NEW.checkout_session_id,
+    NEW.artwork_id,
+    NEW.reservation_id,
+    NEW.checkout_session_id,
+    COALESCE(NEW.payment_intent_id, ''),
+    'paid-awaiting-packing',
+    NEW.currency,
+    NEW.price_cents,
+    COALESCE(CAST(json_extract(r.shipping_quote_json, '$.quote.customerCents') AS INTEGER), 0),
+    NEW.declared_value_cents,
+    COALESCE(json_extract(r.shipping_quote_json, '$.shippingAddress.recipientName'), ''),
+    NULL,
+    NULL,
+    COALESCE(json_extract(r.shipping_quote_json, '$.shippingAddress'), '{}'),
+    NEW.package_length_cm,
+    NEW.package_width_cm,
+    NEW.package_height_cm,
+    NEW.package_weight_kg,
+    COALESCE(NEW.sold_at, NEW.updated_at),
+    NEW.updated_at
+  FROM original_artwork_reservations r
+  WHERE r.reservation_id = NEW.reservation_id;
+
+  INSERT INTO original_artwork_fulfilment_events (
+    fulfilment_id, artwork_id, event_type, event_json, actor_email, created_at
+  )
+  SELECT
+    'owf_' || NEW.checkout_session_id,
+    NEW.artwork_id,
+    'paid-handoff-created',
+    json_object(
+      'checkoutSessionId', NEW.checkout_session_id,
+      'paymentIntentId', COALESCE(NEW.payment_intent_id, '')
+    ),
+    'stripe-webhook',
+    COALESCE(NEW.sold_at, NEW.updated_at)
+  WHERE EXISTS (
+    SELECT 1 FROM original_artwork_fulfilment
+    WHERE checkout_session_id = NEW.checkout_session_id
+  );
+END;
