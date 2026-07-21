@@ -1,5 +1,6 @@
 import { listOriginalArtworkAvailabilityForCheckout } from "../../_lib/original-artwork-checkout.js";
 import { isOriginalWorksAcquisitionEnabled } from "../../_lib/original-artworks.js";
+import { isOriginalArtworkQuoteSigningConfigured } from "../../_lib/original-artwork-quote-token.js";
 import { isOriginalArtworkShippingConfigured } from "../../_lib/original-artwork-shipping.js";
 import { COUNTRIES } from "../../_lib/products.js";
 import { isCheckoutOperational, json, methodNotAllowed, publicError } from "../../_lib/http.js";
@@ -22,13 +23,20 @@ export async function onRequest(context) {
   try {
     const acquisitionEnabled = isOriginalWorksAcquisitionEnabled(context.env);
     const shippingConfigured = isOriginalArtworkShippingConfigured(context.env);
-    const checkoutReady = Boolean(acquisitionEnabled && shippingConfigured && isCheckoutOperational(context.env));
+    const quoteSigningConfigured = isOriginalArtworkQuoteSigningConfigured(context.env);
+    const checkoutReady = Boolean(
+      acquisitionEnabled
+      && shippingConfigured
+      && quoteSigningConfigured
+      && isCheckoutOperational(context.env)
+    );
     const rows = await listOriginalArtworkAvailabilityForCheckout(context.env);
     return json({
       currency: "EUR",
       reservationMinutes: 30,
       acquisitionEnabled,
       shippingConfigured,
+      quoteSigningConfigured,
       checkoutReady,
       artworks: rows.map((row) => ({
         id: row.artwork_id,
