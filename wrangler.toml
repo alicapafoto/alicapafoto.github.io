@@ -3,9 +3,9 @@ compatibility_date = "2026-07-20"
 pages_build_output_dir = "."
 
 [vars]
-STORE_ENV = "staging"
-STAGING_SAFE_MODE = "true"
-ANALYTICS_MODE = "staging"
+STORE_ENV = "live"
+STAGING_SAFE_MODE = "false"
+ANALYTICS_MODE = "production"
 
 [[analytics_engine_datasets]]
 binding = "ANALYTICS_ENGINE"
