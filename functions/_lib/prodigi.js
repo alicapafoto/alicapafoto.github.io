@@ -1,3 +1,5 @@
+import { fetchWithTimeout } from "./fetch.js";
+
 const METHODS = ["budget", "standard", "standardplus", "express", "overnight"];
 
 function prodigiBase(env) {
@@ -10,7 +12,7 @@ function prodigiBase(env) {
 export async function getProdigiQuotes({ env, sku, countryCode, quantity = 1 }) {
   if (!env.PRODIGI_API_KEY) throw new Error("Prodigi API is not configured");
 
-  const response = await fetch(`${prodigiBase(env)}/quotes`, {
+  const response = await fetchWithTimeout(`${prodigiBase(env)}/quotes`, {
     method: "POST",
     headers: {
       "content-type": "application/json",
@@ -26,7 +28,7 @@ export async function getProdigiQuotes({ env, sku, countryCode, quantity = 1 }) 
         assets: [{ printArea: "default" }],
       }],
     }),
-  });
+  }, 12_000, "Prodigi delivery quote");
 
   const payload = await response.json().catch(() => ({}));
   if (!response.ok || !Array.isArray(payload.quotes) || payload.quotes.length === 0) {
