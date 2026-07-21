@@ -50,7 +50,7 @@ jobs:
         run: npm run validate
 
   package-v0-9:
-    if: github.event_name == 'push' && github.ref == 'refs/heads/original-works-automation-2026-07-21'
+    if: github.event_name == 'pull_request' || (github.event_name == 'push' && github.ref == 'refs/heads/original-works-automation-2026-07-21')
     needs: test
     runs-on: ubuntu-latest
     timeout-minutes: 10
