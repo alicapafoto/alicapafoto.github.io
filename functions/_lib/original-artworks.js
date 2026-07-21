@@ -114,6 +114,9 @@ export async function ensureOriginalArtworkSchema(env = {}) {
   return db;
 }
 
+// Only reservations that have not reached Stripe Checkout may expire through
+// generic time-based cleanup. A checkout-created hold is resolved exclusively
+// by a verified Stripe expiration, a secure explicit cancellation, or payment.
 export async function releaseExpiredOriginalArtworkReservations(env = {}, now = Date.now()) {
   const db = await ensureOriginalArtworkSchema(env);
   const timestamp = nowIso(now);
@@ -121,13 +124,18 @@ export async function releaseExpiredOriginalArtworkReservations(env = {}, now = 
     db.prepare(`
       UPDATE original_artwork_reservations
       SET status = 'expired', updated_at = ?
-      WHERE status IN ('active', 'checkout-created') AND reserved_until <= ?
+      WHERE status = 'active' AND reserved_until <= ?
     `).bind(timestamp, now),
     db.prepare(`
       UPDATE original_artworks
       SET status = 'available', reservation_id = NULL, reservation_token_hash = NULL,
-          reserved_until = NULL, updated_at = ?
-      WHERE status = 'reserved' AND reserved_until <= ?
+          reserved_until = NULL, checkout_session_id = NULL, updated_at = ?
+      WHERE status = 'reserved'
+        AND checkout_session_id IS NULL
+        AND reservation_id IN (
+          SELECT reservation_id FROM original_artwork_reservations
+          WHERE status = 'expired' AND reserved_until <= ?
+        )
     `).bind(timestamp, now),
   ]);
 }
@@ -150,6 +158,8 @@ export async function listOriginalArtworkAvailability(env = {}) {
   return result.results || [];
 }
 
+// Foundation helper retained for isolated database tests. The public standalone
+// reserve endpoint is disabled; the live flow uses reserveOriginalArtworkForCheckout.
 export async function reserveOriginalArtwork(env = {}, artworkId, now = Date.now()) {
   const artwork = findOriginalArtwork(artworkId);
   if (!artwork) return { acquired: false, reason: "not-found" };
@@ -166,7 +176,7 @@ export async function reserveOriginalArtwork(env = {}, artworkId, now = Date.now
   const update = await db.prepare(`
     UPDATE original_artworks
     SET status = 'reserved', reservation_id = ?, reservation_token_hash = ?,
-        reserved_until = ?, updated_at = ?
+        reserved_until = ?, checkout_session_id = NULL, updated_at = ?
     WHERE artwork_id = ? AND status = 'available'
   `).bind(reservationId, tokenHash, reservedUntil, timestamp, artwork.id).run();
 
@@ -215,127 +225,25 @@ export async function validateOriginalArtworkReservation(env = {}, {
   await releaseExpiredOriginalArtworkReservations(env, now);
   const tokenHash = await hashToken(reservationToken);
   const row = await db.prepare(`
-    SELECT artwork_id, title, price_cents, declared_value_cents, currency,
-           package_length_cm, package_width_cm, package_height_cm, package_weight_kg,
-           status, reservation_id, reservation_token_hash, reserved_until,
-           checkout_session_id, sold_at
-    FROM original_artworks
-    WHERE artwork_id = ?
+    SELECT a.artwork_id, a.title, a.price_cents, a.declared_value_cents, a.currency,
+           a.package_length_cm, a.package_width_cm, a.package_height_cm, a.package_weight_kg,
+           a.status, a.reservation_id, a.reservation_token_hash, a.reserved_until,
+           a.checkout_session_id, a.sold_at, r.status AS reservation_status
+    FROM original_artworks a
+    LEFT JOIN original_artwork_reservations r ON r.reservation_id = a.reservation_id
+    WHERE a.artwork_id = ?
   `).bind(String(artworkId || "").toLowerCase()).first();
 
   const valid = Boolean(
     row
     && row.status === "reserved"
+    && row.reservation_status === "active"
+    && !row.checkout_session_id
     && row.reservation_id === reservationId
     && row.reservation_token_hash === tokenHash
     && Number(row.reserved_until || 0) > now
   );
   return { valid, row };
-}
-
-export async function saveOriginalArtworkQuote(env = {}, {
-  artworkId,
-  reservationId,
-  reservationToken,
-  destinationCountry,
-  quote,
-  now = Date.now(),
-} = {}) {
-  const validation = await validateOriginalArtworkReservation(env, {
-    artworkId,
-    reservationId,
-    reservationToken,
-    now,
-  });
-  if (!validation.valid) return { saved: false, reason: "invalid-reservation" };
-
-  const db = requireDatabase(env);
-  const timestamp = nowIso(now);
-  const result = await db.prepare(`
-    UPDATE original_artwork_reservations
-    SET destination_country = ?, shipping_quote_json = ?, updated_at = ?
-    WHERE reservation_id = ? AND artwork_id = ?
-      AND status = 'active' AND reserved_until > ?
-  `).bind(
-    String(destinationCountry || "").toUpperCase(),
-    JSON.stringify(quote || {}),
-    timestamp,
-    reservationId,
-    String(artworkId || "").toLowerCase(),
-    now,
-  ).run();
-  return { saved: Number(result.meta?.changes || 0) === 1 };
-}
-
-export async function attachOriginalArtworkCheckout(env = {}, {
-  artworkId,
-  reservationId,
-  reservationToken,
-  checkoutSessionId,
-  now = Date.now(),
-} = {}) {
-  const validation = await validateOriginalArtworkReservation(env, {
-    artworkId,
-    reservationId,
-    reservationToken,
-    now,
-  });
-  if (!validation.valid) return { attached: false, reason: "invalid-reservation" };
-
-  const db = requireDatabase(env);
-  const timestamp = nowIso(now);
-  const results = await db.batch([
-    db.prepare(`
-      UPDATE original_artwork_reservations
-      SET status = 'checkout-created', checkout_session_id = ?, updated_at = ?
-      WHERE reservation_id = ? AND artwork_id = ?
-        AND status IN ('active', 'checkout-created') AND reserved_until > ?
-    `).bind(checkoutSessionId, timestamp, reservationId, String(artworkId || "").toLowerCase(), now),
-    db.prepare(`
-      UPDATE original_artworks
-      SET checkout_session_id = ?, updated_at = ?
-      WHERE artwork_id = ? AND reservation_id = ? AND status = 'reserved'
-    `).bind(checkoutSessionId, timestamp, String(artworkId || "").toLowerCase(), reservationId),
-  ]);
-  return { attached: results.every((result) => Number(result.meta?.changes || 0) === 1) };
-}
-
-export async function releaseOriginalArtworkReservation(env = {}, {
-  artworkId,
-  reservationId,
-  reservationToken,
-  now = Date.now(),
-} = {}) {
-  const validation = await validateOriginalArtworkReservation(env, {
-    artworkId,
-    reservationId,
-    reservationToken,
-    now,
-  });
-  if (!validation.valid) return { released: false, reason: "invalid-reservation" };
-
-  const db = requireDatabase(env);
-  const timestamp = nowIso(now);
-  const results = await db.batch([
-    db.prepare(`
-      UPDATE original_artworks
-      SET status = 'available', reservation_id = NULL, reservation_token_hash = NULL,
-          reserved_until = NULL, checkout_session_id = NULL, updated_at = ?
-      WHERE artwork_id = ? AND reservation_id = ? AND status = 'reserved'
-    `).bind(timestamp, String(artworkId || "").toLowerCase(), reservationId),
-    db.prepare(`
-      UPDATE original_artwork_reservations
-      SET status = 'released', updated_at = ?
-      WHERE reservation_id = ? AND artwork_id = ?
-        AND status IN ('active', 'checkout-created')
-    `).bind(timestamp, reservationId, String(artworkId || "").toLowerCase()),
-    db.prepare(`
-      INSERT INTO original_artwork_events (
-        artwork_id, reservation_id, event_type, event_json, created_at
-      ) VALUES (?, ?, 'released', '{}', ?)
-    `).bind(String(artworkId || "").toLowerCase(), reservationId, timestamp),
-  ]);
-  return { released: Number(results[0].meta?.changes || 0) === 1 };
 }
 
 export async function markOriginalArtworkSold(env = {}, {
