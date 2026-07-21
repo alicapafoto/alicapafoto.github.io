@@ -25,6 +25,8 @@ jobs:
           node-version: 22
       - name: Install dependencies
         run: npm install --no-audit --no-fund
+      - name: Run private fulfilment security tests
+        run: node scripts/test-original-artwork-fulfilment.mjs
       - name: Run storefront tests
         run: npm test
       - name: Validate site files
