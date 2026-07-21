@@ -85,7 +85,8 @@ function validateClaims(payload, env = {}, nowSeconds = Math.floor(Date.now() / 
 }
 
 export async function verifyCloudflareAccessJwt(token, env = {}, nowSeconds = Math.floor(Date.now() / 1000)) {
-  const parts = String(token || "").split(".");
+  const resolvedToken = await token;
+  const parts = String(resolvedToken || "").split(".");
   if (parts.length !== 3) throw new Error("Private Access token is missing or malformed");
   const [encodedHeader, encodedPayload, encodedSignature] = parts;
   const header = decodeJsonPart(encodedHeader);
