@@ -10,3 +10,9 @@ ANALYTICS_MODE = "staging"
 [[analytics_engine_datasets]]
 binding = "ANALYTICS_ENGINE"
 dataset = "ali_capa_storefront_staging_events"
+
+[[d1_databases]]
+binding = "ORDER_LEDGER"
+database_name = "ali-capa-order-ledger-production"
+database_id = "829f9e58-5b03-4850-8a1f-f06f345696cf"
+migrations_dir = "migrations"
