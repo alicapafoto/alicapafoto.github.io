@@ -84,6 +84,7 @@ const statusResponse = await statusEndpoint({
 assert.equal(statusResponse.status, 200);
 const statusPayload = await statusResponse.json();
 assert.equal(statusPayload.acquisitionEnabled, false);
+assert.equal(statusPayload.checkoutReady, false);
 assert.ok(statusPayload.artworks.every((artwork) => artwork.status.code === "opening-soon"));
 assert.ok(statusPayload.artworks.every((artwork) => artwork.status.reservable === false));
 
@@ -95,12 +96,12 @@ const disabledReserve = await reserveEndpoint({
   }),
   env,
 });
-assert.equal(disabledReserve.status, 409);
+assert.equal(disabledReserve.status, 410);
 
 ORDER_LEDGER.db.prepare("UPDATE original_artworks SET status = 'available'").run();
 env.ORIGINAL_WORKS_ACQUISITION_ENABLED = "true";
 
-const firstReserve = await reserveEndpoint({
+const legacyReserve = await reserveEndpoint({
   request: new Request("https://example.test/api/original-artworks/reserve", {
     method: "POST",
     headers: { origin: "https://example.test", "content-type": "application/json" },
@@ -108,11 +109,13 @@ const firstReserve = await reserveEndpoint({
   }),
   env,
 });
-assert.equal(firstReserve.status, 201);
-const firstReservation = await firstReserve.json();
+assert.equal(legacyReserve.status, 410);
+
+const firstReservation = await reserveOriginalArtwork(env, "dusaemas");
+assert.equal(firstReservation.acquired, true);
 assert.match(firstReservation.reservationId, /^owr_/);
 assert.ok(firstReservation.reservationToken.length >= 40);
-assert.equal(firstReservation.reservationMinutes, 30);
+assert.equal(firstReservation.reservedUntil > Date.now(), true);
 
 const reservedRow = ORDER_LEDGER.db.prepare(
   "SELECT status, reservation_id, reservation_token_hash, reserved_until FROM original_artworks WHERE artwork_id = ?",
@@ -122,15 +125,9 @@ assert.equal(reservedRow.reservation_id, firstReservation.reservationId);
 assert.notEqual(reservedRow.reservation_token_hash, firstReservation.reservationToken);
 assert.ok(reservedRow.reserved_until > Date.now());
 
-const losingReserve = await reserveEndpoint({
-  request: new Request("https://example.test/api/original-artworks/reserve", {
-    method: "POST",
-    headers: { origin: "https://example.test", "content-type": "application/json" },
-    body: JSON.stringify({ artworkId: "dusaemas" }),
-  }),
-  env,
-});
-assert.equal(losingReserve.status, 409);
+const losingReserve = await reserveOriginalArtwork(env, "dusaemas");
+assert.equal(losingReserve.acquired, false);
+assert.equal(losingReserve.reason, "reserved");
 
 const wrongToken = await validateOriginalArtworkReservation(env, {
   artworkId: "dusaemas",
@@ -206,4 +203,4 @@ const soldReserveAttempt = await reserveOriginalArtwork(env, "study", saleStart 
 assert.equal(soldReserveAttempt.acquired, false);
 assert.equal(soldReserveAttempt.reason, "sold");
 
-console.log("Original Works reservation tests passed.");
+console.log("Original Works reservation foundation tests passed.");
