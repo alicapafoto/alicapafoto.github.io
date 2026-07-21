@@ -46,7 +46,6 @@ export function publicError(error, fallback = "The request could not be complete
   return fallback;
 }
 
-
 export function isStagingSafeMode(env = {}) {
   return String(env.STAGING_SAFE_MODE || "").toLowerCase() === "true";
 }
@@ -59,7 +58,7 @@ export function isCheckoutOperational(env = {}) {
     && env.GOOGLE_SHEET_ID
     && env.GOOGLE_SERVICE_ACCOUNT_EMAIL
     && env.GOOGLE_PRIVATE_KEY
-    && env.ORDER_EVENTS
+    && env.ORDER_LEDGER
   );
 }
 
