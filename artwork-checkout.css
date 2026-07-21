@@ -1,0 +1,102 @@
+.artwork-reservation-summary {
+  margin: 1.5rem 0;
+  padding: 1.1rem 1.2rem;
+  border: 1px solid rgba(24, 24, 23, .16);
+  text-align: left;
+}
+
+.artwork-reservation-row {
+  display: flex;
+  justify-content: space-between;
+  gap: 1.5rem;
+  padding: .42rem 0;
+  font-size: .78rem;
+}
+
+.artwork-reservation-row--total {
+  margin-top: .35rem;
+  padding-top: .85rem;
+  border-top: 1px solid rgba(24, 24, 23, .16);
+  font-size: .9rem;
+}
+
+.artwork-reservation-timer {
+  margin: 1rem 0 .35rem;
+  font-family: 'Cormorant Garamond', serif;
+  font-size: clamp(2rem, 8vw, 3.6rem);
+  font-weight: 300;
+  line-height: 1;
+}
+
+.artwork-reservation-timer-label {
+  color: #77756f;
+  font-size: .68rem;
+  letter-spacing: .13em;
+  text-transform: uppercase;
+}
+
+.artwork-reservation-actions {
+  display: grid;
+  gap: .7rem;
+  margin-top: 1.5rem;
+}
+
+.artwork-reservation-primary,
+.artwork-reservation-secondary {
+  min-height: 3.1rem;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  padding: .8rem 1rem;
+  border: 1px solid #181817;
+  font: 500 .62rem/1.2 'Inter', sans-serif;
+  letter-spacing: .14em;
+  text-transform: uppercase;
+  text-decoration: none;
+  cursor: pointer;
+}
+
+.artwork-reservation-primary {
+  background: #181817;
+  color: #fff;
+}
+
+.artwork-reservation-secondary {
+  background: transparent;
+  color: #181817;
+}
+
+.artwork-reservation-primary:hover,
+.artwork-reservation-primary:focus-visible {
+  opacity: .84;
+}
+
+.artwork-reservation-secondary:hover:not(:disabled),
+.artwork-reservation-secondary:focus-visible:not(:disabled) {
+  background: #181817;
+  color: #fff;
+}
+
+.artwork-reservation-primary[aria-disabled="true"],
+.artwork-reservation-secondary:disabled {
+  border-color: #ddd9d0;
+  background: transparent;
+  color: #77756f;
+  cursor: not-allowed;
+  pointer-events: none;
+}
+
+.artwork-reservation-message {
+  min-height: 1.5rem;
+  margin-top: 1rem;
+  color: #6d3f34;
+  font-size: .72rem;
+  line-height: 1.55;
+}
+
+.artwork-reservation-note {
+  margin-top: 1rem;
+  color: #77756f;
+  font-size: .7rem;
+  line-height: 1.6;
+}
