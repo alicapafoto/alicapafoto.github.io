@@ -6,7 +6,7 @@
     "dev": "wrangler pages dev .",
     "validate": "node scripts/validate-site.mjs",
     "set-domain": "node scripts/set-domain.mjs",
-    "test": "node scripts/test-storefront.mjs && node scripts/test-original-artworks.mjs && node scripts/test-original-artwork-checkout.mjs && node scripts/test-original-artwork-ui.mjs"
+    "test": "node scripts/test-storefront.mjs && node scripts/test-original-artworks.mjs && node scripts/test-original-artwork-checkout.mjs && node scripts/test-original-artwork-ui.mjs && node scripts/test-original-artwork-fulfilment.mjs"
   },
   "devDependencies": {
     "wrangler": "^4.0.0"
