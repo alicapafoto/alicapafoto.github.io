@@ -195,7 +195,7 @@ async function loadRecords({ keepSelection = true } = {}) {
 }
 
 async function selectRecord(fulfilmentId) {
-  if (state.busy) return;
+  if (state.busy && state.selectedId !== fulfilmentId) return;
   setBusy(true);
   setMessage('Loading the selected paid order…');
   try {
