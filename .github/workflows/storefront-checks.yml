@@ -26,7 +26,22 @@ jobs:
       - name: Install dependencies
         run: npm install --no-audit --no-fund
       - name: Run private fulfilment security tests
-        run: node scripts/test-original-artwork-fulfilment.mjs
+        id: private_fulfilment_tests
+        shell: bash
+        run: |
+          set +e
+          node scripts/test-original-artwork-fulfilment.mjs > private-fulfilment-test.log 2>&1
+          status=$?
+          cat private-fulfilment-test.log
+          exit $status
+      - name: Upload private fulfilment failure log
+        if: failure()
+        uses: actions/upload-artifact@v4
+        with:
+          name: private-fulfilment-test-log
+          path: private-fulfilment-test.log
+          if-no-files-found: error
+          retention-days: 1
       - name: Run storefront tests
         run: npm test
       - name: Validate site files
