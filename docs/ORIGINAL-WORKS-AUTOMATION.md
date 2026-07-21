@@ -20,17 +20,19 @@ The parcel dimensions and packed weight are conservative provisional values. The
 1. The collector chooses an available artwork.
 2. The collector enters the complete delivery address.
 3. The server calculates insured delivery. A quote does not reserve the artwork.
-4. The collector reviews the artwork price, insured delivery, and complete total.
-5. The collector selects **Reserve and continue**.
-6. The server calculates the insured delivery quote again.
-7. If the price changed, no reservation is created and the collector reviews the updated total.
-8. If the quote is unchanged, one atomic D1 update reserves the artwork.
-9. The server creates a card-only Stripe Checkout Session with a 30-minute expiration.
-10. The reservation and Stripe Session are joined in D1 before the checkout URL is returned.
-11. The collector sees a private countdown page and then continues to Stripe.
-12. Successful payment permanently changes the artwork to `sold` through the signed Stripe webhook.
-13. Explicit cancellation expires the Stripe Session first and only then releases the artwork.
-14. An unpaid Stripe Session releases the artwork through the verified `checkout.session.expired` event.
+4. The server returns a signed quote token valid for ten minutes. It is bound to the artwork, normalized delivery address, and insured shipping amount without embedding the address itself.
+5. The collector reviews the artwork price, insured delivery, and complete total.
+6. The collector selects **Reserve and continue**.
+7. The server verifies the signed quote token and calculates insured delivery again.
+8. If the token expired, the address changed, or the amount was altered, no reservation is created.
+9. If the carrier price changed, no reservation is created and the collector reviews a newly signed total.
+10. If the quote remains valid and unchanged, one atomic D1 update reserves the artwork.
+11. The server creates a card-only Stripe Checkout Session with a 30-minute expiration.
+12. The reservation and Stripe Session are joined in D1 before the checkout URL is returned.
+13. The collector sees a private countdown page and then continues to Stripe.
+14. Successful payment permanently changes the artwork to `sold` through the signed Stripe webhook.
+15. Explicit cancellation expires the Stripe Session first and only then releases the artwork.
+16. An unpaid Stripe Session releases the artwork through the verified `checkout.session.expired` event.
 
 ## Inventory and reservation states
 
@@ -61,16 +63,19 @@ The browser never decides the authoritative inventory state.
 
 - All four database seed records begin as `unavailable`.
 - `ORIGINAL_WORKS_ACQUISITION_ENABLED` defaults to false.
-- Public availability requires all checkout, D1, shipping, and feature gates to agree.
+- Public availability requires all checkout, D1, shipping, quote-signing, and feature gates to agree.
 - The obsolete standalone reserve endpoint returns HTTP 410.
 - The shipping quote is calculated before any reservation exists.
+- A short-lived HMAC quote token makes quote-first a server rule rather than only a browser sequence.
+- The quote token contains only an address hash, artwork ID, amount, timestamps, and nonce; it does not contain the delivery address.
 - The shipping quote is recalculated server-side immediately before reservation.
 - Checkout attempts have UUID idempotency keys.
 - Inventory acquisition uses one conditional D1 update, so only one collector can win.
 - Reservation tokens contain 256 random bits.
-- Only SHA-256 token hashes are stored in D1.
+- Only SHA-256 reservation-token hashes are stored in D1.
 - Reservation tokens never enter URLs, Stripe metadata, analytics, or Google Sheets.
 - The complete delivery address is stored server-side with the reservation and is not placed in Stripe metadata.
+- Carrier-controlled method and estimate text is escaped before browser rendering.
 - Stripe Checkout is card-only for Original Works.
 - Stripe Checkout expires after 30 minutes.
 - Stripe Session creation failure releases the D1 reservation.
@@ -88,7 +93,7 @@ The browser never decides the authoritative inventory state.
 
 `ORIGINAL_WORKS_SHIPPING_MODE=dhl-live` is currently fail-closed. Even the presence of credentials cannot make the storefront report DHL as ready until the approved DHL product and live adapter have been implemented and tested.
 
-No DHL secret belongs in the repository.
+No DHL or quote-signing secret belongs in the repository.
 
 ## Database migrations
 
@@ -107,6 +112,7 @@ Use Preview or local development only:
 - `ORIGINAL_WORKS_ACQUISITION_ENABLED=true`
 - `ORIGINAL_WORKS_SHIPPING_MODE=mock`
 - `ORIGINAL_WORKS_MOCK_SHIPPING_CENTS_JSON` with test-only regional prices
+- `ORIGINAL_WORKS_QUOTE_SIGNING_SECRET` with a private random value of at least 32 characters
 - Stripe test credentials
 - a non-production D1 database or local D1
 
@@ -114,10 +120,11 @@ The mock adapter remains unavailable in live mode even if someone accidentally c
 
 ## Production configuration still pending
 
-Exact names may change after DHL confirms the approved API product and credential format.
+Exact DHL names may change after DHL confirms the approved API product and credential format.
 
 - `ORIGINAL_WORKS_ACQUISITION_ENABLED=false` until final activation
 - `ORIGINAL_WORKS_SHIPPING_MODE=disabled` until the DHL adapter is complete
+- encrypted `ORIGINAL_WORKS_QUOTE_SIGNING_SECRET` generated independently for production
 - `DHL_API_KEY`
 - `DHL_API_SECRET` or approved OAuth client secret
 - `DHL_ACCOUNT_NUMBER`
@@ -139,6 +146,16 @@ The live webhook destination must subscribe to all three events:
 
 The first two are already subscribed. `checkout.session.expired` must be added before Original Works acquisition can open.
 
+## Abuse protection before activation
+
+Add a Cloudflare rate-limiting rule for:
+
+- `/api/original-artworks/quote`
+- `/api/original-artworks/reserve-and-checkout`
+- `/api/original-artworks/release`
+
+The rule must allow normal collector corrections and retries while blocking automated bursts. Consider Cloudflare Turnstile only if real abuse appears; do not add unnecessary friction before it is justified.
+
 ## Remaining implementation work
 
 - Receive and verify DHL developer approval and credential format.
@@ -149,6 +166,7 @@ The first two are already subscribed. `checkout.session.expired` must be added b
 - Store the DHL shipment ID, tracking number, and label reference in the private order record.
 - Replace provisional parcel data after the first physical packing measurement.
 - Add `checkout.session.expired` to the live Stripe webhook destination.
+- Add and verify Cloudflare endpoint rate limiting.
 - Apply migrations through a controlled production procedure.
 - Run one complete Stripe test-mode Preview acquisition, cancellation, expiration, payment, duplicate-webhook, and sold-lock test.
 - Review mobile and desktop UI manually.
@@ -160,11 +178,14 @@ The first two are already subscribed. `checkout.session.expired` must be added b
 
 - disabled-by-default behavior;
 - one-winner atomic reservations;
-- token hashing and wrong-token rejection;
+- reservation-token hashing and wrong-token rejection;
 - quote-only behavior with no reservation;
+- signed quote creation without address disclosure;
+- missing, altered, expired, and tampered quote-token rejection;
+- address and amount binding;
 - mock shipping prohibited in live mode;
 - DHL live placeholder prohibited from reporting ready;
-- server-side re-quote and changed-total handling;
+- server-side re-quote and genuine changed-total handling;
 - checkout-attempt idempotency;
 - competing collector rejection;
 - Stripe creation failure cleanup;
@@ -185,6 +206,7 @@ Do not merge, deploy, apply production migrations, set artwork rows to `availabl
 1. DHL approval and live quote behavior are known;
 2. Stripe account review is resolved without sales restrictions;
 3. the third Stripe webhook event is subscribed;
-4. Preview passes the complete test matrix;
-5. Ali reviews the collector experience; and
-6. Ali explicitly approves production activation.
+4. production quote signing and Cloudflare rate limiting are configured;
+5. Preview passes the complete test matrix;
+6. Ali reviews the collector experience; and
+7. Ali explicitly approves production activation.
