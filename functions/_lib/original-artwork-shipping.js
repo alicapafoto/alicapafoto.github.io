@@ -1,6 +1,7 @@
 import { ALLOWED_COUNTRY_CODES, getShippingRegion } from "./products.js";
 
 const POSTAL_CODE_PATTERN = /^[A-Za-z0-9][A-Za-z0-9 .\-/]{1,15}$/;
+const DHL_LIVE_ADAPTER_IMPLEMENTED = false;
 
 function shippingMode(env = {}) {
   return String(env.ORIGINAL_WORKS_SHIPPING_MODE || "disabled").toLowerCase();
@@ -53,7 +54,8 @@ export function isOriginalArtworkShippingConfigured(env = {}) {
   }
   if (mode === "dhl-live") {
     return Boolean(
-      env.DHL_API_KEY
+      DHL_LIVE_ADAPTER_IMPLEMENTED
+      && env.DHL_API_KEY
       && env.DHL_API_SECRET
       && env.DHL_ACCOUNT_NUMBER
       && env.DHL_ORIGIN_COUNTRY
@@ -97,5 +99,5 @@ export async function quoteOriginalArtworkShipping({ artwork, shippingAddress, e
     };
   }
 
-  throw new Error("The DHL live quote adapter is awaiting approved credentials.");
+  throw new Error("The DHL live quote adapter is awaiting approved credentials and implementation.");
 }
