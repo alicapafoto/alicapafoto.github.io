@@ -9,6 +9,11 @@ import {
 } from "../../_lib/original-artwork-checkout.js";
 import { isOriginalWorksAcquisitionEnabled } from "../../_lib/original-artworks.js";
 import {
+  createOriginalArtworkQuoteToken,
+  isOriginalArtworkQuoteSigningConfigured,
+  verifyOriginalArtworkQuoteToken,
+} from "../../_lib/original-artwork-quote-token.js";
+import {
   isOriginalArtworkShippingConfigured,
   normalizeOriginalArtworkShippingAddress,
   quoteOriginalArtworkShipping,
@@ -49,7 +54,7 @@ export async function onRequest(context) {
     if (!isOriginalWorksAcquisitionEnabled(context.env)) {
       return json({ error: "Original artwork acquisition is not open yet." }, 409);
     }
-    if (!isOriginalArtworkShippingConfigured(context.env)) {
+    if (!isOriginalArtworkShippingConfigured(context.env) || !isOriginalArtworkQuoteSigningConfigured(context.env)) {
       return json({ error: "Insured delivery is still being prepared." }, 409);
     }
 
@@ -65,19 +70,48 @@ export async function onRequest(context) {
     }
 
     const shippingAddress = normalizeOriginalArtworkShippingAddress(body.shippingAddress);
+    const expectedShippingCents = Number(body.expectedShippingCents);
+    if (!Number.isInteger(expectedShippingCents) || expectedShippingCents < 0 || !body.quoteToken) {
+      return json({ error: "Calculate insured delivery before reserving the artwork." }, 400);
+    }
+    const verifiedQuote = await verifyOriginalArtworkQuoteToken(context.env, {
+      token: body.quoteToken,
+      artworkId: artwork.id,
+      shippingAddress,
+      shippingCents: expectedShippingCents,
+    });
+    if (!verifiedQuote.valid) {
+      return json({
+        error: "The insured delivery quote expired or the delivery details changed. Calculate it again before continuing.",
+        quoteExpired: true,
+      }, 409);
+    }
+
     const shippingQuote = await quoteOriginalArtworkShipping({
       artwork,
       shippingAddress,
       env: context.env,
     });
-    const expectedShippingCents = Number(body.expectedShippingCents);
-    if (Number.isInteger(expectedShippingCents) && expectedShippingCents !== shippingQuote.customerCents) {
+    if (expectedShippingCents !== shippingQuote.customerCents) {
+      const refreshedQuote = await createOriginalArtworkQuoteToken(context.env, {
+        artworkId: artwork.id,
+        shippingAddress,
+        shippingCents: shippingQuote.customerCents,
+      });
       return json({
         error: "The insured delivery total changed. Review the updated total before continuing.",
         quoteChanged: true,
-        artwork: { id: artwork.id, title: artwork.title, priceCents: artwork.priceCents },
+        artwork: {
+          id: artwork.id,
+          title: artwork.title,
+          priceCents: artwork.priceCents,
+          declaredValueCents: artwork.declaredValueCents,
+        },
+        shippingAddress,
         shipping: shippingQuote,
         totalCents: artwork.priceCents + shippingQuote.customerCents,
+        quoteToken: refreshedQuote.token,
+        quoteExpiresAt: refreshedQuote.expiresAt,
       }, 409);
     }
 
