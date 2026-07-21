@@ -3,19 +3,48 @@ import { fetchWithTimeout } from "./fetch.js";
 const keyCache = new Map();
 const CLOCK_SKEW_SECONDS = 60;
 const KEY_CACHE_MS = 60 * 60 * 1000;
+const BASE64URL_PATTERN = /^[A-Za-z0-9_-]+$/;
+
+function encodeBase64Url(bytes) {
+  let binary = "";
+  for (const byte of bytes) binary += String.fromCharCode(byte);
+  return btoa(binary).replace(/\+/g, "-").replace(/\//g, "_").replace(/=+$/, "");
+}
 
 function decodeBase64Url(value) {
-  const normalized = String(value || "").replace(/-/g, "+").replace(/_/g, "/");
+  const source = String(value || "");
+  if (!source || !BASE64URL_PATTERN.test(source) || source.length % 4 === 1) {
+    throw new Error("Private Access token is missing or malformed");
+  }
+
+  const normalized = source.replace(/-/g, "+").replace(/_/g, "/");
   const padded = normalized.padEnd(Math.ceil(normalized.length / 4) * 4, "=");
-  const binary = atob(padded);
+  let binary;
+  try {
+    binary = atob(padded);
+  } catch {
+    throw new Error("Private Access token is missing or malformed");
+  }
+
   const output = new Uint8Array(binary.length);
   for (let index = 0; index < binary.length; index += 1) output[index] = binary.charCodeAt(index);
+
+  // JWT segments must use one canonical, unpadded Base64URL representation.
+  // Reject alternate encodings that decode to the same bytes through unused padding bits.
+  if (encodeBase64Url(output) !== source) {
+    throw new Error("Private Access token is missing or malformed");
+  }
   return output;
 }
 
 function decodeJsonPart(value) {
-  const text = new TextDecoder().decode(decodeBase64Url(value));
-  return JSON.parse(text);
+  try {
+    const text = new TextDecoder().decode(decodeBase64Url(value));
+    return JSON.parse(text);
+  } catch (error) {
+    if (String(error?.message || "").includes("malformed")) throw error;
+    throw new Error("Private Access token is missing or malformed");
+  }
 }
 
 function teamOrigin(env = {}) {
