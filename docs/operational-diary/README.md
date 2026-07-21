@@ -12,10 +12,13 @@ Operational Diary/
   ENTRY-TEMPLATE.md
   2026/
     07-July/
+      2026-07-Monthly-Index.md
       2026-07-21.md
 ```
 
 New years receive their own folder. Each year is divided by numbered month folders. Entries are created only for meaningful business workdays, not merely because a calendar day passed.
+
+The monthly index contains one short summary and link for each recorded workday. Weekly folders are intentionally avoided.
 
 ## Entry rules
 
