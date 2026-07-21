@@ -99,6 +99,16 @@ function formatEuro(cents) {
   }).format((Number(cents) || 0) / 100);
 }
 
+function escapeHtml(value) {
+  return String(value || '').replace(/[&<>"']/g, (character) => ({
+    '&': '&amp;',
+    '<': '&lt;',
+    '>': '&gt;',
+    '"': '&quot;',
+    "'": '&#39;',
+  })[character]);
+}
+
 function setMessage(value) {
   acquisitionMessage.textContent = value || '';
 }
@@ -106,7 +116,7 @@ function setMessage(value) {
 function setBusy(busy, label = '') {
   acquisitionState.busy = busy;
   quoteButton.disabled = busy;
-  checkoutButton.disabled = busy || !acquisitionState.quote;
+  checkoutButton.disabled = busy || !acquisitionState.quote?.quoteToken;
   if (busy && label) quoteButton.textContent = label;
   else quoteButton.textContent = 'Calculate insured delivery';
   checkoutButton.textContent = busy ? 'Preparing secure checkout…' : 'Reserve and continue';
@@ -135,15 +145,15 @@ function resetQuote() {
 }
 
 function renderQuote(payload) {
-  acquisitionState.quote = payload;
+  acquisitionState.quote = payload?.quoteToken ? payload : null;
   quoteBox.innerHTML = `
     <div class="artwork-quote__row"><span>Original artwork</span><strong>${formatEuro(payload.artwork.priceCents)}</strong></div>
     <div class="artwork-quote__row"><span>Insured delivery</span><strong>${formatEuro(payload.shipping.customerCents)}</strong></div>
     <div class="artwork-quote__row artwork-quote__row--total"><span>Total</span><strong>${formatEuro(payload.totalCents)}</strong></div>
-    <p><strong>${payload.shipping.method}</strong><br>${payload.shipping.estimateNote}</p>
+    <p><strong>${escapeHtml(payload.shipping.method)}</strong><br>${escapeHtml(payload.shipping.estimateNote)}</p>
     <p>The complete artwork is declared and insured at ${formatEuro(payload.artwork.declaredValueCents)}.</p>`;
   quoteBox.hidden = false;
-  checkoutButton.disabled = false;
+  checkoutButton.disabled = !acquisitionState.quote;
 }
 
 function populateCountries(countries = []) {
@@ -228,7 +238,7 @@ async function requestQuote() {
       }),
     });
     const payload = await response.json();
-    if (!response.ok) throw new Error(payload.error || 'Insured delivery could not be calculated.');
+    if (!response.ok || !payload.quoteToken) throw new Error(payload.error || 'Insured delivery could not be calculated.');
     renderQuote(payload);
   } catch (error) {
     console.error(error);
@@ -240,7 +250,7 @@ async function requestQuote() {
 }
 
 async function reserveAndCreateCheckout() {
-  if (acquisitionState.busy || !acquisitionState.quote || !acquisitionState.selectedArtwork) return;
+  if (acquisitionState.busy || !acquisitionState.quote?.quoteToken || !acquisitionState.selectedArtwork) return;
   if (!acquisitionForm.reportValidity()) return;
   acquisitionState.checkoutAttemptId ||= crypto.randomUUID();
   setBusy(true);
@@ -253,12 +263,19 @@ async function reserveAndCreateCheckout() {
         artworkId: acquisitionState.selectedArtwork.id,
         shippingAddress: shippingAddressFromForm(),
         expectedShippingCents: acquisitionState.quote.shipping.customerCents,
+        quoteToken: acquisitionState.quote.quoteToken,
         checkoutAttemptId: acquisitionState.checkoutAttemptId,
       }),
     });
     const payload = await response.json();
     if (payload.quoteChanged) {
       renderQuote(payload);
+      setMessage(payload.error);
+      setBusy(false);
+      return;
+    }
+    if (payload.quoteExpired) {
+      resetQuote();
       setMessage(payload.error);
       setBusy(false);
       return;
