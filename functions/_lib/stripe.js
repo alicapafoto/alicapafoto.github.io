@@ -15,6 +15,20 @@ function append(params, key, value) {
   params.append(key, String(value));
 }
 
+async function postCheckoutSession(env, params, idempotencyKey, label = "Stripe Checkout session creation") {
+  const response = await fetchWithTimeout("https://api.stripe.com/v1/checkout/sessions", {
+    method: "POST",
+    headers: stripeHeaders(env, idempotencyKey),
+    body: params,
+  }, 15_000, label);
+  const payload = await response.json().catch(() => ({}));
+  if (!response.ok || !payload.url) {
+    const message = payload?.error?.message || "Stripe could not create the checkout session";
+    throw new Error(message);
+  }
+  return payload;
+}
+
 export async function createStripeCheckoutSession({
   env,
   siteOrigin,
@@ -84,17 +98,89 @@ export async function createStripeCheckoutSession({
     append(params, `payment_intent_data[metadata][${key}]`, value);
   }
 
-  const response = await fetchWithTimeout("https://api.stripe.com/v1/checkout/sessions", {
-    method: "POST",
-    headers: stripeHeaders(env, idempotencyKey),
-    body: params,
-  }, 15_000, "Stripe Checkout session creation");
-  const payload = await response.json().catch(() => ({}));
-  if (!response.ok || !payload.url) {
-    const message = payload?.error?.message || "Stripe could not create the checkout session";
-    throw new Error(message);
+  return postCheckoutSession(env, params, idempotencyKey);
+}
+
+export async function createOriginalArtworkCheckoutSession({
+  env,
+  siteOrigin,
+  artwork,
+  shippingAddress,
+  shippingQuote,
+  reservationId,
+  idempotencyKey,
+}) {
+  const expiresAt = Math.floor(Date.now() / 1000) + 30 * 60;
+  const params = new URLSearchParams();
+  append(params, "mode", "payment");
+  append(params, "payment_method_types[0]", "card");
+  append(params, "success_url", `${siteOrigin}/artwork-confirmed.html?session_id={CHECKOUT_SESSION_ID}`);
+  append(params, "cancel_url", `${siteOrigin}/artwork-checkout-cancelled.html#${artwork.id}`);
+  append(params, "client_reference_id", `aco_${crypto.randomUUID()}`);
+  append(params, "customer_creation", "if_required");
+  append(params, "billing_address_collection", "auto");
+  append(params, "phone_number_collection[enabled]", "true");
+  append(params, "consent_collection[terms_of_service]", "required");
+  append(params, "submit_type", "pay");
+  append(params, "expires_at", expiresAt);
+
+  append(params, "line_items[0][quantity]", "1");
+  append(params, "line_items[0][price_data][currency]", "eur");
+  append(params, "line_items[0][price_data][unit_amount]", artwork.priceCents);
+  append(params, "line_items[0][price_data][product_data][name]", `${artwork.title}, unique original artwork`);
+  append(params, "line_items[0][price_data][product_data][description]", `${artwork.framed.widthCm} × ${artwork.framed.heightCm} cm framed · Photographic emulsion on wood, 24 karat gold, acrylic paint and varnish`);
+  append(params, "line_items[0][price_data][product_data][images][0]", `${siteOrigin}/images/work-${artwork.id}-detail.jpg`);
+
+  append(params, "shipping_options[0][shipping_rate_data][type]", "fixed_amount");
+  append(params, "shipping_options[0][shipping_rate_data][display_name]", `Insured delivery · ${shippingQuote.method}`);
+  append(params, "shipping_options[0][shipping_rate_data][fixed_amount][amount]", shippingQuote.customerCents);
+  append(params, "shipping_options[0][shipping_rate_data][fixed_amount][currency]", "eur");
+
+  const providerShippingEur = (shippingQuote.carrierCents / 100).toFixed(2);
+  const metadata = {
+    schema_version: "4",
+    order_type: "original-artwork",
+    product_id: `original-${artwork.id}`,
+    artwork_id: artwork.id,
+    artwork: artwork.title,
+    variant_label: "Unique original",
+    store_sku: `ORIGINAL-${artwork.id.toUpperCase()}`,
+    provider: "Ali Capa Foto",
+    provider_sku: `ORIGINAL-${artwork.id.toUpperCase()}`,
+    paper: "Original mixed media artwork",
+    print_size: `${artwork.framed.widthCm} × ${artwork.framed.heightCm} cm framed`,
+    edition_size: "1",
+    destination_country: shippingAddress.countryCode,
+    shipping_method: shippingQuote.method,
+    shipping_quote_source: shippingQuote.source,
+    provider_item_quote_eur: "0.00",
+    provider_shipping_quote_eur: providerShippingEur,
+    customer_shipping_cents: String(shippingQuote.customerCents),
+    provider_tax_rate: "0.0000",
+    provider_item_tax_cents: "0",
+    provider_shipping_tax_cents: "0",
+    estimated_provider_total_cents: String(shippingQuote.carrierCents),
+    quote_created_at: shippingQuote.quoteCreatedAt,
+    fulfillment_country: "PT",
+    fulfillment_lab: "Ali Capa studio",
+    store_price_cents: String(artwork.priceCents),
+    declared_value_cents: String(artwork.declaredValueCents),
+    reservation_id: reservationId,
+    package_length_cm: String(artwork.parcel.lengthCm),
+    package_width_cm: String(artwork.parcel.widthCm),
+    package_height_cm: String(artwork.parcel.heightCm),
+    package_weight_kg: String(artwork.parcel.weightKg),
+    initial_status: "Paid — Original artwork awaiting shipment",
+  };
+
+  for (const [key, value] of Object.entries(metadata)) {
+    append(params, `metadata[${key}]`, value);
+    append(params, `payment_intent_data[metadata][${key}]`, value);
   }
-  return payload;
+
+  const session = await postCheckoutSession(env, params, idempotencyKey, "Original artwork Stripe Checkout creation");
+  if (!session.expires_at) session.expires_at = expiresAt;
+  return session;
 }
 
 export async function retrieveCheckoutSession(env, sessionId) {
@@ -106,6 +192,19 @@ export async function retrieveCheckoutSession(env, sessionId) {
   }, 12_000, "Stripe Checkout session lookup");
   const payload = await response.json().catch(() => ({}));
   if (!response.ok) throw new Error(payload?.error?.message || "Stripe session lookup failed");
+  return payload;
+}
+
+export async function expireCheckoutSession(env, sessionId) {
+  if (!sessionId) return null;
+  const response = await fetchWithTimeout(`https://api.stripe.com/v1/checkout/sessions/${encodeURIComponent(sessionId)}/expire`, {
+    method: "POST",
+    headers: stripeHeaders(env),
+  }, 12_000, "Stripe Checkout session expiry");
+  const payload = await response.json().catch(() => ({}));
+  if (!response.ok && payload?.error?.code !== "checkout_session_not_open") {
+    throw new Error(payload?.error?.message || "Stripe session could not be expired");
+  }
   return payload;
 }
 
