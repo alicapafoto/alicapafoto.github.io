@@ -1,9 +1,13 @@
-function stripeHeaders(env) {
+import { fetchWithTimeout } from "./fetch.js";
+
+function stripeHeaders(env, idempotencyKey = "") {
   if (!env.STRIPE_SECRET_KEY) throw new Error("Stripe is not configured");
-  return {
+  const headers = {
     authorization: `Bearer ${env.STRIPE_SECRET_KEY}`,
     "content-type": "application/x-www-form-urlencoded",
   };
+  if (idempotencyKey) headers["Idempotency-Key"] = idempotencyKey;
+  return headers;
 }
 
 function append(params, key, value) {
@@ -19,6 +23,7 @@ export async function createStripeCheckoutSession({
   countryCode,
   shipping,
   quote,
+  idempotencyKey,
 }) {
   const work = product.work;
   const params = new URLSearchParams();
@@ -48,7 +53,7 @@ export async function createStripeCheckoutSession({
   append(params, "shipping_options[0][shipping_rate_data][fixed_amount][currency]", "eur");
 
   const metadata = {
-    schema_version: "2",
+    schema_version: "3",
     product_id: product.id,
     artwork: work.title,
     variant_label: product.label,
@@ -79,11 +84,11 @@ export async function createStripeCheckoutSession({
     append(params, `payment_intent_data[metadata][${key}]`, value);
   }
 
-  const response = await fetch("https://api.stripe.com/v1/checkout/sessions", {
+  const response = await fetchWithTimeout("https://api.stripe.com/v1/checkout/sessions", {
     method: "POST",
-    headers: stripeHeaders(env),
+    headers: stripeHeaders(env, idempotencyKey),
     body: params,
-  });
+  }, 15_000, "Stripe Checkout session creation");
   const payload = await response.json().catch(() => ({}));
   if (!response.ok || !payload.url) {
     const message = payload?.error?.message || "Stripe could not create the checkout session";
@@ -96,9 +101,9 @@ export async function retrieveCheckoutSession(env, sessionId) {
   const query = new URLSearchParams();
   query.append("expand[]", "line_items");
   query.append("expand[]", "payment_intent.latest_charge.balance_transaction");
-  const response = await fetch(`https://api.stripe.com/v1/checkout/sessions/${encodeURIComponent(sessionId)}?${query}`, {
+  const response = await fetchWithTimeout(`https://api.stripe.com/v1/checkout/sessions/${encodeURIComponent(sessionId)}?${query}`, {
     headers: stripeHeaders(env),
-  });
+  }, 12_000, "Stripe Checkout session lookup");
   const payload = await response.json().catch(() => ({}));
   if (!response.ok) throw new Error(payload?.error?.message || "Stripe session lookup failed");
   return payload;
