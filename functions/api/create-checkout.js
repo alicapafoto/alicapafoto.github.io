@@ -10,12 +10,19 @@ import { quoteProduct } from "../_lib/fulfillment.js";
 import { createStripeCheckoutSession } from "../_lib/stripe.js";
 import { writeAnalyticsEvent } from "../_lib/analytics.js";
 
+function checkoutIdempotencyKey(attemptId, productId, countryCode) {
+  const cleanAttempt = /^[a-f0-9-]{20,80}$/i.test(String(attemptId || ""))
+    ? String(attemptId)
+    : crypto.randomUUID();
+  return `ali-capa-checkout:${cleanAttempt}:${productId}:${countryCode}`;
+}
+
 export async function onRequest(context) {
   if (context.request.method !== "POST") return methodNotAllowed("POST");
   try {
     assertSameOrigin(context.request, context.env);
     assertCheckoutOperational(context.env);
-    const { productId, countryCode } = await readJson(context.request);
+    const { productId, countryCode, checkoutAttemptId } = await readJson(context.request);
     const product = getProduct(productId);
     const country = String(countryCode || "").toUpperCase();
     if (!product || !isPubliclyAvailable(product)) return json({ error: "This print is not currently available." }, 404);
@@ -35,6 +42,7 @@ export async function onRequest(context) {
       countryCode: country,
       shipping,
       quote,
+      idempotencyKey: checkoutIdempotencyKey(checkoutAttemptId, product.id, country),
     });
     writeAnalyticsEvent(context.env, "checkout_session_created", {
       page: "/prints.html",
