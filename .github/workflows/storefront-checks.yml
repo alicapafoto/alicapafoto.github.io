@@ -6,6 +6,7 @@ on:
       - atlas-production-hardening
       - cloudflare-storefront-staging
       - main
+      - original-works-automation-2026-07-21
   pull_request:
 
 permissions:
