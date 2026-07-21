@@ -1,11 +1,10 @@
-import {
-  isOriginalWorksAcquisitionEnabled,
-  listOriginalArtworkAvailability,
-} from "../../_lib/original-artworks.js";
-import { json, methodNotAllowed, publicError } from "../../_lib/http.js";
+import { listOriginalArtworkAvailabilityForCheckout } from "../../_lib/original-artwork-checkout.js";
+import { isOriginalWorksAcquisitionEnabled } from "../../_lib/original-artworks.js";
+import { isOriginalArtworkShippingConfigured } from "../../_lib/original-artwork-shipping.js";
+import { isCheckoutOperational, json, methodNotAllowed, publicError } from "../../_lib/http.js";
 
-function publicStatus(row, acquisitionEnabled) {
-  if (!acquisitionEnabled || row.status === "unavailable") {
+function publicStatus(row, checkoutReady) {
+  if (!checkoutReady || row.status === "unavailable") {
     return { code: "opening-soon", label: "Acquisition opening soon", reservable: false };
   }
   if (row.status === "available") {
@@ -21,17 +20,21 @@ export async function onRequest(context) {
   if (context.request.method !== "GET") return methodNotAllowed("GET");
   try {
     const acquisitionEnabled = isOriginalWorksAcquisitionEnabled(context.env);
-    const rows = await listOriginalArtworkAvailability(context.env);
+    const shippingConfigured = isOriginalArtworkShippingConfigured(context.env);
+    const checkoutReady = Boolean(acquisitionEnabled && shippingConfigured && isCheckoutOperational(context.env));
+    const rows = await listOriginalArtworkAvailabilityForCheckout(context.env);
     return json({
       currency: "EUR",
       reservationMinutes: 30,
       acquisitionEnabled,
+      shippingConfigured,
+      checkoutReady,
       artworks: rows.map((row) => ({
         id: row.artwork_id,
         title: row.title,
         priceCents: row.price_cents,
         declaredValueCents: row.declared_value_cents,
-        status: publicStatus(row, acquisitionEnabled),
+        status: publicStatus(row, checkoutReady),
       })),
     });
   } catch (error) {
