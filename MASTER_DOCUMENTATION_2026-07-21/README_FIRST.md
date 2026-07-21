@@ -12,13 +12,15 @@ For the production state described here, this folder and the live code at activa
 
 1. `ALI_CAPA_MASTER_SYSTEM_DOCUMENTATION_2026-07-21.md`  
    Full business, product, technical, security, fulfilment, and operating documentation.
-2. `PRODUCT_CATALOGUE_2026-07-21.csv`  
+2. `DAILY_COMPLETION_LOG_2026-07-20_TO_2026-07-21.md`  
+   Chronological record of the staging repair, visual corrections, D1 hardening, production activation, and six checkout verifications.
+3. `PRODUCT_CATALOGUE_2026-07-21.csv`  
    Machine-readable product and supplier catalogue.
-3. `DEPLOYMENT_AND_RECOVERY_MANIFEST_2026-07-21.md`  
-   Exact repository, branch, commit, Cloudflare resources, secret names, restoration steps, and go-live verification.
-4. `FIRST_REAL_ORDER_CHECKLIST.md`  
+4. `DEPLOYMENT_AND_RECOVERY_MANIFEST_2026-07-21.md`  
+   Exact repository, branch, commit, Cloudflare resources, restoration steps, and go-live verification.
+5. `FIRST_REAL_ORDER_CHECKLIST.md`  
    Controlled checklist for the first genuine print order and every fulfilment handoff.
-5. `KNOWN_GAPS_AND_NEXT_ACTIONS.md`  
+6. `KNOWN_GAPS_AND_NEXT_ACTIONS.md`  
    Deliberately unfinished work and non-blocking issues.
 
 ## Live production snapshot
@@ -38,7 +40,7 @@ For the production state described here, this folder and the live code at activa
 
 ## Security notice
 
-No live passwords, API keys, webhook secrets, private keys, customer records, card details, or private shipping-origin information are included in this documentation. Secret **names** are recorded so the system can be restored, but their values remain encrypted in the service dashboards.
+No live passwords, API keys, webhook secrets, private keys, customer records, card details, or private shipping-origin information are included in this documentation. Protected configuration names are recorded so the system can be restored, but their values remain encrypted in the service dashboards.
 
 ## Backup use
 
