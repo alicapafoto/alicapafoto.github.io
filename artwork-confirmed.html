@@ -3,7 +3,7 @@
 <head>
 <meta charset="utf-8"/>
 <meta content="width=device-width, initial-scale=1" name="viewport"/>
-<title>Artwork confirmed | Ali Capa</title>
+<title>Artwork confirmation | Ali Capa</title>
 <meta content="noindex,nofollow" name="robots"/>
 <link href="https://fonts.googleapis.com" rel="preconnect"/>
 <link crossorigin="" href="https://fonts.gstatic.com" rel="preconnect"/>
@@ -15,13 +15,16 @@
 <main class="checkout-result">
 <section aria-labelledby="artwork-order-title" class="checkout-card">
 <p class="eyebrow">Original Artworks</p>
-<h1 id="artwork-order-title">Thank you!</h1>
+<h1 id="artwork-order-title" data-confirmation-title>Confirming your artwork…</h1>
+<div data-confirmed-content hidden>
 <p><strong>Your artwork is confirmed.</strong></p>
-<p>I’ll prepare the original artwork with care and send tracking as soon as its insured journey begins.</p>
+<p>I’ll prepare <span data-confirmed-artwork>the original artwork</span> with care and send tracking as soon as its insured journey begins.</p>
+</div>
+<p aria-live="polite" data-confirmation-status role="status">Securely verifying the paid Stripe session.</p>
 <p><a href="artworks.html">Return to Original Artworks</a></p>
 </section>
 </main>
-<script defer src="artwork-confirmed.js?v=20260721"></script>
+<script defer src="artwork-confirmed.js?v=20260721-verified"></script>
 <script defer src="site-analytics.js?v=20260720-staging-analytics"></script>
 </body>
 </html>
