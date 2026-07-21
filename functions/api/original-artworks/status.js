@@ -4,16 +4,16 @@ import { isOriginalArtworkShippingConfigured } from "../../_lib/original-artwork
 import { isCheckoutOperational, json, methodNotAllowed, publicError } from "../../_lib/http.js";
 
 function publicStatus(row, checkoutReady) {
-  if (!checkoutReady || row.status === "unavailable") {
-    return { code: "opening-soon", label: "Acquisition opening soon", reservable: false };
-  }
-  if (row.status === "available") {
-    return { code: "available", label: "Acquire this artwork", reservable: true };
+  if (row.status === "sold") {
+    return { code: "sold", label: "Sold", reservable: false };
   }
   if (row.status === "reserved") {
     return { code: "unavailable", label: "Currently unavailable", reservable: false };
   }
-  return { code: "sold", label: "Sold", reservable: false };
+  if (!checkoutReady || row.status === "unavailable") {
+    return { code: "opening-soon", label: "Acquisition opening soon", reservable: false };
+  }
+  return { code: "available", label: "Acquire this artwork", reservable: true };
 }
 
 export async function onRequest(context) {
