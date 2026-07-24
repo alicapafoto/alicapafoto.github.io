@@ -1,4 +1,16 @@
 (() => {
+  const legacyHosts = new Set([
+    "alicapafoto.github.io",
+    "www.alicapafoto.github.io",
+  ]);
+
+  if (legacyHosts.has(window.location.hostname.toLowerCase())) {
+    const path = window.location.pathname === "/index.html" ? "/" : window.location.pathname;
+    const destination = `https://alicapa.com${path}${window.location.search}${window.location.hash}`;
+    window.location.replace(destination);
+    return;
+  }
+
   const endpoint = "/api/track";
   const sentViews = new Set();
 
