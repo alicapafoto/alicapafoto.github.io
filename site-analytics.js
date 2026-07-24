@@ -53,7 +53,6 @@
     if (!link) return;
     const href = link.href || "";
     if (href.includes("patreon.com")) track("patreon_clicked", { source: "join-us" });
-    else if (href.includes("buy.stripe.com")) track("contribution_clicked", { source: "join-us" });
     else if (href.includes("mixam.com") || href.includes("mixam.de")) {
       track("nine_purchase_clicked", { source: href.includes("mixam.de") ? "europe" : "americas" });
     }
