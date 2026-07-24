@@ -1,0 +1,68 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="utf-8"/>
+  <meta content="width=device-width, initial-scale=1.0" name="viewport"/>
+  <title>Page not found | Ali Capa</title>
+  <meta content="noindex,nofollow" name="robots"/>
+  <meta content="#0a0a0a" name="theme-color"/>
+  <script>
+    (() => {
+      const legacyHosts = new Set([
+        "alicapafoto.github.io",
+        "www.alicapafoto.github.io",
+      ]);
+
+      if (legacyHosts.has(window.location.hostname.toLowerCase())) {
+        const path = window.location.pathname === "/index.html" ? "/" : window.location.pathname;
+        const destination = `https://alicapa.com${path}${window.location.search}${window.location.hash}`;
+        window.location.replace(destination);
+      }
+    })();
+  </script>
+  <link href="https://fonts.googleapis.com" rel="preconnect"/>
+  <link crossorigin="" href="https://fonts.gstatic.com" rel="preconnect"/>
+  <link href="https://fonts.googleapis.com/css2?family=Cormorant+Garamond:ital,wght@0,300;1,300&amp;family=Inter:wght@300;400&amp;display=swap" rel="stylesheet"/>
+  <style>
+    :root { color-scheme: dark; }
+    * { box-sizing: border-box; }
+    body {
+      margin: 0;
+      min-height: 100vh;
+      display: grid;
+      place-items: center;
+      padding: 32px;
+      background: #0a0a0a;
+      color: #f4f1eb;
+      font-family: Inter, sans-serif;
+      text-align: center;
+    }
+    main { max-width: 620px; }
+    p {
+      margin: 0 0 18px;
+      font-size: 0.75rem;
+      letter-spacing: 0.18em;
+      text-transform: uppercase;
+      opacity: 0.68;
+    }
+    h1 {
+      margin: 0 0 24px;
+      font-family: "Cormorant Garamond", serif;
+      font-size: clamp(3rem, 9vw, 6.5rem);
+      font-weight: 300;
+      line-height: 0.95;
+    }
+    a {
+      color: inherit;
+      text-underline-offset: 6px;
+    }
+  </style>
+</head>
+<body>
+  <main>
+    <p>Colourful Dimensions</p>
+    <h1>This page has moved.</h1>
+    <a href="https://alicapa.com/">Return to Ali Capa</a>
+  </main>
+</body>
+</html>
