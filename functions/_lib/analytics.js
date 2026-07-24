@@ -12,7 +12,6 @@ const ALLOWED_EVENTS = new Set([
   "checkout_returned_success",
   "checkout_cancelled",
   "patreon_clicked",
-  "contribution_clicked",
   "nine_purchase_clicked",
 ]);
 
