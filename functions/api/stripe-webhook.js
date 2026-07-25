@@ -2,7 +2,14 @@ import { isStagingSafeMode, json, methodNotAllowed } from "../_lib/http.js";
 import { writeAnalyticsEvent } from "../_lib/analytics.js";
 import { appendOrderRow, hasOrderSession } from "../_lib/google-sheets.js";
 import { claimOrderEvent, markOrderCompleted, markOrderFailed, saveOrderSnapshot } from "../_lib/order-ledger.js";
+import {
+  getOriginalArtworkOrderContext,
+  markOriginalArtworkCheckoutSold,
+  releaseOriginalArtworkCheckoutBySession,
+} from "../_lib/original-artwork-checkout.js";
 import { retrieveCheckoutSession, verifyStripeWebhook } from "../_lib/stripe.js";
+
+const PAID_EVENTS = new Set(["checkout.session.completed", "checkout.session.async_payment_succeeded"]);
 
 export async function onRequest(context) {
   if (context.request.method !== "POST") return methodNotAllowed("POST");
@@ -24,9 +31,19 @@ export async function onRequest(context) {
     return json({ error: "Invalid webhook payload" }, 400);
   }
 
-  if (!["checkout.session.completed", "checkout.session.async_payment_succeeded"].includes(event.type)) {
-    return json({ received: true });
+  if (event.type === "checkout.session.expired") {
+    const expiredSession = event.data?.object || {};
+    const metadata = expiredSession.metadata || {};
+    if (metadata.order_type !== "original-artwork") return json({ received: true });
+    const released = await releaseOriginalArtworkCheckoutBySession(context.env, {
+      artworkId: metadata.artwork_id,
+      reservationId: metadata.reservation_id,
+      checkoutSessionId: expiredSession.id,
+    });
+    return json({ received: true, artworkReleased: released.released });
   }
+
+  if (!PAID_EVENTS.has(event.type)) return json({ received: true });
 
   const sessionId = event.data?.object?.id;
   if (!sessionId) return json({ error: "Missing Checkout Session ID" }, 400);
@@ -56,10 +73,30 @@ export async function onRequest(context) {
     }
 
     const metadata = session.metadata || {};
-    const shippingDetails = session.collected_information?.shipping_details
-      || session.shipping_details
-      || session.customer_details
-      || {};
+    const isOriginalArtwork = metadata.order_type === "original-artwork";
+    let originalOrderContext = null;
+    if (isOriginalArtwork) {
+      originalOrderContext = await getOriginalArtworkOrderContext(context.env, {
+        artworkId: metadata.artwork_id,
+        reservationId: metadata.reservation_id,
+        checkoutSessionId: sessionId,
+      });
+      if (!originalOrderContext) throw new Error("Original artwork reservation context is missing");
+      const sold = await markOriginalArtworkCheckoutSold(context.env, {
+        artworkId: metadata.artwork_id,
+        reservationId: metadata.reservation_id,
+        checkoutSessionId: sessionId,
+        paymentIntentId: session.payment_intent?.id || session.payment_intent || "",
+      });
+      if (!sold.sold) throw new Error(`Original artwork sold lock failed: ${sold.reason || "unknown"}`);
+    }
+
+    const shippingDetails = isOriginalArtwork
+      ? storedOriginalArtworkShipping(originalOrderContext.shippingAddress)
+      : session.collected_information?.shipping_details
+        || session.shipping_details
+        || session.customer_details
+        || {};
     const address = shippingDetails.address || session.customer_details?.address || {};
     const balanceTransaction = session.payment_intent?.latest_charge?.balance_transaction || {};
     const lineItem = session.line_items?.data?.[0] || {};
@@ -79,13 +116,15 @@ export async function onRequest(context) {
     const contributionCents = stripeFeeCents === null
       ? null
       : customerTotalCents - stripeFeeCents - providerTotalCents;
+    const initialStatus = metadata.initial_status
+      || (isOriginalArtwork ? "Paid — Original artwork awaiting shipment" : "Paid — Awaiting Wise");
 
     const values = [
       createdIso,
       session.client_reference_id || "",
       session.id,
       session.payment_intent?.id || session.payment_intent || "",
-      "Paid — Awaiting Wise",
+      initialStatus,
       "No",
       "Not ordered",
       metadata.artwork || lineItem.description || "",
@@ -126,7 +165,6 @@ export async function onRequest(context) {
       updatedIso,
     ];
 
-    // D1 is the authoritative atomic ledger. Google Sheets is the operational mirror.
     await saveOrderSnapshot(context.env, sessionId, {
       eventId: event.id || "",
       eventType: event.type,
@@ -154,14 +192,14 @@ export async function onRequest(context) {
     }
 
     writeAnalyticsEvent(context.env, "checkout_completed", {
-      page: "/checkout-success.html",
+      page: isOriginalArtwork ? "/artwork-confirmed.html" : "/checkout-success.html",
       product: metadata.product_id || metadata.store_sku || "",
       variant: metadata.variant_label || "",
       country: address.country || metadata.destination_country || "",
       outcome: "paid",
       source: "stripe-webhook",
     });
-    return json({ received: true, reconciled: alreadyMirrored });
+    return json({ received: true, reconciled: alreadyMirrored, originalArtwork: isOriginalArtwork });
   } catch (error) {
     if (acquired) {
       try {
@@ -175,11 +213,27 @@ export async function onRequest(context) {
   }
 }
 
+function storedOriginalArtworkShipping(address = {}) {
+  return {
+    name: address.recipientName || "",
+    address: {
+      line1: address.addressLine1 || "",
+      line2: address.addressLine2 || "",
+      city: address.city || "",
+      state: address.state || "",
+      postal_code: address.postalCode || "",
+      country: address.countryCode || "",
+    },
+  };
+}
+
 function buildNotes(metadata) {
   const notes = [];
   if (metadata.store_sku) notes.push(`Store SKU: ${metadata.store_sku}`);
   if (metadata.variant_label) notes.push(`Variant: ${metadata.variant_label}`);
   if (metadata.edition_size) notes.push(`Edition size: ${metadata.edition_size}`);
+  if (metadata.reservation_id) notes.push(`Reservation: ${metadata.reservation_id}`);
+  if (metadata.declared_value_cents) notes.push(`Declared value: €${(cents(metadata.declared_value_cents) / 100).toFixed(2)}`);
   return notes.join(" · ");
 }
 

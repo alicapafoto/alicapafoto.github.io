@@ -1,4 +1,5 @@
 User-agent: *
 Allow: /
+Disallow: /admin-original-works.html
 
 Sitemap: https://alicapa.com/sitemap.xml

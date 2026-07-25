@@ -1,0 +1,41 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="utf-8"/>
+<meta content="width=device-width, initial-scale=1" name="viewport"/>
+<title>Artwork reserved | Ali Capa</title>
+<meta content="noindex,nofollow" name="robots"/>
+<link href="https://fonts.googleapis.com" rel="preconnect"/>
+<link crossorigin="" href="https://fonts.gstatic.com" rel="preconnect"/>
+<link href="https://fonts.googleapis.com/css2?family=Cormorant+Garamond:ital,wght@0,300;1,300&amp;family=Inter:wght@300;400;500&amp;display=swap" rel="stylesheet"/>
+<link href="site-shell.css" rel="stylesheet"/>
+<link href="storefront.css" rel="stylesheet"/>
+<link href="artwork-checkout.css?v=20260721" rel="stylesheet"/>
+</head>
+<body>
+<main class="checkout-result">
+<section aria-labelledby="reservation-title" class="checkout-card">
+<p class="eyebrow">Original Artworks</p>
+<h1 id="reservation-title">Your artwork is reserved.</h1>
+<p><strong data-reserved-artwork>Unique original artwork</strong></p>
+<p>The complete total is ready. Continue to Stripe before the temporary reservation expires.</p>
+<div class="artwork-reservation-summary" data-reservation-summary hidden>
+<div class="artwork-reservation-row"><span>Original artwork</span><strong data-reserved-price></strong></div>
+<div class="artwork-reservation-row"><span>Insured delivery</span><strong data-reserved-shipping></strong></div>
+<div class="artwork-reservation-row artwork-reservation-row--total"><span>Total</span><strong data-reserved-total></strong></div>
+</div>
+<p class="artwork-reservation-timer" data-reservation-timer>30:00</p>
+<p class="artwork-reservation-timer-label">Temporary reservation remaining</p>
+<div class="artwork-reservation-actions">
+<a class="artwork-reservation-primary" data-continue-checkout href="#">Continue to secure checkout</a>
+<button class="artwork-reservation-secondary" data-cancel-reservation type="button">Cancel reservation</button>
+</div>
+<p aria-live="polite" class="artwork-reservation-message" data-reservation-message role="status"></p>
+<p class="artwork-reservation-note">Payment is completed on Stripe. If the timer expires before payment, the artwork becomes available again.</p>
+<p><a href="artworks.html">Return to Original Artworks</a></p>
+</section>
+</main>
+<script defer src="artwork-reserved.js?v=20260721"></script>
+<script defer src="site-analytics.js?v=20260720-staging-analytics"></script>
+</body>
+</html>

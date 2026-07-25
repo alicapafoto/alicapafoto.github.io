@@ -1,0 +1,118 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="utf-8"/>
+<meta content="width=device-width, initial-scale=1" name="viewport"/>
+<meta content="noindex,nofollow,noarchive" name="robots"/>
+<meta content="#FAFAF7" name="theme-color"/>
+<title>Private Original Works fulfilment | Ali Capa</title>
+<link href="https://fonts.googleapis.com" rel="preconnect"/>
+<link crossorigin="" href="https://fonts.gstatic.com" rel="preconnect"/>
+<link href="https://fonts.googleapis.com/css2?family=Cormorant+Garamond:wght@300;400&amp;family=Inter:wght@300;400;500&amp;display=swap" rel="stylesheet"/>
+<link href="admin-original-works.css?v=20260721" rel="stylesheet"/>
+</head>
+<body>
+<main class="admin-shell">
+<header class="admin-header">
+<div>
+<p class="eyebrow">Private business control</p>
+<h1>Original Works fulfilment</h1>
+<p class="intro">Paid artwork orders move through address review, physical packing, real parcel measurement, and a final shipment gate. Nothing on this page creates a DHL label until the approved live adapter is connected.</p>
+</div>
+<button class="secondary-button" data-refresh type="button">Refresh</button>
+</header>
+
+<section aria-live="polite" class="system-message" data-system-message role="status">Connecting to the private fulfilment ledger…</section>
+
+<div class="admin-grid" hidden data-admin-grid>
+<aside class="order-list-panel">
+<div class="panel-heading">
+<div>
+<p class="eyebrow">Paid orders</p>
+<h2>Shipment tasks</h2>
+</div>
+<span class="count" data-record-count>0</span>
+</div>
+<div class="order-list" data-order-list></div>
+</aside>
+
+<section class="order-detail-panel" data-order-detail>
+<div class="empty-state" data-empty-state>
+<h2>Select a paid artwork order</h2>
+<p>The collector address and packing controls appear here only after private Access authentication succeeds.</p>
+</div>
+
+<div hidden data-record-view>
+<div class="record-heading">
+<div>
+<p class="eyebrow">Unique original</p>
+<h2 data-title></h2>
+<p class="record-reference" data-reference></p>
+</div>
+<span class="status-pill" data-status></span>
+</div>
+
+<div class="summary-grid">
+<section class="summary-card">
+<h3>Collector and destination</h3>
+<dl>
+<div><dt>Name</dt><dd data-recipient-name></dd></div>
+<div><dt>Email</dt><dd data-recipient-email></dd></div>
+<div><dt>Telephone</dt><dd data-recipient-phone></dd></div>
+<div><dt>Address</dt><dd class="address-lines" data-recipient-address></dd></div>
+</dl>
+</section>
+<section class="summary-card">
+<h3>Sale and protection</h3>
+<dl>
+<div><dt>Artwork</dt><dd data-sale-price></dd></div>
+<div><dt>Delivery charged</dt><dd data-shipping-price></dd></div>
+<div><dt>Declared value</dt><dd data-declared-value></dd></div>
+<div><dt>Provisional parcel</dt><dd data-provisional-parcel></dd></div>
+</dl>
+</section>
+</div>
+
+<form class="packing-form" data-packing-form autocomplete="off">
+<div class="form-heading">
+<div>
+<p class="eyebrow">Physical packing</p>
+<h3>Enter the real parcel measurements</h3>
+</div>
+<p>Measure only after the artwork is fully protected and sealed in its final shipping carton.</p>
+</div>
+<div class="measurement-grid">
+<label><span>Length, cm</span><input data-length inputmode="decimal" min="0.01" max="300" required step="0.01" type="number"/></label>
+<label><span>Width, cm</span><input data-width inputmode="decimal" min="0.01" max="300" required step="0.01" type="number"/></label>
+<label><span>Height, cm</span><input data-height inputmode="decimal" min="0.01" max="300" required step="0.01" type="number"/></label>
+<label><span>Packed weight, kg</span><input data-weight inputmode="decimal" min="0.01" max="70" required step="0.01" type="number"/></label>
+</div>
+<label class="notes-field"><span>Packing notes</span><textarea data-packing-notes maxlength="2000" rows="4"></textarea></label>
+<label class="confirmation-check"><input data-address-reviewed required type="checkbox"/><span>I compared the collector’s full address above with the paid order and confirmed it is complete.</span></label>
+<div class="form-actions">
+<button class="primary-button" data-save-packing type="submit">Save packing measurements</button>
+<button class="secondary-button" data-ready-label disabled type="button">Mark ready for label</button>
+</div>
+</form>
+
+<section class="shipment-gate">
+<div>
+<p class="eyebrow">Final irreversible step</p>
+<h3>Create insured DHL shipment</h3>
+<p>The live action remains blocked until DHL credentials, final quote verification, label storage, and tracking handling are approved and tested.</p>
+</div>
+<button class="danger-button" data-create-shipment disabled type="button">DHL adapter awaiting approval</button>
+</section>
+
+<section class="event-panel">
+<p class="eyebrow">Audit history</p>
+<h3>Order events</h3>
+<ol class="event-list" data-event-list></ol>
+</section>
+</div>
+</section>
+</div>
+</main>
+<script defer src="admin-original-works.js?v=20260721"></script>
+</body>
+</html>

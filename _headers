@@ -15,6 +15,30 @@
 /gallery-enhancements.js
   Cache-Control: no-cache
 
+/artworks-page.js
+  Cache-Control: no-cache
+
+/artwork-acquisition.css
+  Cache-Control: no-cache
+
+/artwork-checkout.css
+  Cache-Control: no-cache
+
+/artwork-reserved.js
+  Cache-Control: no-cache
+
+/artwork-confirmed.js
+  Cache-Control: no-cache
+
+/artwork-checkout-cancelled.js
+  Cache-Control: no-cache
+
+/admin-original-works.js
+  Cache-Control: no-store
+
+/admin-original-works.css
+  Cache-Control: no-store
+
 /checkout-success.html
   Cache-Control: no-store
   X-Robots-Tag: noindex, nofollow
@@ -22,6 +46,22 @@
 /checkout-cancelled.html
   Cache-Control: no-store
   X-Robots-Tag: noindex, nofollow
+
+/artwork-reserved.html
+  Cache-Control: no-store
+  X-Robots-Tag: noindex, nofollow
+
+/artwork-confirmed.html
+  Cache-Control: no-store
+  X-Robots-Tag: noindex, nofollow
+
+/artwork-checkout-cancelled.html
+  Cache-Control: no-store
+  X-Robots-Tag: noindex, nofollow
+
+/admin-original-works.html
+  Cache-Control: no-store
+  X-Robots-Tag: noindex, nofollow, noarchive
 
 /api/*
   Cache-Control: no-store
