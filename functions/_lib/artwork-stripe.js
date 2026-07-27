@@ -35,7 +35,8 @@ export async function createOriginalArtworkCheckoutSession({
   append(params, "phone_number_collection[enabled]", "true");
   append(params, "consent_collection[terms_of_service]", "required");
   append(params, "submit_type", "pay");
-  append(params, "expires_at", Math.floor(Date.now() / 1000) + 30 * 60);
+  // Stripe requires at least 30 full minutes from its own session-creation time.
+  append(params, "expires_at", Math.floor(Date.now() / 1000) + 31 * 60);
 
   append(params, "line_items[0][quantity]", "1");
   append(params, "line_items[0][price_data][currency]", "eur");
