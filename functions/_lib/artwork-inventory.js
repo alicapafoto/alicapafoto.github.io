@@ -25,11 +25,11 @@ export async function ensureArtworkInventory(env = {}) {
   return db;
 }
 
-async function completedOrderExists(db, productId) {
+async function paidOrderExists(db, productId) {
   const row = await db.prepare(`
     SELECT session_id
     FROM order_events
-    WHERE status = 'completed'
+    WHERE order_json IS NOT NULL
       AND json_extract(order_json, '$.productId') = ?
     LIMIT 1
   `).bind(productId).first();
@@ -38,7 +38,7 @@ async function completedOrderExists(db, productId) {
 
 export async function getArtworkInventoryStatus(env, productId) {
   const db = await ensureArtworkInventory(env);
-  if (await completedOrderExists(db, productId)) return { code: "sold", checkoutReady: false };
+  if (await paidOrderExists(db, productId)) return { code: "sold", checkoutReady: false };
 
   const now = Date.now();
   await db.prepare(`
@@ -63,7 +63,7 @@ export async function getArtworkInventoryStatus(env, productId) {
 
 export async function reserveArtwork(env, { productId, reservationToken }) {
   const db = await ensureArtworkInventory(env);
-  if (await completedOrderExists(db, productId)) return { acquired: false, code: "sold" };
+  if (await paidOrderExists(db, productId)) return { acquired: false, code: "sold" };
 
   const now = Date.now();
   const expiresAt = now + RESERVATION_TTL_MS;
