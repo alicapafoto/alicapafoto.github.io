@@ -31,6 +31,32 @@ export const PRINT_CATEGORIES = Object.freeze({
 
 export const PRINT_CATALOG = Object.freeze([
   Object.freeze({
+    id: "nine",
+    title: "NiNE",
+    category: "book",
+    order: 0,
+    previewPath: "/images/hero-1.jpg",
+    description: "A 132-page fine art photobook documenting nine years across ten countries.",
+    variants: Object.freeze([
+      Object.freeze({
+        id: "nine-europe-softcover",
+        label: "European Softcover",
+        storeSku: "NINE-A4-SOFT-EU",
+        provider: "Prodigi",
+        providerSku: "BOOK-FE-A4-P-SOFT-G",
+        paper: "150 gsm gloss interior · matte cover",
+        size: "A4 · 210 × 297 mm",
+        priceCents: 5500,
+        availability: "available",
+        productType: "book",
+        fulfillment: Object.freeze({
+          mode: "prodigi-live",
+          attributes: Object.freeze({ pages: 134 }),
+        }),
+      }),
+    ]),
+  }),
+  Object.freeze({
     id: "ataquas",
     title: "AtaquaS",
     category: "open",
