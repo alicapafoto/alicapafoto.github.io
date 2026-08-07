@@ -51,7 +51,7 @@ export const PRINT_CATALOG = Object.freeze([
         productType: "book",
         fulfillment: Object.freeze({
           mode: "prodigi-live",
-          attributes: Object.freeze({ pages: 134 }),
+          pageCount: 134,
         }),
       }),
     ]),
