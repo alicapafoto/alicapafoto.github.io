@@ -114,4 +114,3 @@ export function calculateCustomerShippingCents(quote, countryCode, env = {}) {
     customerCents: grossedUpCents + handlingCents,
   };
 }
-
