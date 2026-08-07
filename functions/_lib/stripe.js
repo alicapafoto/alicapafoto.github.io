@@ -43,12 +43,14 @@ export async function createStripeCheckoutSession({
   append(params, "line_items[0][price_data][currency]", "eur");
   append(params, "line_items[0][price_data][unit_amount]", priceCents);
   append(params, "line_items[0][price_data][product_data][name]", `${work.title}, ${product.label}`);
-  append(params, "line_items[0][price_data][product_data][description]", `${product.size} · ${product.paper} · Unframed`);
+  append(params, "line_items[0][price_data][product_data][description]", product.productType === "book"
+    ? `${product.size} Â· ${product.paper} Â· 132 interior pages`
+    : `${product.size} Â· ${product.paper} Â· Unframed`);
   append(params, "line_items[0][price_data][product_data][images][0]", `${siteOrigin}${work.previewPath}`);
 
   append(params, "shipping_address_collection[allowed_countries][0]", countryCode);
   append(params, "shipping_options[0][shipping_rate_data][type]", "fixed_amount");
-  append(params, "shipping_options[0][shipping_rate_data][display_name]", `Shipping and handling · ${formatMethod(quote.method)}`);
+  append(params, "shipping_options[0][shipping_rate_data][display_name]", `Shipping and handling Â· ${formatMethod(quote.method)}`);
   append(params, "shipping_options[0][shipping_rate_data][fixed_amount][amount]", shipping.customerCents);
   append(params, "shipping_options[0][shipping_rate_data][fixed_amount][currency]", "eur");
 
@@ -62,6 +64,7 @@ export async function createStripeCheckoutSession({
     provider_sku: product.providerSku,
     paper: product.paper,
     print_size: product.size,
+    product_type: product.productType || "print",
     edition_size: product.editionSize || "",
     destination_country: countryCode,
     shipping_method: quote.method,
@@ -76,7 +79,7 @@ export async function createStripeCheckoutSession({
     fulfillment_country: quote.fulfillmentCountry,
     fulfillment_lab: quote.labCode,
     store_price_cents: String(priceCents),
-    initial_status: "Paid — Awaiting Wise",
+    initial_status: "Paid â€” Awaiting Wise",
   };
 
   for (const [key, value] of Object.entries(metadata)) {
@@ -156,3 +159,4 @@ export async function verifyStripeWebhook({ payload, signatureHeader, secret, to
 
   return signatures.some((signature) => timingSafeEqual(digest, hexToBytes(signature)));
 }
+
