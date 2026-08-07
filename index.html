@@ -37,7 +37,7 @@
   },
   "description": "NiNE is a 132 page fine art photobook by photographer Ali Capa, documenting nine years of travel, portraiture, landscapes, and fine art nude photography across ten countries.",
   "numberOfPages": 132,
-  "bookFormat": "https://schema.org/Hardcover",
+  "bookFormat": ["https://schema.org/Hardcover", "https://schema.org/Paperback"],
   "inLanguage": "en",
   "genre": [
     "Fine art photography",
@@ -53,7 +53,7 @@
 <link href="https://fonts.googleapis.com/css2?family=Smooch&amp;family=Cormorant+Garamond:ital,wght@0,300;0,400;1,300&amp;family=Inter:wght@300;400;500&amp;display=swap" rel="stylesheet"/>
 <link href="index-page.css" rel="stylesheet"/>
 <link href="site-footer.css" rel="stylesheet"/>
-<link href="site-shell.css" rel="stylesheet"/><link href="home-refresh.css" rel="stylesheet"/></head>
+<link href="site-shell.css" rel="stylesheet"/><link href="home-refresh.css" rel="stylesheet"/><link href="storefront.css" rel="stylesheet"/></head>
 <body>
 <nav aria-label="Primary navigation" class="site-nav site-nav--home">
 <a class="nav-brand" href="index.html">Ali Capa</a>
@@ -95,34 +95,36 @@
 <div class="card">
 <p class="card-tag">Standard Edition</p>
 <div class="card-title">NiNE</div>
-<p class="card-subtitle">Hardcover · Print on Demand</p>
-<p class="card-price-note">Ships worldwide · Fulfilled by Mixam</p>
+<p class="card-subtitle">Two regional editions · Print on demand</p>
+<p class="card-price-note">€55 / $55 · Delivery calculated for your destination</p>
 <hr class="card-rule"/>
 <ul class="card-specs">
-<li><span>Pages</span><span>132</span></li>
-<li><span>Colour</span><span>Full colour throughout</span></li>
-<li><span>Binding</span><span>Adhesive casebound hardcover</span></li>
-<li><span>Shipping</span><span>Worldwide</span></li>
+<li><span>Pages</span><span>132 interior pages · full colour</span></li>
 </ul>
 <div class="region-split">
 <div class="region-col">
 <p class="region-label">Americas</p>
 <ul class="region-specs">
+<li><span>Edition</span><span>Hardcover · $55</span></li>
 <li><span>Trim Size</span><span>Letter · 8.5″ × 11″</span></li>
 <li><span>Paper</span><span>100lb Gloss Text</span></li>
+<li><span>Fulfilment</span><span>Mixam US</span></li>
 </ul>
 </div>
 <div class="region-col">
 <p class="region-label">Europe</p>
 <ul class="region-specs">
-<li><span>Trim Size</span><span>A4 · 210 × 297mm</span></li>
-<li><span>Paper</span><span>170g/m² Gloss</span></li>
+<li><span>Edition</span><span>Softcover · €55</span></li>
+<li><span>Trim Size</span><span>A4 · 210 × 297 mm</span></li>
+<li><span>Interior</span><span>150 gsm gloss</span></li>
+<li><span>Cover</span><span>Matte cover</span></li>
+<li><span>Fulfilment</span><span>Prodigi · Europe</span></li>
 </ul>
 </div>
 </div>
 <div class="card-btn-row">
-<a class="card-btn" href="#editions" data-staging-disabled="true" data-analytics-event="nine_purchase_clicked" data-analytics-source="americas" aria-disabled="true" rel="noopener" target="_blank">Americas</a>
-<a class="card-btn" href="#editions" data-staging-disabled="true" data-analytics-event="nine_purchase_clicked" data-analytics-source="europe" aria-disabled="true" rel="noopener" target="_blank">Europe</a>
+<a class="card-btn" href="https://mixam.com/print-on-demand/6a417907f343e9478f5c9f85" data-analytics-event="nine_purchase_clicked" data-analytics-source="americas" rel="noopener" target="_blank">Americas</a>
+<button class="card-btn" data-nine-checkout type="button" data-analytics-event="nine_purchase_clicked" data-analytics-source="europe">Europe</button>
 </div>
 </div>
 <div class="card featured">
@@ -207,6 +209,19 @@
 </nav>
 <span class="footer-copy">© 2026 Ali Capa Foto<br/><a href="privacy.html">Privacy</a> <span aria-hidden="true">·</span> <a href="terms.html">Terms</a></span>
 </footer>
+<dialog aria-labelledby="nineDialogTitle" class="store-dialog" id="nineDialog">
+<div class="store-dialog__inner">
+<div class="store-dialog__top">
+<div><p class="store-dialog__eyebrow">European Edition</p><h2 id="nineDialogTitle">Acquire NiNE</h2><p class="store-dialog__variant">A4 softcover · 210 × 297 mm · €55</p></div>
+<button class="store-dialog__close" data-nine-close type="button">Close</button>
+</div>
+<p class="store-dialog__intro">150 gsm gloss interior · matte cover · fulfilled by Prodigi. Choose your delivery country to see shipping and the complete price.</p>
+<div class="store-field"><label for="nineDeliveryCountry">Delivery country</label><select data-nine-country id="nineDeliveryCountry"><option value="">Choose a country</option></select></div>
+<div class="store-quote" data-nine-quote hidden></div>
+<button class="store-dialog__action" data-nine-action disabled type="button">Continue to secure checkout</button>
+<p aria-live="polite" class="store-message" data-nine-message role="status"></p>
+</div>
+</dialog>
 <nav aria-label="Mobile navigation" class="mobile-nav mobile-nav--home"><a href="index.html#editions">NiNE</a><a href="prints.html">Prints</a><a href="artworks.html">Original Artworks</a><a href="about.html">About</a><a href="support.html">Join Us</a></nav>
-<script defer="" src="index-page.js"></script><script defer src="site-analytics.js?v=20260720-staging-analytics"></script></body>
+<script defer="" src="index-page.js"></script><script defer src="nine-checkout.js"></script><script defer src="site-analytics.js?v=20260720-staging-analytics"></script></body>
 </html>
