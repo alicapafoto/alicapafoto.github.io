@@ -37,7 +37,7 @@
   },
   "description": "NiNE is a 132 page fine art photobook by photographer Ali Capa, documenting nine years of travel, portraiture, landscapes, and fine art nude photography across ten countries.",
   "numberOfPages": 132,
-  "bookFormat": "https://schema.org/Hardcover",
+  "bookFormat": ["https://schema.org/Hardcover", "https://schema.org/Paperback"],
   "inLanguage": "en",
   "genre": [
     "Fine art photography",
@@ -53,7 +53,7 @@
 <link href="https://fonts.googleapis.com/css2?family=Smooch&amp;family=Cormorant+Garamond:ital,wght@0,300;0,400;1,300&amp;family=Inter:wght@300;400;500&amp;display=swap" rel="stylesheet"/>
 <link href="index-page.css" rel="stylesheet"/>
 <link href="site-footer.css" rel="stylesheet"/>
-<link href="site-shell.css" rel="stylesheet"/><link href="home-refresh.css" rel="stylesheet"/></head>
+<link href="site-shell.css" rel="stylesheet"/><link href="home-refresh.css" rel="stylesheet"/><link href="storefront.css" rel="stylesheet"/></head>
 <body>
 <nav aria-label="Primary navigation" class="site-nav site-nav--home">
 <a class="nav-brand" href="index.html">Ali Capa</a>
@@ -95,51 +95,53 @@
 <div class="card">
 <p class="card-tag">Standard Edition</p>
 <div class="card-title">NiNE</div>
-<p class="card-subtitle">Hardcover · Print on Demand</p>
-<p class="card-price-note">Ships worldwide · Fulfilled by Mixam</p>
+<p class="card-subtitle">Two regional editions Â· Print on demand</p>
+<p class="card-price-note">â‚¬55 / $55 Â· Delivery calculated for your destination</p>
 <hr class="card-rule"/>
 <ul class="card-specs">
-<li><span>Pages</span><span>132</span></li>
-<li><span>Colour</span><span>Full colour throughout</span></li>
-<li><span>Binding</span><span>Adhesive casebound hardcover</span></li>
-<li><span>Shipping</span><span>Worldwide</span></li>
+<li><span>Pages</span><span>132 interior pages Â· full colour</span></li>
 </ul>
 <div class="region-split">
 <div class="region-col">
 <p class="region-label">Americas</p>
 <ul class="region-specs">
-<li><span>Trim Size</span><span>Letter · 8.5″ × 11″</span></li>
+<li><span>Edition</span><span>Hardcover Â· $55</span></li>
+<li><span>Trim Size</span><span>Letter Â· 8.5â€³ Ã— 11â€³</span></li>
 <li><span>Paper</span><span>100lb Gloss Text</span></li>
+<li><span>Fulfilment</span><span>Mixam US</span></li>
 </ul>
 </div>
 <div class="region-col">
 <p class="region-label">Europe</p>
 <ul class="region-specs">
-<li><span>Trim Size</span><span>A4 · 210 × 297mm</span></li>
-<li><span>Paper</span><span>170g/m² Gloss</span></li>
+<li><span>Edition</span><span>Softcover Â· â‚¬55</span></li>
+<li><span>Trim Size</span><span>A4 Â· 210 Ã— 297 mm</span></li>
+<li><span>Interior</span><span>150 gsm gloss</span></li>
+<li><span>Cover</span><span>Matte cover</span></li>
+<li><span>Fulfilment</span><span>Prodigi Â· Europe</span></li>
 </ul>
 </div>
 </div>
 <div class="card-btn-row">
 <a class="card-btn" href="https://mixam.com/print-on-demand/6a417907f343e9478f5c9f85" data-analytics-event="nine_purchase_clicked" data-analytics-source="americas" rel="noopener" target="_blank">Americas</a>
-<a class="card-btn" href="https://mixam.de/print-on-demand/6a43f46089757fcb48bb3c67" data-analytics-event="nine_purchase_clicked" data-analytics-source="europe" rel="noopener" target="_blank">Europe</a>
+<button class="card-btn" data-nine-checkout type="button" data-analytics-event="nine_purchase_clicked" data-analytics-source="europe">Europe</button>
 </div>
 </div>
 <div class="card featured">
 <span class="card-badge sold-out-badge">Sold Out</span>
 <p class="card-tag">Collector's Edition</p>
 <div class="card-title">NiNE</div>
-<p class="card-subtitle">Premium Hardcover · Saal Digital</p>
+<p class="card-subtitle">Premium Hardcover Â· Saal Digital</p>
 <p class="card-price">Sold Out</p>
-<p class="card-price-note">Strictly limited · No longer available</p>
+<p class="card-price-note">Strictly limited Â· No longer available</p>
 <hr class="card-rule"/>
 <ul class="card-specs">
 <li><span>Pages</span><span>130</span></li>
 <li><span>Colour</span><span>Full colour, premium print</span></li>
-<li><span>Binding</span><span>Hardcover · lay-flat</span></li>
+<li><span>Binding</span><span>Hardcover Â· lay-flat</span></li>
 <li><span>Paper</span><span>Fujifilm Crystal Archive HD Silk</span></li>
 <li><span>Cover</span><span>Acrylic + leatherette red</span></li>
-<li><span>Fulfillment</span><span>Saal Digital · Germany</span></li>
+<li><span>Fulfillment</span><span>Saal Digital Â· Germany</span></li>
 </ul>
 <span class="card-btn disabled">Not Available</span>
 </div>
@@ -148,7 +150,7 @@
 <section class="gallery-section" id="collector">
 <p class="gallery-eyebrow">Collector's Edition</p>
 <h2 class="gallery-heading">Inside the book</h2>
-<p class="gallery-sub">Premium hardcover · Fujifilm Crystal Archive HD Silk · Saal Digital, Germany</p>
+<p class="gallery-sub">Premium hardcover Â· Fujifilm Crystal Archive HD Silk Â· Saal Digital, Germany</p>
 <div class="gallery-grid">
 <div aria-label="Open gallery image 1" class="gal-item" role="button" tabindex="0"><img alt="NiNE Collector Edition displayed beside a mineral sculpture and camera lens" decoding="async" height="1400" loading="lazy" src="images/gallery-1.jpg" width="1050"/></div>
 <div aria-label="Open gallery image 2" class="gal-item" role="button" tabindex="0"><img alt="Open NiNE photobook showing a nude portrait and butterfly illustration" decoding="async" height="1400" loading="lazy" src="images/gallery-2.jpg" width="1050"/></div>
@@ -163,10 +165,10 @@
 </div>
 </section>
 <div aria-hidden="true" aria-label="Image viewer" aria-modal="true" class="lightbox" id="lightbox" role="dialog">
-<button aria-label="Close image viewer" class="lightbox-close" id="lbClose" type="button">×</button>
-<button aria-label="Previous image" class="lightbox-prev" id="lbPrev" type="button">‹</button>
+<button aria-label="Close image viewer" class="lightbox-close" id="lbClose" type="button">Ã—</button>
+<button aria-label="Previous image" class="lightbox-prev" id="lbPrev" type="button">â€¹</button>
 <img alt="" id="lbImg" src=""/>
-<button aria-label="Next image" class="lightbox-next" id="lbNext" type="button">›</button>
+<button aria-label="Next image" class="lightbox-next" id="lbNext" type="button">â€º</button>
 </div>
 <section class="works-preview" id="original-works-preview">
 <div class="works-preview-inner">
@@ -174,7 +176,7 @@
 <img alt="DusaEmas, an original photographic artwork by Ali Capa" decoding="async" height="978" loading="lazy" src="images/work-dusaemas-detail.jpg" width="645"/>
 </div>
 <div>
-<p class="works-preview-eyebrow">Original Artworks · 2022</p>
+<p class="works-preview-eyebrow">Original Artworks Â· 2022</p>
 <h2>From idea to photograph.<br/>From photograph to emulsion.<br/>From emulsion into physical form.</h2>
 <p class="works-preview-copy">A small collection of unique artworks created by transferring photographic emulsion onto wood, then finishing each piece with 24 karat gold, acrylic paint and varnish.</p>
 <a class="works-preview-link" href="artworks.html">View the original artworks</a>
@@ -205,8 +207,22 @@
 <li><a href="mailto:alicapafoto@gmail.com">Contact</a></li>
 </ul>
 </nav>
-<span class="footer-copy">© 2026 Ali Capa Foto<br/><a href="privacy.html">Privacy</a> <span aria-hidden="true">·</span> <a href="terms.html">Terms</a></span>
+<span class="footer-copy">Â© 2026 Ali Capa Foto<br/><a href="privacy.html">Privacy</a> <span aria-hidden="true">Â·</span> <a href="terms.html">Terms</a></span>
 </footer>
+<dialog aria-labelledby="nineDialogTitle" class="store-dialog" id="nineDialog">
+<div class="store-dialog__inner">
+<div class="store-dialog__top">
+<div><p class="store-dialog__eyebrow">European Edition</p><h2 id="nineDialogTitle">Acquire NiNE</h2><p class="store-dialog__variant">A4 softcover Â· 210 Ã— 297 mm Â· â‚¬55</p></div>
+<button class="store-dialog__close" data-nine-close type="button">Close</button>
+</div>
+<p class="store-dialog__intro">150 gsm gloss interior Â· matte cover Â· fulfilled by Prodigi. Choose your delivery country to see shipping and the complete price.</p>
+<div class="store-field"><label for="nineDeliveryCountry">Delivery country</label><select data-nine-country id="nineDeliveryCountry"><option value="">Choose a country</option></select></div>
+<div class="store-quote" data-nine-quote hidden></div>
+<button class="store-dialog__action" data-nine-action disabled type="button">Continue to secure checkout</button>
+<p aria-live="polite" class="store-message" data-nine-message role="status"></p>
+</div>
+</dialog>
 <nav aria-label="Mobile navigation" class="mobile-nav mobile-nav--home"><a href="index.html#editions">NiNE</a><a href="prints.html">Prints</a><a href="artworks.html">Original Artworks</a><a href="about.html">About</a><a href="support.html">Join Us</a></nav>
-<script defer="" src="index-page.js"></script><script defer src="site-analytics.js?v=20260720-gallery-fixes-1"></script></body>
+<script defer="" src="index-page.js"></script><script defer src="nine-checkout.js?v=20260807-nine-europe"></script><script defer src="site-analytics.js?v=20260720-gallery-fixes-1"></script></body>
 </html>
+
