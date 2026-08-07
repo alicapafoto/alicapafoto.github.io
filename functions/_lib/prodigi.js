@@ -9,7 +9,7 @@ function prodigiBase(env) {
     : "https://api.sandbox.prodigi.com/v4.0";
 }
 
-export async function getProdigiQuotes({ env, sku, countryCode, quantity = 1 }) {
+export async function getProdigiQuotes({ env, sku, countryCode, quantity = 1, attributes = {} }) {
   if (!env.PRODIGI_API_KEY) throw new Error("Prodigi API is not configured");
 
   const response = await fetchWithTimeout(`${prodigiBase(env)}/quotes`, {
@@ -24,7 +24,7 @@ export async function getProdigiQuotes({ env, sku, countryCode, quantity = 1 }) 
       items: [{
         sku,
         copies: quantity,
-        attributes: {},
+        attributes,
         assets: [{ printArea: "default" }],
       }],
     }),
@@ -114,3 +114,4 @@ export function calculateCustomerShippingCents(quote, countryCode, env = {}) {
     customerCents: grossedUpCents + handlingCents,
   };
 }
+
