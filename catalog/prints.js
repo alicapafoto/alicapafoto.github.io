@@ -24,8 +24,8 @@ export const PRINT_CATEGORIES = Object.freeze({
     eyebrow: "Limited editions",
     title: "Collector Editions",
     revealLabel: "Collector Edition",
-    overviewDescription: "Limited photographic editions, printed on HahnemÃ¼hle Pearl and accompanied by a signed Certificate of Authenticity.",
-    deepDescription: "Limited photographic editions, printed on HahnemÃ¼hle Pearl and accompanied by a signed Certificate of Authenticity.",
+    overviewDescription: "Limited photographic editions, printed on Hahnemühle Pearl and accompanied by a signed Certificate of Authenticity.",
+    deepDescription: "Limited photographic editions, printed on Hahnemühle Pearl and accompanied by a signed Certificate of Authenticity.",
   }),
 });
 
@@ -44,8 +44,8 @@ export const PRINT_CATALOG = Object.freeze([
         storeSku: "NINE-A4-SOFT-EU",
         provider: "Prodigi",
         providerSku: "BOOK-FE-A4-P-SOFT-G",
-        paper: "150 gsm gloss interior Â· matte cover",
-        size: "A4 Â· 210 Ã— 297 mm",
+        paper: "150 gsm gloss interior · matte cover",
+        size: "A4 · 210 × 297 mm",
         priceCents: 5500,
         availability: "available",
         productType: "book",
@@ -66,7 +66,7 @@ export const PRINT_CATALOG = Object.freeze([
     mockupPath: "/images/prints/ataquas-mockup.jpg",
     aspectRatio: "2:3 portrait",
     borderMm: 0,
-    cardSummary: "Dream Edition Â· â‚¬30",
+    cardSummary: "Dream Edition · €30",
     description: "A crown of small white flowers, a gaze painted blue, and a hand still bright with yellow. AtaquaS holds one saturated, suspended moment. It is playful, intimate, and entirely alive.",
     variants: Object.freeze([
       Object.freeze({
@@ -76,7 +76,7 @@ export const PRINT_CATALOG = Object.freeze([
         provider: "Prodigi",
         providerSku: "GLOBAL-PAP-12X18",
         paper: "Lustre Photo Paper (LPP), 240 gsm",
-        size: "30 Ã— 45 cm / 12 Ã— 18 in",
+        size: "30 × 45 cm / 12 × 18 in",
         priceCents: 3000,
         availability: "available",
         fulfillment: Object.freeze({ mode: "prodigi-live" }),
@@ -94,7 +94,7 @@ export const PRINT_CATALOG = Object.freeze([
     mockupPath: "/images/prints/eclaircisse-mockup.jpg",
     aspectRatio: "4:5 portrait",
     borderMm: 0,
-    cardSummary: "Dream Edition Â· â‚¬35",
+    cardSummary: "Dream Edition · €35",
     description: "Light breaks across a body in motion, dissolving the boundary between waking and dreaming. EclaircissE is warmth, blur, and surrender held inside a single frame.",
     variants: Object.freeze([
       Object.freeze({
@@ -104,7 +104,7 @@ export const PRINT_CATALOG = Object.freeze([
         provider: "Prodigi",
         providerSku: "GLOBAL-PAP-16X20",
         paper: "Lustre Photo Paper (LPP), 240 gsm",
-        size: "40 Ã— 50 cm / 16 Ã— 20 in",
+        size: "40 × 50 cm / 16 × 20 in",
         priceCents: 3500,
         availability: "available",
         fulfillment: Object.freeze({ mode: "prodigi-live" }),
@@ -113,7 +113,7 @@ export const PRINT_CATALOG = Object.freeze([
   }),
   Object.freeze({
     id: "oppia",
-    title: "Ã–ppiÃ¤",
+    title: "Öppiä",
     category: "open",
     order: 3,
     artworkPath: "/images/prints/oppia.jpg",
@@ -122,8 +122,8 @@ export const PRINT_CATALOG = Object.freeze([
     mockupPath: "/images/prints/oppia-mockup.jpg",
     aspectRatio: "4:3 landscape collage",
     borderMm: 0,
-    cardSummary: "Dream Edition Â· Available soon",
-    description: "A constellation of painted gestures, colour, and repeated presence. Ã–ppiÃ¤ is still being rebuilt from the archive; the image shown here is a preview, not the final work.",
+    cardSummary: "Dream Edition · Available soon",
+    description: "A constellation of painted gestures, colour, and repeated presence. Öppiä is still being rebuilt from the archive; the image shown here is a preview, not the final work.",
     variants: Object.freeze([
       Object.freeze({
         id: "oppia-open",
@@ -150,7 +150,7 @@ export const PRINT_CATALOG = Object.freeze([
     mockupPath: "/images/prints/independienta-mockup.jpg",
     aspectRatio: "4:3 landscape collage",
     borderMm: 0,
-    cardSummary: "Dream Edition Â· Available soon",
+    cardSummary: "Dream Edition · Available soon",
     description: "Eight private moments are held inside one frame. Warm light and inward gestures follow a woman becoming her own shelter. IndepenDienta is still being rebuilt; this remains a preview of the final work.",
     variants: Object.freeze([
       Object.freeze({
@@ -178,7 +178,7 @@ export const PRINT_CATALOG = Object.freeze([
     mockupPath: "/images/prints/kaisar-mockup.jpg",
     aspectRatio: "2:3 portrait",
     borderMm: 0,
-    cardSummary: "Presence and Immersion Â· from â‚¬250",
+    cardSummary: "Presence and Immersion · from €250",
     description: "Warm shadow, red silk, and a small offering of white flowers. K.aisa.R turns a backward glance into something between invitation and farewell. It is quiet, self-possessed, and impossible to hurry.",
     certificate: "Clean",
     letterIncluded: true,
@@ -189,8 +189,8 @@ export const PRINT_CATALOG = Object.freeze([
         storeSku: "KSR-PRL-PRESENCE-60X90",
         provider: "Creativehub / theprintspace",
         providerSku: "V-XL076PZL",
-        paper: "HahnemÃ¼hle Pearl, 285 gsm GiclÃ©e",
-        size: "60 Ã— 90 cm / 24 Ã— 35 in",
+        paper: "Hahnemühle Pearl, 285 gsm Giclée",
+        size: "60 × 90 cm / 24 × 35 in",
         priceCents: 25000,
         availability: "available",
         editionSize: 5,
@@ -210,8 +210,8 @@ export const PRINT_CATALOG = Object.freeze([
         storeSku: "KSR-PRL-IMMERSION-80X120",
         provider: "Creativehub / theprintspace",
         providerSku: "V-Y6L6H5YT",
-        paper: "HahnemÃ¼hle Pearl, 285 gsm GiclÃ©e",
-        size: "80 Ã— 120 cm / 31 Ã— 47 in",
+        paper: "Hahnemühle Pearl, 285 gsm Giclée",
+        size: "80 × 120 cm / 31 × 47 in",
         priceCents: 35000,
         availability: "available",
         editionSize: 5,
@@ -229,7 +229,7 @@ export const PRINT_CATALOG = Object.freeze([
   }),
   Object.freeze({
     id: "merano",
-    title: "MÃ¨ranÃ¶",
+    title: "Mèranö",
     category: "collector",
     order: 2,
     artworkPath: "/images/prints/merano.jpg",
@@ -237,8 +237,8 @@ export const PRINT_CATALOG = Object.freeze([
     mockupPath: "/images/prints/merano-mockup.jpg",
     aspectRatio: "4:5 portrait",
     borderMm: 25,
-    cardSummary: "Edition of 10 Â· â‚¬150",
-    description: "A pale flower remains sharply present while the body begins to soften into memory. MÃ¨ranÃ¶ lives in that gentle distance between touch and disappearance, where tenderness refuses to be hurried.",
+    cardSummary: "Edition of 10 · €150",
+    description: "A pale flower remains sharply present while the body begins to soften into memory. Mèranö lives in that gentle distance between touch and disappearance, where tenderness refuses to be hurried.",
     certificate: "Clean",
     letterIncluded: true,
     variants: Object.freeze([
@@ -248,8 +248,8 @@ export const PRINT_CATALOG = Object.freeze([
         storeSku: "MER-PRL-REVERIE-60X75",
         provider: "Creativehub / theprintspace",
         providerSku: "V-GDH2VKCH",
-        paper: "HahnemÃ¼hle Pearl, 285 gsm GiclÃ©e",
-        size: "50 Ã— 40 cm / 20 Ã— 16 in",
+        paper: "Hahnemühle Pearl, 285 gsm Giclée",
+        size: "50 × 40 cm / 20 × 16 in",
         priceCents: 15000,
         availability: "available",
         editionSize: 10,
@@ -267,7 +267,7 @@ export const PRINT_CATALOG = Object.freeze([
   }),
   Object.freeze({
     id: "raabta",
-    title: "RÃ Ã¡bta",
+    title: "Ràábta",
     category: "collector",
     order: 3,
     artworkPath: "/images/prints/raabta.jpg",
@@ -276,8 +276,8 @@ export const PRINT_CATALOG = Object.freeze([
     mockupPath: "/images/prints/raabta-mockup.jpg",
     aspectRatio: "4:5 portrait",
     borderMm: 25,
-    cardSummary: "Edition of 10 Â· â‚¬200",
-    description: "Hair, pearls, and skin move between concealment and revelation. RÃ Ã¡bta is not about what is hidden. It is about the trust held inside vulnerability, and the quiet moment when presence becomes connection.",
+    cardSummary: "Edition of 10 · €200",
+    description: "Hair, pearls, and skin move between concealment and revelation. Ràábta is not about what is hidden. It is about the trust held inside vulnerability, and the quiet moment when presence becomes connection.",
     certificate: "Clean",
     letterIncluded: true,
     variants: Object.freeze([
@@ -287,8 +287,8 @@ export const PRINT_CATALOG = Object.freeze([
         storeSku: "RBT-PRL-VEIL-40X50",
         provider: "Creativehub / theprintspace",
         providerSku: "V-K5SCKYN3",
-        paper: "HahnemÃ¼hle Pearl, 285 gsm GiclÃ©e",
-        size: "75 Ã— 60 cm / 30 Ã— 24 in",
+        paper: "Hahnemühle Pearl, 285 gsm Giclée",
+        size: "75 × 60 cm / 30 × 24 in",
         priceCents: 20000,
         availability: "available",
         editionSize: 10,
@@ -313,4 +313,3 @@ export function flattenVariants() {
 export function findVariant(productId) {
   return flattenVariants().find((entry) => entry.id === productId) || null;
 }
-
