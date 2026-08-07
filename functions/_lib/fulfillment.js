@@ -5,13 +5,15 @@ export async function quoteProduct({ product, countryCode, env }) {
   const mode = product?.fulfillment?.mode;
 
   if (mode === "prodigi-live") {
-    const payload = await getProdigiQuotes({ env, sku: product.providerSku, countryCode });
+    const payload = await getProdigiQuotes({ env, sku: product.providerSku, countryCode, attributes: product.fulfillment?.attributes || {} });
     const quote = chooseBestQuote(payload);
     const shipping = calculateCustomerShippingCents(quote, countryCode, env);
     return {
       quote,
       shipping,
-      estimateNote: "Made to order. Production usually takes 2 to 3 business days before dispatch; delivery timing varies by destination.",
+      estimateNote: product.productType === "book"
+        ? "Printed to order in Europe; production and delivery timing vary by destination."
+        : "Made to order. Production usually takes 2 to 3 business days before dispatch; delivery timing varies by destination.",
     };
   }
 
