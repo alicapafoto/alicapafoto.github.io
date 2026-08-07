@@ -266,3 +266,14 @@
     @media(prefers-reduced-motion:reduce) { .slide { transition:none; } .gal-item img { transition:none; } }
 
 body.lightbox-open { overflow: hidden; }
+
+
+/* NiNE regional checkout */
+.card-btn-row button.card-btn { font-family: inherit; }
+#region-split + .card-btn-row { margin-top: .25rem; }
+#nineDialog .store-dialog__variant { color: var(--red); }
+@media (max-width: 620px) {
+  .region-split { grid-template-columns: 1fr; gap: 1.75rem; }
+  .region-col + .region-col { padding-top: 1.5rem; border-top: 1px solid #E8E8E6; }
+  .card-btn-row { flex-direction: column; }
+}
