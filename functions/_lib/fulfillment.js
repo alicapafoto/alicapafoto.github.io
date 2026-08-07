@@ -5,7 +5,12 @@ export async function quoteProduct({ product, countryCode, env }) {
   const mode = product?.fulfillment?.mode;
 
   if (mode === "prodigi-live") {
-    const payload = await getProdigiQuotes({ env, sku: product.providerSku, countryCode, attributes: product.fulfillment?.attributes || {} });
+    const payload = await getProdigiQuotes({
+      env,
+      sku: product.providerSku,
+      countryCode,
+      pageCount: product.fulfillment?.pageCount || null,
+    });
     const quote = chooseBestQuote(payload);
     const shipping = calculateCustomerShippingCents(quote, countryCode, env);
     return {
