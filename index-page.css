@@ -195,7 +195,7 @@
     nav.site-nav.on-dark .nav-brand { color: var(--white); }
     nav.site-nav.on-dark .nav-links a { color: var(--white); }
 
-    /* UNIFIED MOBILE HEADER — identical geometry on every page */
+    /* UNIFIED MOBILE HEADER â€” identical geometry on every page */
     .mobile-nav {
       display: none;
       position: fixed;
@@ -266,3 +266,13 @@
     @media(prefers-reduced-motion:reduce) { .slide { transition:none; } .gal-item img { transition:none; } }
 
 body.lightbox-open { overflow: hidden; }
+
+/* NiNE regional checkout */
+.card-btn-row button.card-btn { font-family: inherit; }
+#nineDialog .store-dialog__variant { color: var(--red); }
+@media (max-width: 620px) {
+  .region-split { grid-template-columns: 1fr; gap: 1.75rem; }
+  .region-col + .region-col { padding-top: 1.5rem; border-top: 1px solid #E8E8E6; }
+  .card-btn-row { flex-direction: column; }
+}
+
