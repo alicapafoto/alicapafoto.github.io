@@ -34,7 +34,7 @@
     } catch (error) {
       console.error(error);
       openButton.disabled = true;
-      openButton.textContent = "Europe · temporarily unavailable";
+      openButton.textContent = "Europe \u00b7 temporarily unavailable";
     }
   }
 
@@ -46,7 +46,7 @@
     setBusy(false);
     const countryCode = countrySelect.value;
     if (!countryCode) return;
-    setBusy(true, "Finding delivery options…");
+    setBusy(true, "Finding delivery options\u2026");
     try {
       const response = await fetch("/api/quote", {
         method: "POST",
@@ -56,7 +56,7 @@
       const payload = await response.json();
       if (!response.ok) throw new Error(payload.error || "Delivery unavailable");
       quote = payload;
-      quoteBox.innerHTML = `<div class="store-quote__row"><span>NiNE · European Softcover</span><strong>${euro(payload.priceCents)}</strong></div>
+      quoteBox.innerHTML = `<div class="store-quote__row"><span>NiNE &middot; European Softcover</span><strong>${euro(payload.priceCents)}</strong></div>
         <div class="store-quote__row"><span>Delivery</span><strong>${euro(payload.shippingCents)}</strong></div>
         <div class="store-quote__row store-quote__row--total"><span>Total</span><strong>${euro(payload.totalCents)}</strong></div>
         <p class="store-quote__note"><strong>Production & delivery</strong><br>${payload.estimateNote}</p>`;
@@ -76,7 +76,7 @@
       return;
     }
     showMessage();
-    setBusy(true, "Preparing secure checkout…");
+    setBusy(true, "Preparing secure checkout\u2026");
     try {
       const response = await fetch("/api/create-checkout", {
         method: "POST",
