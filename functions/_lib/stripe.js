@@ -38,7 +38,9 @@ export async function createStripeCheckoutSession({
   append(params, "line_items[0][price_data][currency]", "eur");
   append(params, "line_items[0][price_data][unit_amount]", priceCents);
   append(params, "line_items[0][price_data][product_data][name]", `${work.title}, ${product.label}`);
-  append(params, "line_items[0][price_data][product_data][description]", `${product.size} · ${product.paper} · Unframed`);
+  append(params, "line_items[0][price_data][product_data][description]", product.productType === "book"
+    ? `${product.size} · ${product.paper} · 132 interior pages`
+    : `${product.size} · ${product.paper} · Unframed`);
   append(params, "line_items[0][price_data][product_data][images][0]", `${siteOrigin}${work.previewPath}`);
 
   append(params, "shipping_address_collection[allowed_countries][0]", countryCode);
@@ -57,6 +59,7 @@ export async function createStripeCheckoutSession({
     provider_sku: product.providerSku,
     paper: product.paper,
     print_size: product.size,
+    product_type: product.productType || "print",
     edition_size: product.editionSize || "",
     destination_country: countryCode,
     shipping_method: quote.method,
