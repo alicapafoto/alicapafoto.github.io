@@ -195,7 +195,7 @@
     nav.site-nav.on-dark .nav-brand { color: var(--white); }
     nav.site-nav.on-dark .nav-links a { color: var(--white); }
 
-    /* UNIFIED MOBILE HEADER â€” identical geometry on every page */
+    /* UNIFIED MOBILE HEADER — identical geometry on every page */
     .mobile-nav {
       display: none;
       position: fixed;
@@ -275,4 +275,3 @@ body.lightbox-open { overflow: hidden; }
   .region-col + .region-col { padding-top: 1.5rem; border-top: 1px solid #E8E8E6; }
   .card-btn-row { flex-direction: column; }
 }
-
