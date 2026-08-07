@@ -9,7 +9,7 @@ function prodigiBase(env) {
     : "https://api.sandbox.prodigi.com/v4.0";
 }
 
-export async function getProdigiQuotes({ env, sku, countryCode, quantity = 1, attributes = {} }) {
+export async function getProdigiQuotes({ env, sku, countryCode, quantity = 1, pageCount = null }) {
   if (!env.PRODIGI_API_KEY) throw new Error("Prodigi API is not configured");
 
   const response = await fetchWithTimeout(`${prodigiBase(env)}/quotes`, {
@@ -24,8 +24,11 @@ export async function getProdigiQuotes({ env, sku, countryCode, quantity = 1, at
       items: [{
         sku,
         copies: quantity,
-        attributes,
-        assets: [{ printArea: "default" }],
+        attributes: {},
+        assets: [{
+          printArea: "default",
+          ...(Number.isInteger(pageCount) ? { pageCount } : {}),
+        }],
       }],
     }),
   }, 12_000, "Prodigi delivery quote");
