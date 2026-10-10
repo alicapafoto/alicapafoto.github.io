@@ -175,6 +175,16 @@
       font-size: 0.8rem;
     }
     .cred-title { font-weight: 400; color: var(--ink); }
+    .press-link {
+      color: inherit;
+      text-decoration: underline;
+      text-decoration-color: var(--rule);
+      text-underline-offset: 0.2em;
+    }
+    .press-link:hover, .press-link:focus-visible {
+      color: var(--red);
+      text-decoration-color: currentColor;
+    }
     .cred-sub { font-size: 0.72rem; color: var(--mid); margin-top: 0.15rem; }
     .cred-year {
       font-size: 0.7rem;
