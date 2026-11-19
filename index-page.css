@@ -66,6 +66,7 @@
     .card-specs li span:first-child { color:#999; }
     .card-btn { display:block; width:100%; padding:1rem; text-align:center; font-size:.65rem; font-weight:500; letter-spacing:.2em; text-transform:uppercase; text-decoration:none; border:1px solid var(--ink); color:var(--ink); background:transparent; cursor:pointer; transition:background .2s, color .2s; }
     .card-btn:hover { background:var(--ink); color:var(--white); }
+    .card-btn--paused, .card-btn--paused:hover { background:var(--ink); color:var(--white); cursor:not-allowed; }
     .card.featured .card-btn { background:var(--ink); color:var(--white); }
     .card.featured .card-btn:hover { background:transparent; color:var(--ink); }
     .card-btn.disabled { background:#ccc; border-color:#ccc; color:#fff; cursor:not-allowed; pointer-events:none; }

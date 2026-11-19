@@ -47,7 +47,7 @@ export const PRINT_CATALOG = Object.freeze([
         paper: "150 gsm gloss interior · matte cover",
         size: "A4 · 210 × 297 mm",
         priceCents: 5500,
-        availability: "upcoming",
+        availability: "available",
         productType: "book",
         fulfillment: Object.freeze({
           mode: "prodigi-live",

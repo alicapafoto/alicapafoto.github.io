@@ -51,7 +51,7 @@
 <link href="https://fonts.googleapis.com" rel="preconnect"/>
 <link crossorigin="" href="https://fonts.gstatic.com" rel="preconnect"/>
 <link href="https://fonts.googleapis.com/css2?family=Smooch&amp;family=Cormorant+Garamond:ital,wght@0,300;0,400;1,300&amp;family=Inter:wght@300;400;500&amp;display=swap" rel="stylesheet"/>
-<link href="index-page.css" rel="stylesheet"/>
+<link href="index-page.css?v=20261119-nine-availability" rel="stylesheet"/>
 <link href="site-footer.css" rel="stylesheet"/>
 <link href="site-shell.css" rel="stylesheet"/><link href="home-refresh.css" rel="stylesheet"/><link href="storefront.css" rel="stylesheet"/></head>
 <body>
@@ -89,8 +89,8 @@
 </div>
 </section>
 <section class="editions" id="editions">
-<p class="editions-eyebrow">The photobook</p>
-<h2 class="editions-heading">Explore the editions</h2>
+<p class="editions-eyebrow">Available Now</p>
+<h2 class="editions-heading">Choose your edition</h2>
 <div class="editions-grid">
 <div class="card">
 <p class="card-tag">Standard Edition</p>
@@ -122,7 +122,10 @@
 </ul>
 </div>
 </div>
-<p class="card-price-note">Available again soon</p>
+<div class="card-btn-row">
+<button aria-label="Americas: available again soon" class="card-btn card-btn--paused" disabled type="button">Available again soon</button>
+<button class="card-btn" data-nine-checkout type="button" data-analytics-event="nine_purchase_clicked" data-analytics-source="europe">Europe</button>
+</div>
 </div>
 <div class="card featured">
 <span class="card-badge sold-out-badge">Sold Out</span>
@@ -206,6 +209,19 @@
 </nav>
 <span class="footer-copy">© 2026 Ali Capa Foto<br/><a href="privacy.html">Privacy</a> <span aria-hidden="true">·</span> <a href="terms.html">Terms</a></span>
 </footer>
+<dialog aria-labelledby="nineDialogTitle" class="store-dialog" id="nineDialog">
+<div class="store-dialog__inner">
+<div class="store-dialog__top">
+<div><p class="store-dialog__eyebrow">European Edition</p><h2 id="nineDialogTitle">Acquire NiNE</h2><p class="store-dialog__variant">A4 softcover · 210 × 297 mm · €55</p></div>
+<button class="store-dialog__close" data-nine-close type="button">Close</button>
+</div>
+<p class="store-dialog__intro">150 gsm gloss interior · matte cover · fulfilled by Prodigi. Choose your delivery country to see shipping and the complete price.</p>
+<div class="store-field"><label for="nineDeliveryCountry">Delivery country</label><select data-nine-country id="nineDeliveryCountry"><option value="">Choose a country</option></select></div>
+<div class="store-quote" data-nine-quote hidden></div>
+<button class="store-dialog__action" data-nine-action disabled type="button">Continue to secure checkout</button>
+<p aria-live="polite" class="store-message" data-nine-message role="status"></p>
+</div>
+</dialog>
 <nav aria-label="Mobile navigation" class="mobile-nav mobile-nav--home"><a href="index.html#editions">NiNE</a><a href="prints.html">Prints</a><a href="artworks.html">Original Artworks</a><a href="about.html">About</a><a href="support.html">Join Us</a></nav>
-<script defer="" src="index-page.js"></script><script defer src="site-analytics.js?v=20260720-staging-analytics"></script></body>
+<script defer="" src="index-page.js"></script><script defer src="nine-checkout.js"></script><script defer src="site-analytics.js?v=20260720-staging-analytics"></script></body>
 </html>
